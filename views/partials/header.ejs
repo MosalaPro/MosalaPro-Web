@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html class="wide wow-animation" lang="en">
+  <head>
+    <title>MosalaPro | Your African Service Finder</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,900">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/input.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
+    <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
+  </head>
+  <body>
+    <!--div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div-->
+    <div class="preloader">
+      <div class="preloader-body">
+        <div class="loader">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <p>Loading...</p>
+      </div>
+    </div>
+    <div class="page"><!--a class="banner banner-top" href="https://www.templatemonster.com/website-templates/monstroid2.html" target="_blank"><img src="images/monstroid.jpg" alt="" height="0"></a-->
+      <header class="section page-header rd-navbar-transparent-wrap">
+        <!--RD Navbar-->
+        <div class="rd-navbar-wrap">
+          <nav class="rd-navbar rd-navbar-transparent" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-lg-stick-up-offset="20px" data-xl-stick-up-offset="20px" data-xxl-stick-up-offset="20px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+            <div class="rd-navbar-collapse-toggle rd-navbar-fixed-element-1" data-rd-navbar-toggle=".rd-navbar-collapse"><span></span></div>
+            <div class="rd-navbar-aside-outer rd-navbar-collapse">
+              <div class="rd-navbar-aside">
+                <div class="rd-navbar-info">
+                  The African Service Finder
+                </div>
+
+                <% if(usr){ %>
+                  <ul class="list-lined">
+                    <li>
+                      <div class="btn-group open ">
+                        <a class="btn" data-toggle="dropdown" href="#"><b class="fa fa-user fa-fw mr-1"></b> Hi, <%=usr.firstName %>
+                          <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
+                          <ul class="dropdown-menu ul-none">
+                            <li><a href="#"><b class="fa fa-user-circle mr-1"></b>  Profil</a></li>
+                            <li><a href="#"><b class="fa fa-tasks mr-1"></b>  My Requests</a></li>
+                            <li><a href="/logout"><b class="fa fa-sign-out mr-1"></b>  Logout </a></li>
+                          </ul>
+                        
+                      </div>
+                    </li>
+                  </ul>
+                  <% } else { %>
+                    <ul class="list-lined">
+                      <li><a href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Log in</a></li>
+                      <li><a href="#regModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Create an account</a></li>
+                    </ul>
+                  <% } %>
+
+              </div>
+            </div>
+            <div class="rd-navbar-main-outer">
+              <div class="rd-navbar-main-inner">
+                <div class="rd-navbar-main">
+                  <!--RD Navbar Panel-->
+                  <div class="rd-navbar-panel">
+                    <!--RD Navbar Toggle-->
+                    <!--RD Navbar Brand-->
+                    <div class="rd-navbar-brand">
+                      <!--Brand--><a class="brand" href="/"><img class="brand-logo-dark" src="images/mosalapro-logo-h.png" alt="" width="146" height="22"/><img class="brand-logo-light" src="images/mosalapro-logo-h.png" alt="" width="155" height="22"/></a>
+                    </div>
+                  </div>
+                  <div class="rd-navbar-main-element">
+                    <div class="rd-navbar-nav-wrap">
+                      <ul class="rd-navbar-nav">
+                        <li class="rd-nav-item active"><a class="rd-nav-link" href="/">Home</a>
+                        </li>
+						            <li class="rd-nav-item"><a class="rd-nav-link" href="about.html">Find Services</a></li>
+                        <li class="rd-nav-item"><a class="rd-nav-link" href="/about-us">About us</a></li>
+                        <li class="rd-nav-item"><a class="rd-nav-link" href="typography.html">For Professionals</a>
+                        </li>
+                        <li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us">Contact Us</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+
+<!--TODO: Check if user not logged in, then include-->
+<%- include('loginModal') %>
+<%- include('registerModal') %>
+        

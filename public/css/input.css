@@ -1,0 +1,43 @@
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-5050px);
+  }
+}
+
+.caroussel {
+  margin: auto;
+  overflow: hidden;
+  position: relative;
+}
+.caroussel::before, .caroussel::after {
+  content: "";
+  position: absolute;
+  width: 200px;
+  z-index: 2;
+}
+.caroussel::after {
+  right: 0;
+  top: 0;
+  transform: rotateZ(180deg);
+}
+.caroussel::before {
+  left: 0;
+  top: 0;
+}
+.caroussel .slide-track {
+  animation: scroll 105s linear infinite;
+  display: flex;
+}
+.caroussel .slide {
+  padding: 2em;
+}
+
+@media (max-width: 600px) {
+	.caroussel{
+		display: none;
+	}
+}
+/*# sourceMappingURL=input.css.map */
