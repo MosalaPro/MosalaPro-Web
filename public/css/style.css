@@ -2150,10 +2150,18 @@ h5 + .list-marked-big {
 
 .list-marked-2 > li::before {
 	content: '\f00c';
-	left: 0;
-	top: 0;
-	font-weight: 400;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: inline-block;
+    font-family: "FontAwesome";
+    font-weight: 400;
 	color: #518e2a;
+	
+}
+
+.mt-txt-slide{
+	margin-top: -10em;
 }
 
 .list-mark {
@@ -7576,7 +7584,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .txt> h1{
-	text-shadow: 2px 2px 5px rgb(43, 43, 43);
+	text-shadow: 2px 2px 5px rgb(29, 29, 29);
 }
 
 
@@ -7612,6 +7620,7 @@ html.rd-navbar-fixed-linked .page {
 	}
 }
 
+
 @media (min-width: 1600px) {
 	.swiper-slider-1 .swiper-pagination-wrap {
 		height: 27%;
@@ -7626,13 +7635,13 @@ html.rd-navbar-fixed-linked .page {
 
 @media (min-width: 992px) {
 	.rd-navbar-transparent-wrap + .swiper-slider-1 .swiper-slide-caption {
-		padding: 130px 0 100px;
+		padding: 50px 0 100px;
 	}
 }
 
 @media (min-width: 1600px) {
 	.rd-navbar-transparent-wrap + .swiper-slider-1 .swiper-slide-caption {
-		padding: 110px 0 100px;
+		padding: 50px 0 100px;
 	}
 }
 

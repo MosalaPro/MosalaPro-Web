@@ -40,7 +40,7 @@ module.exports = function(app){
         model.loginUser(req, res);
     });
 
-    app.get("/for-pro", function(req, res){
+    app.get("/professionals", function(req, res){
         res.render("forProfessionals", {usr: null, cats: req.cats});
     });
 
