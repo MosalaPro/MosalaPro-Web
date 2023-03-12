@@ -26,7 +26,7 @@
   "keywords": [],
   "author": "Constant Pagoui",
   "license": "ISC",
-  "engine":{
+  "engines":{
       "node":"18.13.0"
    } 
   
