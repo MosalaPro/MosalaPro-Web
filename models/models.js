@@ -9,56 +9,34 @@
 require("dotenv").config();
 const schemas = require(__dirname+"/schemas/schemas.js");
 const mongoose = require("mongoose");
-const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook");
-const findOrCreate = require("mongoose-findorcreate");
+const express = require("express");
 mongoose.set('strictQuery', false);
+const bodyParser = require("body-parser");
+const session = require("express-session");
+const root = require('path').resolve('./');
+const passport = require("passport");
 
-const User = new mongoose.model("User", schemas.getUserSchema());
-const Provider = new mongoose.model("Provider", schemas.getProviderSchema());
-const Category = new mongoose.model("Category", schemas.getCategorySchema());
-
+const User = mongoose.model("User", schemas.getUserSchema());
 passport.use(User.createStrategy());
 
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+  done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
-        done(err, user);
-    });
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
 });
 
-passport.use(new GoogleStrategy ({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL,
-    userProfileURL: process.env.GOOGLE_PROFILE_URL
-    },
-    function(accessToken, refreshToken, profile, cb){
-        console.log(profile);
-        User.findOrCreate({googleId: profile.id}, function(err, user){
-            return cb(err, user);
-        });
-    })
+const Provider = new mongoose.model("Provider", schemas.getProviderSchema());
+const Category = new mongoose.model("Category", schemas.getCategorySchema());
 
-);
-
-passport.use(new FacebookStrategy({
-    clientID: process.env.APP_ID,
-    clientSecret: process.env.APP_SECRET,
-    callbackURL: process.env.FB_CALLBACK_URL,
-    profileFields: ['id', 'displayName', 'email']
-    },
-    function(accessToken, refreshToken, profile, cb) {
-        console.log(profile);
-        User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-        return cb(err, user);
-        });
-    }
-));
+exports.getUserModel = function(){
+    return User;
+}
 
 exports.registerUser = function(req, res){
 
@@ -104,6 +82,40 @@ exports.loginUser = function(req, res){
         }
     });
 }
+
+/*exports.loginUserFB = function(){
+    app.use(passport.initialize());
+    app.use(passport.session());
+    console.log("Authenticating user through FB Login");
+    app.get("/auth/facebook", passport.authenticate("facebook"));
+}
+
+exports.loginUserGoogle = function(){
+    console.log("Authenticating user through Google Login");
+    app.get("/auth/google",
+	passport.authenticate("google", {scope: ["profile"]}));
+}
+
+exports.authenticateUserGoogle = function(){
+    console.log("Authenticating user through Google Auth");
+    app.get("/auth/google/mosalapro", 
+	passport.authenticate("google", {failureRedirect: "/"}), function(err, res){
+		res.redirect("/secrets");
+	});
+}
+
+exports.authenticateUserFB = function(){
+    app.use(passport.initialize());
+    app.use(passport.session());
+    console.log("Authenticating user through FB Auth");
+    app.get('/auth/facebook/secrets',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    function(req, res) {
+        // Successful authentication, redirect home.
+        console.log("User has been successfully authenticated through FB");
+        res.redirect('/');
+    });
+}*/
 
 exports.registerProvider = function(req, res){
 
@@ -166,3 +178,89 @@ exports.showHomePage = function(req, res){
     });
     
 }
+
+exports.showFindServicesPage = function(req, res){
+
+    Category.find({"name":{$ne:null}}, function(err, foundCategories){
+        if(err){console.log(err);}
+        else{
+            
+            if(req.isAuthenticated()){
+                res.render("findServices", {usr: req.user, cats: foundCategories, map_api:process.env.GOOGLE_MAP_API});
+            }
+            else
+            res.render("findServices", {usr: null, cats: foundCategories, map_api:process.env.GOOGLE_MAP_API});
+        }
+    });
+    
+}
+
+exports.showAboutUsPage = function(req, res){
+
+    Category.find({"name":{$ne:null}}, function(err, foundCategories){
+        if(err){console.log(err);}
+        else{
+            
+            if(req.isAuthenticated()){
+                res.render("about_us", {usr: req.user, cats: req.cats});
+            }
+            else
+                res.render("about_us", {usr: null, cats: req.cats});
+        }
+    });
+    
+}
+
+exports.showContactUsPage = function(req, res){
+
+    Category.find({"name":{$ne:null}}, function(err, foundCategories){
+        if(err){console.log(err);}
+        else{
+            if(req.isAuthenticated()){
+                res.render("contact", {usr: req.user, cats: req.cats});
+            }
+            else
+                res.render("contact", {usr: null, cats: req.cats});
+        }
+    });
+    
+}
+
+    const axios = require('axios');
+
+    exports.sendEmail = async function (name, email, subject, message, req, res) {
+        const newUser = new User({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            username: req.body.email,
+            address: req.body.address,
+            createdAt: new Date(),
+            lastUpdate: new Date()
+        });
+        const data = JSON.stringify({
+            "Messages": [{
+            "From": {"Email": process.env.EMAIL_SENDER, "Name": "MosalaPro"},
+            "To": [{"Email": email, "Name": name}],
+            "Subject": subject,
+            "TextPart": message
+            }]
+        });
+
+        const config = {
+            method: 'post',
+            url: 'https://api.mailjet.com/v3.1/send',
+            data: data,
+            headers: {'Content-Type': 'application/json'},
+            auth: {username: process.env.MAILJET_API_KEY, password: process.env.MAILJET_API_SECRET},
+        };
+        res.render("emailVerification", {usr: newUser, cats: req.cats});
+        return axios(config)
+            .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            })
+            .catch(function (error) {
+            console.log(error);
+            });
+
+    }

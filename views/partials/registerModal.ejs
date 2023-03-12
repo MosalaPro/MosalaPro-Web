@@ -17,7 +17,7 @@
         <div class="tab-content ">
           <div class="tab-pane fade show active" id="pills-register-u" role="tabpanel" aria-labelledby="tab-register-u">
             
-            <form action="/register-user" method="post">
+            
               <div class="text-center ">
                 <h5 class="title text text-center">Sign Up as User</h5> 
                 <button type="button" class="btn  btn-floating mx-1">
@@ -36,8 +36,10 @@
                   <a class="fab fa-github"></a>
                 </button>
               </div>
+
                 <p class="big text text-center">Or fill in information below.</p>
-              
+
+            <form action="/register-user" method="post">
               <div class="row">
                 <div class="col-md-6">
                     <!-- First name input -->
@@ -120,7 +122,7 @@
                     <div class="col-md-6">
                         <!-- Confirm Password input -->
                         <div class="form-outline  ">
-                            <input type="password" id="registerConfPassword" class="form-control" placeholder="Confirm Password"  required/>
+                            <input type="password" id="registerConfPassword" class="form-control" placeholder="Confirm Password"  name="cpassword" required/>
                         </div>
                     </div>
                 </div>
@@ -151,7 +153,7 @@
             </form>
           </div>
           <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register-p">
-            <form  action="/register-pro" method="post">
+            
               <div class="text-center mb-3">
                 <h5 class="title text text-center">Sign Up as Service Provider</h5> 
                 <button type="button" class="btn btn-floating mx-1">
@@ -171,15 +173,18 @@
                 </button>
               </div>
               <p class="big text text-center">Or fill in information below.</p>
+            
+            <form  action="/register-pro" method="post">
               <!-- Company Name input -->
               <div class="row">
                 <div class="col">
                      <!-- Country input -->
                      <select class="form-control" aria-label="Select Category" name="pRegisterCategroy" style="display: inline;">
                         <option selected>Select Category</option>
-                        <option value="cat1">Category 1</option>
-                        <option value="cat2">Category 2</option>
-                        <option value="cat3">Category 3</option>
+
+                        <% if(cats){ cats.forEach(cat=>{ %>
+                          <option value="<%=cat.name %>"><%=cat.name %></option>
+                        <% });} %>
                       </select>
                 </div>
               </div>  
@@ -187,13 +192,13 @@
                 <div class="col-md-6">
                     <!-- First name input -->
                     <div class="form-outline  ">
-                        <input type="text" id="pRegisterName" class="form-control" placeholder="First Name" name="firstName"  required/>
+                        <input type="text" id="pRegisterName" class="form-control" placeholder="First Name" name="pFirstName"  required/>
                       </div>
                 </div>
                 <div class="col-md-6">
                     <!-- Last name input -->
                     <div class="form-outline  ">
-                        <input type="text" id="pRegisterLastname" class="form-control" placeholder="Last Name" name="lastName"  required/>
+                        <input type="text" id="pRegisterLastname" class="form-control" placeholder="Last Name" name="pLastName"  required/>
                     </div>
                 </div>
               </div>
@@ -202,13 +207,13 @@
                 <div class="col-md-6">
                     <!-- Email input -->
                     <div class="form-outline ">
-                        <input type="email" id="pRegisterEmail" class="form-control" placeholder="Email" name="email"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required/>
+                        <input type="email" id="pRegisterEmail" class="form-control" placeholder="Email" name="pEmail"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required/>
                     </div>
                 </div>
                 <div class="col-md-6">
                      <!-- Phone input -->
                     <div class="form-outline ">
-                        <input type="number" id="pRegisterPhone" class="form-control" placeholder="Phone Number" name="phone" pattern="/((\+*)((0[ -]*)*|(*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/" required/>
+                        <input type="number" id="pRegisterPhone" class="form-control" placeholder="Phone Number" name="pPhone" pattern="/((\+*)((0[ -]*)*|(*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/" required/>
                     </div>
                 </div>
             </div>
@@ -216,7 +221,7 @@
             <div class="row">
                 <div class="col">
                     <div class="form-outline  ">
-                        <input type="text" id="pRegisterAddress" class="form-control" placeholder="Address" name="address"/>
+                        <input type="text" id="pRegisterAddress" class="form-control" placeholder="Address" name="pAddress"/>
                       </div>
                 </div>
             </div>
@@ -245,13 +250,13 @@
                 <div class="col-md-6">
                     <!-- First name input -->
                     <div class="form-outline  ">
-                        <input type="text" id="pRegisterState" class="form-control" placeholder="State" name="state"/>
+                        <input type="text" id="pRegisterState" class="form-control" placeholder="State" name="pState"/>
                       </div>
                 </div>
                 <div class="col-md-6">
                     <!-- Last name input -->
                     <div class="form-outline  ">
-                        <input type="text" id="pRegisterZip" class="form-control" placeholder="Zip Code" name="zip" />
+                        <input type="text" id="pRegisterZip" class="form-control" placeholder="Zip Code" name="pZip" />
                     </div>
                 </div>
               </div>

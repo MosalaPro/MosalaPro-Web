@@ -11,9 +11,9 @@
                     <div class="dropdown dropdown-search">
                         <select class="form-control search-input-s" aria-label="Select Category" name="categorySelect" style="display: inline;">
                             <option selected>Select Category</option>
-                            <option value="ghana">Ghana</option>
-                            <option value="usa">USA</option>
-                            <option value="nigeria">Nigeria</option>
+                            <% if(cats){ cats.forEach(cat=>{ %>
+                                <option value="<%=cat.name %>"><%=cat.name %></option>
+                              <% });} %>
                           </select>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li><a class="dropdown-item" href="#">Rural</a></li>

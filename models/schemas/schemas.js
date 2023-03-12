@@ -19,18 +19,15 @@ exports.getUserSchema = function(){
         },
         lastName:{
             type: String,
-            required: true,
             min: 2,
             max: 45
         },
         email:{
             type: String,
-            required: true
         },
         username:String,
         phone:{
             type: String,
-            required: true,
             min: 7,
             max: 15
         },
@@ -124,6 +121,9 @@ exports.getCategorySchema = function(){
             required: true,
             min: 3,
             max: 45
+        },
+        icon:{
+            type: String
         },
         createdAt:{
             type: Date,
