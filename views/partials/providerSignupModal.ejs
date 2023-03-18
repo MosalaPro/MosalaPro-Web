@@ -32,7 +32,7 @@
               <select class="form-control" aria-label="Select Category" name="pRegisterCategroy" style="display: inline;">
                   <option selected>Select Category</option>
 
-                  <% if(cats){ cats.forEach(cat=>{ %>
+                  <% if(categories){ categories.forEach(cat=>{ %>
                     <option value="<%=cat.name %>"><%=cat.name %></option>
                   <% });} %>
                 </select>
@@ -71,31 +71,28 @@
       <div class="row">
           <div class="col">
               <div class="form-outline  ">
-                  <input type="text" id="pRegisterAddress" class="form-control" placeholder="Address" name="pAddress"/>
+                  <input type="text" id="pRegisterAddress" class="form-control" placeholder="Address" name="pAddress" required/>
                 </div>
           </div>
       </div>
       
       <div class="row">
-          <div class="col-md-6">
-              <!-- Country input -->
-              <select class="form-control" aria-label="Select Country" name="registerCountry" style="display: inline;">
-                  <option selected>Select Country</option>
-                  <option value="ghana">Ghana</option>
-                  <option value="usa">USA</option>
-                  <option value="nigeria">Nigeria</option>
-                </select>
-          </div>
-          <div class="col-md-6">
-              <!-- City input -->
-              <select class="form-control" aria-label="Select City"  style="display: inline;">
-                  <option selected>Select City</option>
-                  <option value="ghana">City 1</option>
-                  <option value="usa">City 2</option>
-                  <option value="nigeria">City 3</option>
-                </select>
-          </div>
-      </div>
+        <div class="col-md-6">
+             <!-- Country input -->
+             <select name="country_" id="country_" class="form-control" aria-label="Select Country" style="display: inline;" required>
+                <option selected>Select Country</option>
+                <% countries.forEach(country => { %> 
+                  <option value="<%= country.name %>"> <%= country.name %></option>
+                  <% }); %>
+              </select>
+        </div>
+        <div class="col-md-6">
+            <!-- City input -->
+            <select class="form-control" aria-label="Select City"  style="display: inline;" id="city_" name="city_" required>
+                <option selected>Select City</option>
+              </select>
+        </div>
+    </div>
       <div class="row">
           <div class="col-md-6">
               <!-- First name input -->
@@ -155,7 +152,7 @@
           <div class="col-md-6 d-flex justify-content-center">
             <!-- Checkbox -->
             <div class="form-check mb-3 mb-md-0">
-              <input class="form-check-input" type="checkbox" value="" id="termsCheck" checked />
+              <input class="form-check-input" type="checkbox" value="" id="termsCheck" unchecked required/>
               <label class="form-check-label" for="termsCheck"> I have read the terms and conditions.</label>
             </div>
           </div>

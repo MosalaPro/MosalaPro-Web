@@ -140,3 +140,82 @@ exports.getCategorySchema = function(){
     categorySchema.plugin(require("mongoose-findorcreate"));
     return categorySchema;
 }
+
+exports.getCountrySchema = function(){
+
+    const countrySchema = new mongoose.Schema({
+        name:{
+            type: String,
+            unique: true,
+            min:3
+        },
+        phone_code: String,
+        currency_name: String,
+        currency_symbol: String,
+        capital: String, 
+        region: String,
+        subregion: String,
+        latitude: Number,
+        longitude: Number,
+    
+    });
+
+    countrySchema.plugin(require("passport-local-mongoose"));
+    countrySchema.plugin(require("mongoose-findorcreate"));
+    return countrySchema;
+}
+
+exports.getCitySchema = function(){
+
+    const citySchema = new mongoose.Schema({
+        name:{
+            type: String,
+            unique: true,
+            min:3
+        },
+        state_code: String,
+        state_name: {
+            type: String,
+            required: true
+        },
+        country_code: String,
+        country_name: {
+            type:String,
+            required: true
+        },
+        latitude: Number,
+        longitude: Number,
+    
+    });
+
+    citySchema.plugin(require("passport-local-mongoose"));
+    citySchema.plugin(require("mongoose-findorcreate"));
+    return citySchema;
+}
+
+exports.getStateSchema = function(){
+
+    const stateSchema = new mongoose.Schema({
+        name:{
+            type: String,
+            unique: true,
+            min:3
+        },
+        state_code:{
+            type: String,
+            required: true
+        },
+        country_code: String,
+        country_name: {
+            type:String,
+            required: true
+        },
+        latitude: Number,
+        longitude: Number,
+    
+    });
+
+    stateSchema.plugin(require("passport-local-mongoose"));
+    stateSchema.plugin(require("mongoose-findorcreate"));
+    return stateSchema;
+}

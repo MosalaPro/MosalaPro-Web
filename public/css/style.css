@@ -6585,7 +6585,17 @@ html.tablet .ui-to-top {
 .rd-navbar-fixed .rd-navbar-megamenu .rd-megamenu-title a:hover {
 	color: #31404a;
 }
-
+.search-btn{
+	color:#fff;
+	background-color: #5A9E2F;
+	text-transform: capitalize;
+	border-radius: 0 7px 7px 0;
+	border: none;
+	font-weight: bold;
+	font-size: large;
+	cursor: pointer;
+	padding: 0 1em;
+}
 .rd-navbar-fixed .rd-navbar-submenu-toggle {
 	color: #516ca9;
 }
@@ -7728,7 +7738,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .google-map-container-2 {
-	border-radius: 10px;
+	/*border-radius: 10px;*/
 	overflow: hidden;
 	height: 100%;
 }
@@ -7738,19 +7748,19 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .google-map {
-	height: 250px;
+	height: 50em;
 	width: 100%;
 }
 
 @media (min-width: 768px) {
 	.google-map {
-		height: 250px;
+		height: 50em;
 	}
 }
 
 @media (min-width: 992px) {
 	.google-map {
-		height: 355px;
+		height: 50em;
 	}
 }
 
@@ -12065,7 +12075,9 @@ html:not(.ie-11):not(.ios) .parallax-disabled {
 .box-pricing-list > li + li {
 	margin-top: 14px;
 }
-
+.searh_box{
+	margin-top: -20em;
+}
 .advanced{
 
     text-decoration: none;

@@ -33,6 +33,30 @@ passport.deserializeUser(function(id, done) {
 
 const Provider = new mongoose.model("Provider", schemas.getProviderSchema());
 const Category = new mongoose.model("Category", schemas.getCategorySchema());
+const City = new mongoose.model("City", schemas.getCitySchema());
+const State = new mongoose.model("State", schemas.getStateSchema());
+const Country = new mongoose.model("Country", schemas.getCountrySchema());
+
+
+categories = [];
+Category.find({"name":{$ne:null}}, function(err, foundCategories){
+    if(err){
+        console.log(err);
+    }
+    else{
+        console.log("Categories found: "+foundCategories.length);
+        categories = foundCategories;
+    }
+});
+
+countries = [];
+Country.find({"name":{$ne:null}}, function(err, foundCountries){
+    if(err){console.log(err);}
+    else{
+        console.log("Countries found: "+foundCountries.length);
+        countries = foundCountries;
+    }
+});
 
 exports.getUserModel = function(){
     return User;
@@ -83,40 +107,6 @@ exports.loginUser = function(req, res){
     });
 }
 
-/*exports.loginUserFB = function(){
-    app.use(passport.initialize());
-    app.use(passport.session());
-    console.log("Authenticating user through FB Login");
-    app.get("/auth/facebook", passport.authenticate("facebook"));
-}
-
-exports.loginUserGoogle = function(){
-    console.log("Authenticating user through Google Login");
-    app.get("/auth/google",
-	passport.authenticate("google", {scope: ["profile"]}));
-}
-
-exports.authenticateUserGoogle = function(){
-    console.log("Authenticating user through Google Auth");
-    app.get("/auth/google/mosalapro", 
-	passport.authenticate("google", {failureRedirect: "/"}), function(err, res){
-		res.redirect("/secrets");
-	});
-}
-
-exports.authenticateUserFB = function(){
-    app.use(passport.initialize());
-    app.use(passport.session());
-    console.log("Authenticating user through FB Auth");
-    app.get('/auth/facebook/secrets',
-    passport.authenticate('facebook', { failureRedirect: '/login' }),
-    function(req, res) {
-        // Successful authentication, redirect home.
-        console.log("User has been successfully authenticated through FB");
-        res.redirect('/');
-    });
-}*/
-
 exports.registerProvider = function(req, res){
 
     const proCategory = Category.findOrCreate({name:req.body.category});
@@ -165,65 +155,81 @@ exports.loginProvider = function(req, res){
 }
 
 exports.showHomePage = function(req, res){
-    Category.find({"name":{$ne:null}}, function(err, foundCategories){
-        if(err){console.log(err);}
-        else{
-            console.log("Cats found: "+foundCategories.length);
-            if(req.isAuthenticated()){
-                res.render("home", {usr: req.user, cats: foundCategories});
-            }
-            else
-                res.render("home", {usr: null, cats: foundCategories});
-        }
-    });
+    
+    if(req.isAuthenticated()){
+        res.render("home", {usr: req.user, cats: categories});
+    }
+    else
+        res.render("home", {usr: null, cats: categories});
     
 }
 
 exports.showFindServicesPage = function(req, res){
 
-    Category.find({"name":{$ne:null}}, function(err, foundCategories){
-        if(err){console.log(err);}
-        else{
             
-            if(req.isAuthenticated()){
-                res.render("findServices", {usr: req.user, cats: foundCategories, map_api:process.env.GOOGLE_MAP_API});
-            }
-            else
-            res.render("findServices", {usr: null, cats: foundCategories, map_api:process.env.GOOGLE_MAP_API});
-        }
-    });
-    
+    if(req.isAuthenticated()){
+        res.render("findServices", {usr: req.user, map_api:process.env.GOOGLE_MAP_API});
+    }
+    else
+        res.render("findServices", {usr: null, map_api:process.env.GOOGLE_MAP_API});
 }
 
 exports.showAboutUsPage = function(req, res){
 
-    Category.find({"name":{$ne:null}}, function(err, foundCategories){
-        if(err){console.log(err);}
-        else{
-            
-            if(req.isAuthenticated()){
-                res.render("about_us", {usr: req.user, cats: req.cats});
-            }
-            else
-                res.render("about_us", {usr: null, cats: req.cats});
-        }
-    });
+    if(req.isAuthenticated()){
+        res.render("about_us", {usr: req.user});
+    }
+    else
+        res.render("about_us", {usr: null});
     
 }
 
 exports.showContactUsPage = function(req, res){
 
-    Category.find({"name":{$ne:null}}, function(err, foundCategories){
-        if(err){console.log(err);}
-        else{
-            if(req.isAuthenticated()){
-                res.render("contact", {usr: req.user, cats: req.cats});
-            }
-            else
-                res.render("contact", {usr: null, cats: req.cats});
+    if(req.isAuthenticated()){
+        res.render("contact", {usr: req.user});
+    }
+    else
+        res.render("contact", {usr: null});
+    
+}
+
+exports.getCities = function(country){
+    City.find({"country_name": country}, function(err, foundCities){
+        if(err){
+            console.log(err);
+        }else{
+            return foundCities;
         }
     });
-    
+}
+
+exports.getStates = function(country){
+    State.find({"country_name": country}, function(err, foundStates){
+        if(err){
+            console.log(err);
+        }else{
+            return foundStates;
+        }
+    });
+}
+
+exports.showForProPage = function(req, res){
+
+    if(req.isAuthenticated()){
+        res.render("forProfessionals", {usr: req.user});
+    }
+    else
+        res.render("forProfessionals", {usr: null});
+}
+
+exports.showServiceRequestPage = function(req, res){
+
+    if(req.isAuthenticated()){
+        // render service requests page for users
+        res.render("forProfessionals", {usr: req.user});
+        }
+        // otherwise send user to the login page 
 }
 
     const axios = require('axios');

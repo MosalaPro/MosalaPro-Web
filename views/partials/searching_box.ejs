@@ -1,4 +1,4 @@
-<div class="row d-flex justify-content-center ">
+<div class="row d-flex justify-content-center">
 
     <div class="col searching">
 
@@ -11,7 +11,7 @@
                     <div class="dropdown dropdown-search">
                         <select class="form-control search-input-s" aria-label="Select Category" name="categorySelect" style="display: inline;">
                             <option selected>Select Category</option>
-                            <% if(cats){ cats.forEach(cat=>{ %>
+                            <% if(categories){ categories.forEach(cat=>{ %>
                                 <option value="<%=cat.name %>"><%=cat.name %></option>
                               <% });} %>
                           </select>
@@ -24,17 +24,21 @@
                     
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-8">
 
-                    <input type="text" class="form-control search-input" placeholder="Enter address e.g. street, city and state or zip">
+                    <!--input type="text" class="form-control search-input" placeholder="Enter address e.g. street, city and state or zip"-->
+                    <div class="input-group">
+                        <input type="search" class="form-control search-input rounded " placeholder="Location, Zip Code or City" aria-label="Search" aria-describedby="search-addon" />
+                        <button type="button" class="btn-outline-primary search-btn">search</button>
+                      </div>
                     
                 </div>
 
-                <div class="col-md-2 ">
+                <!--div class="col-md-2 ">
 
                     <button class="button button-secondary-text btn-block">Search</button>
                     
-                </div>
+                </div-->
                 
             </div>
 

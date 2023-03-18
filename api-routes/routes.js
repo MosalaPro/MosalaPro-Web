@@ -17,6 +17,42 @@ module.exports = function(app){
         res.render("register");
     });
 
+
+    app.get("/professionals", function(req, res){
+        model.showForProPage(req, res);
+    });
+
+    app.get("/find-services", function(req, res){
+        model.showFindServicesPage(req, res);
+    });
+
+    app.get("/about-us", function(req, res){
+        model.showAboutUsPage(req, res);
+    });
+
+    app.get("/contact-us", function(req, res){
+        model.showContactUsPage(req, res);
+    });
+
+    app.get("/service-request", function(req, res){
+        model.showServiceRequestPage(req, res);
+    });
+
+    app.get("/logout", function(req, res, next ){
+        req.logout(function(err){
+            if(err){return next(err);}
+            res.redirect("/");
+        });
+    });
+
+    app.get('*', function (req, res) {
+         res.render("page_not_found", {usr: null, cats: req.cats});
+    });
+
+    app.get('/:anything/', function (req, res) {
+        res.render("page_not_found", {usr: null, cats: req.cats});
+   });
+    
     app.post("/register-user", function(req, res){
         
         const name = req.body.firstName; 
@@ -38,33 +74,6 @@ module.exports = function(app){
 
     app.post("/login-u", function(req, res){
         model.loginUser(req, res);
-    });
-
-    app.get("/professionals", function(req, res){
-        res.render("forProfessionals", {usr: null, cats: req.cats});
-    });
-
-    app.get("/find-services", function(req, res){
-        model.showFindServicesPage(req, res);
-    });
-
-    app.get("/about-us", function(req, res){
-        model.showAboutUsPage(req, res);
-    });
-
-    app.get("/contact-us", function(req, res){
-        model.showContactUsPage(req, res);
-    });
-
-    app.get("/logout", function(req, res, next ){
-        req.logout(function(err){
-            if(err){return next(err);}
-            res.redirect("/");
-        });
-    });
-
-    app.get('*', function (req, res) {
-         res.render("page_not_found", {usr: null, cats: req.cats});
     });
 
 }

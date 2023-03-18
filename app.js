@@ -39,7 +39,10 @@ const FacebookStrategy = require("passport-facebook");
 
 const findOrCreate = require("mongoose-findorcreate");
 
+
+
 const app = express();
+
 mongoose.set('strictQuery', false);
 
 app.use(express.static("public"));
@@ -167,4 +170,3 @@ require('./api-routes/routes')(app);
 app.listen(process.env.PORT || 3000, function() {
   console.log("Server successfully started online and locally on port 3000");
 });
-
