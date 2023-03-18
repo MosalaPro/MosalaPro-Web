@@ -17,13 +17,12 @@ module.exports = function(app){
         res.render("register");
     });
 
-
     app.get("/professionals", function(req, res){
         model.showForProPage(req, res);
     });
 
     app.get("/find-services", function(req, res){
-        model.showFindServicesPage(req, res);
+        model.showFindProfessionalsPage(req, res);
     });
 
     app.get("/about-us", function(req, res){

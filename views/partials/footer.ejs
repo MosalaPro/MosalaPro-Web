@@ -102,40 +102,54 @@
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script>
-      function _(element)
-      {
-          return document.getElementById(element);
+      function _(element){return document.getElementById(element); }
+      _('country_search').onchange = function(){
+      filename = "./data/cities/" + _('country_search').value +".json";
+      $.getJSON(filename, function(data) {
+        var items = [];
+        items.push('<option value="">City</option>');
+        $.each(data, function( key, val ) {
+              items.push('<option value="' + val.name + '">' + val.name+ '</option>');
+          });
+          _('city_search').innerHTML = items;
+       });
       }
       _('country').onchange = function(){
-      
           filename = "./data/cities/" + _('country').value +".json";
           $.getJSON(filename, function(data) {
             var items = [];
             items.push('<option value="">Select City</option>');
-            console.log("Query seems to be in");
             $.each(data, function( key, val ) {
                   items.push('<option value="' + val.name + '">' + val.name+ '</option>');
               });
 
               _('city').innerHTML = items;
           });
+      }
+      _('country_p').onchange = function(){
+          filename = "./data/cities/" + _('country_p').value +".json";
+          $.getJSON(filename, function(data) {
+            var items = [];
+            items.push('<option value="">Select City</option>');
+            $.each(data, function( key, val ) {
+                  items.push('<option value="' + val.name + '">' + val.name+ '</option>');
+              });
+
+              _('city_p').innerHTML = items;
+          });
         
       }
       _('country_').onchange = function(){
-      
       filename = "./data/cities/" + _('country_').value +".json";
       $.getJSON(filename, function(data) {
         var items = [];
         items.push('<option value="">Select City</option>');
-        console.log("Query seems to be in");
         $.each(data, function( key, val ) {
               items.push('<option value="' + val.name + '">' + val.name+ '</option>');
           });
-
           _('city_').innerHTML = items;
-      });
-    
-  }
+      });}
+      
     </script>
     <script>
 

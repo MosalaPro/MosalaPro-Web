@@ -15,31 +15,18 @@
                                 <option value="<%=cat.name %>"><%=cat.name %></option>
                               <% });} %>
                           </select>
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="#">Rural</a></li>
-                        <li><a class="dropdown-item" href="#">Urban</a></li>
-                        <li><a class="dropdown-item" href="#">All</a></li>
-                      </ul>
+                      
                     </div>
                     
                 </div>
 
                 <div class="col-md-8">
-
-                    <!--input type="text" class="form-control search-input" placeholder="Enter address e.g. street, city and state or zip"-->
                     <div class="input-group">
-                        <input type="search" class="form-control search-input rounded " placeholder="Location, Zip Code or City" aria-label="Search" aria-describedby="search-addon" />
+                        <input type="search" class="form-control search-input rounded " placeholder=" Keyword.. eg. Architect" aria-label="Search" aria-describedby="search-addon" />
                         <button type="button" class="btn-outline-primary search-btn">search</button>
                       </div>
                     
                 </div>
-
-                <!--div class="col-md-2 ">
-
-                    <button class="button button-secondary-text btn-block">Search</button>
-                    
-                </div-->
-                
             </div>
 
 
@@ -59,21 +46,28 @@
 
 <div class="col-md-4">
 
-    <input type="text" placeholder="Property ID" class="form-control">
+    <input type="text" placeholder="Price eg. $500" class="form-control">
     
 </div>
 
 
 <div class="col-md-4">
 
-    <input type="text" class="form-control" placeholder="Search by MAP">
+    <select class="form-control" id="country_search" name="country_search">
+        <option selected>Country</option>
+        <% countries.forEach(country => { %> 
+            <option name="<%= country.name %>" value="<%= country.name %>"> <%= country.name %></option>
+        <% }); %>
+    </select>
     
 </div>
  
 
  <div class="col-md-4">
 
-    <input type="text" class="form-control" placeholder="Search by Country">
+    <select class="form-control" aria-label="Select City"  style="display: inline;" id="city_search" name="city_search" >
+        <option selected>Select City</option>
+      </select>
     
 </div>
  
@@ -83,15 +77,8 @@
 </div>
 
 
-            </div>
-
-
-            
-
-
-    
+            </div>    
         </div>
-        
     </div>
     
 </div>

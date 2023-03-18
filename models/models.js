@@ -164,15 +164,15 @@ exports.showHomePage = function(req, res){
     
 }
 
-exports.showFindServicesPage = function(req, res){
+// exports.showFindServicesPage = function(req, res){
 
             
-    if(req.isAuthenticated()){
-        res.render("findServices", {usr: req.user, map_api:process.env.GOOGLE_MAP_API});
-    }
-    else
-        res.render("findServices", {usr: null, map_api:process.env.GOOGLE_MAP_API});
-}
+//     if(req.isAuthenticated()){
+//         res.render("findServices", {usr: req.user, map_api:process.env.GOOGLE_MAP_API});
+//     }
+//     else
+//         res.render("findServices", {usr: null, map_api:process.env.GOOGLE_MAP_API});
+// }
 
 exports.showAboutUsPage = function(req, res){
 
@@ -221,6 +221,13 @@ exports.showForProPage = function(req, res){
     }
     else
         res.render("forProfessionals", {usr: null});
+}
+
+exports.showFindProfessionalsPage = function(req, res){
+    if(req.isAuthenticated())
+        res.render("findprofessionals", {usr: req.user});
+    else
+        res.render("findprofessionals", {usr: null});
 }
 
 exports.showServiceRequestPage = function(req, res){
