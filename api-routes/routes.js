@@ -14,8 +14,8 @@ module.exports = function(app){
         model.showHomePage(req, res);
     });
 
-    app.get("/login", function(req, res){
-        res.render("login", {usr: null});
+    app.post("/login-u", function(req, res){
+        model.loginUser(req, res);
     });
     
     app.get("/register", function(req, res){
@@ -97,9 +97,7 @@ module.exports = function(app){
         model.registerProvider(req, res);
     });
 
-    app.post("/login-u", function(req, res){
-        model.loginUser(req, res);
-    });
+    
 
 }
 
