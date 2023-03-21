@@ -9,7 +9,7 @@
           </li>
           <li class="nav-item" role="presentation">
             <a class="nav-link" id="tab-provider" data-toggle="pill" href="#pills-register" role="tab"
-              aria-controls="pills-register" aria-selected="false">SERVICE PROVIDER</a>
+              aria-controls="pills-register" aria-selected="false">PROVIDER</a>
           </li>
         </ul>
         <!-- Pills navs -->
@@ -20,24 +20,23 @@
             
               <div class="text-center ">
                 <h5 class="title text text-center">Sign Up as User</h5> 
-                <button type="button" class="btn  btn-floating mx-1">
-                  <a class="fab fa-facebook-f" href="/auth/facebook"></a>
-                </button>
+                <span class="mb-2">With </span>
+                </div>
+              <div class="text-center">
+                <a class="btn btn-primary ml-1" style="background-color: #3b5998;" href="/auth/facebook" role="button">
+                  <b class="fab fa-facebook me-2 px-1"> </b></a>
+                
+                <a class="btn btn-primary ml-1" style="background-color: #7e2b12;" href="/auth/google" role="button">
+                  <b class="fab fa-google me-2"></b> </a>
         
-                <button type="button" class="btn  btn-floating mx-1">
-                  <a class="fab fa-google"  href="/auth/google"></a>
-                </button>
-        
-                <button type="button" class="btn btn-floating mx-1">
-                  <a class="fab fa-twitter"></a>
-                </button>
-        
-                <button type="button" class="btn  btn-floating mx-1">
-                  <a class="fab fa-github"></a>
-                </button>
+                <a class="btn btn-primary ml-1" style="background-color: #55acee;" href="#!" role="button">
+                  <b class="fab fa-twitter me-2"></b> </a>
+
+                <a class="btn btn-primary ml-1" style="background-color: #0082ca;" href="#!" role="button">
+                  <b class="fa fa-linkedin me-2"></b> </a>
               </div>
 
-                <p class="big text text-center">Or fill in information below.</p>
+                <p class="text-center mb-4">Or fill in information below.</p>
 
             <form action="/register-user" method="post">
               <div class="row">
@@ -81,7 +80,7 @@
                   <div class="col-md-6">
                        <!-- Country input -->
                        <select name="country" id="country" class="form-control" aria-label="Select Country" style="display: inline;" required>
-                          <option selected>Select Country</option>
+                          <option >Select Country</option>
                           <% countries.forEach(country => { %> 
                             <option value="<%= country.name %>"> <%= country.name %></option>
                             <% }); %>
@@ -90,25 +89,11 @@
                   <div class="col-md-6">
                       <!-- City input -->
                       <select class="form-control" aria-label="Select City"  style="display: inline;" id="city" name="city" required>
-                          <option selected>Select City</option>
+                          <option>Select City</option>
                         </select>
                   </div>
               </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <!-- First name input -->
-                        <div class="form-outline  ">
-                            <input type="text" id="registerState" class="form-control" placeholder="State" name="state"/>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <!-- Last name input -->
-                        <div class="form-outline  ">
-                            <input type="text" id="registerZip" class="form-control" placeholder="Zip Code" name="zip" />
-                        </div>
-                    </div>
-                </div>
-
+                
                 <div class="row">
                     <div class="col-md-6">
                         <!-- Password input -->
@@ -139,9 +124,21 @@
                     <a href="#!">Read terms and conditions</a>
                     </div>
                 </div>
+                <div class="row  ">
+                  <div class="col-lg-2 col-md-3 col-sm-0">
+                  </div>
+                  <div class="col-lg-8 col-md-6 col-sm-12">
+                    <div class=" justify-content-center">
+                      <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" ></div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-3 col-sm-0">
+                  </div>
+                </div>
+                  
                 <div class="row">
-                    <div class="col">
-                        <div class="mb-3 justify-content-center">
+                    <div class="col justify-content-center">
+                        <div class="mb-1 ">
                                 <!-- Submit button -->
                                 <button type="submit" class="btn button-primary btn-block mb-4" name="register-u">Register</button>
                         </div>
@@ -151,25 +148,24 @@
           </div>
           <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register-p">
             
-              <div class="text-center mb-3">
-                <h5 class="title text text-center">Sign Up as Service Provider</h5> 
-                <button type="button" class="btn btn-floating mx-1">
-                  <a class="fab fa-facebook-f" href="/auth/facebook"></a>
-                </button>
-        
-                <button type="button" class="btn btn-floating mx-1">
-                  <a class="fab fa-google"  href="/auth/google"></a>
-                </button>
-        
-                <button type="button" class="btn btn-floating mx-1">
-                  <a class="fab fa-twitter"></a>
-                </button>
-        
-                <button type="button" class="btn  btn-floating mx-1">
-                  <a class="fab fa-github"></a>
-                </button>
+            <div class="text-center ">
+              <h5 class="title text text-center">Sign Up as Provider</h5> 
+              <span class="mb-2">With </span>
               </div>
-              <p class="big text text-center">Or fill in information below.</p>
+            <div class="text-center">
+              <a class="btn btn-primary ml-1" style="background-color: #3b5998;" href="/auth/facebook" role="button">
+                <b class="fab fa-facebook me-2 px-1"> </b></a>
+              
+              <a class="btn btn-primary ml-1" style="background-color: #7e2b12;" href="/auth/google" role="button">
+                <b class="fab fa-google me-2"></b> </a>
+      
+              <a class="btn btn-primary ml-1" style="background-color: #55acee;" href="#!" role="button">
+                <b class="fab fa-twitter me-2"></b> </a>
+
+              <a class="btn btn-primary ml-1" style="background-color: #0082ca;" href="#!" role="button">
+                <b class="fa fa-linkedin me-2"></b> </a>
+            </div>
+            <p class="text-center mb-4">Or fill in information below.</p>
             
             <form  action="/register-pro" method="post">
               <!-- Company Name input -->
@@ -240,20 +236,6 @@
                       </select>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <!-- First name input -->
-                    <div class="form-outline  ">
-                        <input type="text" id="pRegisterState" class="form-control" placeholder="State" name="pState"/>
-                      </div>
-                </div>
-                <div class="col-md-6">
-                    <!-- Last name input -->
-                    <div class="form-outline  ">
-                        <input type="text" id="pRegisterZip" class="form-control" placeholder="Zip Code" name="pZip" />
-                    </div>
-                </div>
-              </div>
 
             <div class="row">
                 <div class="col-md-6">
@@ -310,7 +292,18 @@
                 </div>
               </div>
         
-             
+              <div class="row  ">
+                <div class="col-lg-2 col-md-3 col-sm-0">
+                </div>
+                <div class="col-lg-8 col-md-6 col-sm-12">
+                  <div class=" justify-content-center">
+                    <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" ></div>
+                  </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-0">
+                </div>
+              </div>
+
               <div class="row">
                 <div class="col">
                     <!-- Submit button -->

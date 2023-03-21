@@ -1,32 +1,68 @@
 <%- include('partials/header') %>
-<hr class="hr-page-sep" />
-<div class="container justify-content-center">
-  <h1 class="text-center">Enter Verification Code</h1>
+<section class="section verify-section">
+  <div class="container ">
+    <h3 class="text-center text-light">Login </h3>
+      
+    <div class="modal-content">
+      
+      <div class="tab-content ">
+        <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login-u">
 
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="card">
-        <div class="card-body">
-
-          <!-- Makes POST request to /login route -->
-          <form action="/verify-email" method="POST">
-            <div class="form-group">
-              <label for="code">Code</label>
-              <input type="text" class="form-control" name="code">
+          <div class="text-center ">
+            <h5 class="title text text-center">A verification link has been sent to your email, please verify your email and log in.</h5> 
+              <form action="/login-u" method="post">
+          
+              <div class="row">
+                <div class="col-md-6">
+                    <!-- Email input -->
+                    <div class="form-outline ">
+                        <input type="email" id="loginEmail" class="form-control" placeholder="Email" name="username"  autocomplete="on" required/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Password input -->
+                   <div class="form-outline">
+                       <input type="password" id="loginPassword" class="form-control" placeholder="Password" name="password" autocomplete="on"  required/>
+                   </div>
+                </div>
             </div>
-            
-            <button type="submit" class="btn button-primary btn-block" >Submit</button>
-
-            
+      
+            <div class="row">
+              <div class="col">
+                  <div class="mb-3 justify-content-center">
+                          <!-- Submit button -->
+                          <button type="submit" class="btn button-primary btn-block mb-4" name="login-u">Login</button>
+                  </div>
+              </div>
+             </div>
           </form>
-
         </div>
+       
+    
+    </div>
+  </div>
+</div>
+    
       </div>
-    </div>
+</section>
+ <!--Google recaptcha-->
+ <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6"></script>
+ <script>
+ grecaptcha.enterprise.ready(function() {
+     grecaptcha.enterprise.execute('6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6', {action: 'login'}).then(function(token) {
+       
+     });
+ });
+ </script>
 
-    </div>
+<script>
 
-    </div>
-
+    $('form').submit(function(event) {
+    if ( $('#g-recaptcha-response').val() === '' ) {
+        event.preventDefault();
+        alert('Please check the recaptcha');
+    }
+});
+</script>
 
     <%- include('partials/footer') %>

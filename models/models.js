@@ -7,18 +7,14 @@
 **********************************************************************************************************/
 
 require("dotenv").config();
-const schemas = require(__dirname+"/schemas/schemas.js");
+const {categorySchema, countrySchema, citySchema, stateSchema, 
+    locationSchema, tokenSchema, userSchema, providerSchema } = require(__dirname+"/schemas/schemas.js");
+
 const mongoose = require("mongoose");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const FacebookStrategy = require("passport-facebook");
-const express = require("express");
 mongoose.set('strictQuery', false);
-const bodyParser = require("body-parser");
-const session = require("express-session");
-const root = require('path').resolve('./');
 const passport = require("passport");
 
-const User = mongoose.model("User", schemas.getUserSchema());
+const User = mongoose.model("User", userSchema);
 passport.use(User.createStrategy());
 
 passport.serializeUser(function(user, done) {
@@ -31,12 +27,13 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-const Provider = new mongoose.model("Provider", schemas.getProviderSchema());
-const Category = new mongoose.model("Category", schemas.getCategorySchema());
-const City = new mongoose.model("City", schemas.getCitySchema());
-const State = new mongoose.model("State", schemas.getStateSchema());
-const Country = new mongoose.model("Country", schemas.getCountrySchema());
-
+const Provider = new mongoose.model("Provider", providerSchema);
+const Category = new mongoose.model("Category", categorySchema);
+const City = new mongoose.model("City", citySchema);
+const State = new mongoose.model("State", stateSchema);
+const Country = new mongoose.model("Country", countrySchema);
+const Location = new mongoose.model("Location", locationSchema);
+const Token = new mongoose.model("Token", tokenSchema);
 
 categories = [];
 Category.find({"name":{$ne:null}}, function(err, foundCategories){
@@ -61,32 +58,20 @@ Country.find({"name":{$ne:null}}, function(err, foundCountries){
 exports.getUserModel = function(){
     return User;
 }
-
-exports.registerUser = function(req, res){
-
-    const newUser = new User({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        phone: req.body.phone,
-        address: req.body.address,
-        username: req.body.email,
-        createdAt: new Date(),
-        lastUpdate: new Date()
-      })
-
-    User.register(newUser, req.body.password, function(err, user){
-        if (err) {
-          console.log(err);
-          // TODO: activate error message on modal
-
-        } else {
-          passport.authenticate("local")(req, res, function(){
-            console.log("User has been successfully registered");
-            res.redirect("/");
-          });
-        }
-    });
+exports.getProviderModel = function(){
+    return Provider;
+}
+exports.getCountryModel = function(){
+    return Country;
+}
+exports.getLocationModel = function(){
+    return Location;
+}
+exports.getCityModel = function(){
+    return City;
+}
+exports.getTokenModel = function(){
+    return Token;
 }
 
 exports.loginUser = function(req, res){
@@ -100,7 +85,15 @@ exports.loginUser = function(req, res){
             // TODO: activate error message on modal
         } else {
             passport.authenticate("local")(req, res, function(){
-                console.log("User has been successfully logged in");
+                if(req.user.verified === true){
+                    console.log("User has been successfully logged in");
+                    
+                }else{
+                    console.log("User has not been verified");
+                    req.logout(function(err){
+                        if(err){return next(err);}
+                    });
+                }
                 res.redirect("/");
             });
         }
@@ -147,7 +140,11 @@ exports.loginProvider = function(req, res){
             // TODO: activate error message on modal
         } else {
             passport.authenticate("local")(req, res, function(){
-                console.log("Provider has been successfully logged in");
+                if(req.user.verified === true)
+                    console.log("Provider has been successfully logged in");
+                else    
+                    // return message for modal
+                    console.log("User has not been verified");
                 res.redirect("/");
             });
         }
@@ -164,16 +161,106 @@ exports.showHomePage = function(req, res){
     
 }
 
-// exports.showFindServicesPage = function(req, res){
+exports.registerUser = async function(req, res){
 
-            
-//     if(req.isAuthenticated()){
-//         res.render("findServices", {usr: req.user, map_api:process.env.GOOGLE_MAP_API});
-//     }
-//     else
-//         res.render("findServices", {usr: null, map_api:process.env.GOOGLE_MAP_API});
-// }
+    try{
+        console.log("User email that always exists: "+req.body.email);
+        let user = await User.findOne({email: req.body.email}).exec();
+        if(user){
+            console.log("User that's always there: "+user +" --");
+            return res.status(400).send("User with given email already exist!"); 
+        }else{ 
+            console.log("Email is solid, none found.");
+        }
 
+        const code = generateRandomString(10);
+        const newUser = new User({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            phone: req.body.phone,
+            address: req.body.address,
+            username: req.body.email,
+            verified: false,
+            country: req.body.country,
+            city: req.body.city,
+            createdAt: new Date(),
+            lastUpdate: new Date()
+        });
+
+        await User.register(newUser, req.body.password, function(err, u){
+            if (err) {
+              console.log("User Registration error: "+err);
+              // TODO: activate error message on modal
+    
+            } else 
+                console.log("User has been successfully registered.");
+                //res.redirect("/");
+            });
+
+    
+        let token = await new Token({
+          userId: newUser._id,
+          token: require('crypto').randomBytes(32).toString('hex'),
+        }).save();
+
+        const name = req.body.firstName; 
+        const email = req.body.email;
+        const link = `${process.env.BASE_URL}/user/verify/${newUser._id}/${token.token}`;
+        
+        const subject = "Verify Your MosalaPro Email Address";
+        const message = "Hi "+name+",\n\nThank you for signing up with MosalaPro. We appreciate your business."+
+        "\nPlease click on this link to verify your MosalaPro Account:\n\n"
+        +link +"\n\nThank you,\nMosalaPro TM";
+        
+            //implement your spam protection or checks.
+        console.log("An Email sent to your account please verify");
+        sendEmail(name, email, subject, message, req, res, code);
+        res.render("emailVerification", {usr: null, cats: categories});
+    }catch(error){
+        res.status(400).send("An error occured : "+error);
+    }
+}
+
+exports.verifyEmail = async function(req, res){
+
+    try {
+        const user = await User.findOne({ _id: req.params.id }).exec();
+        if (!user) return res.status(400).send("User : Invalid link");
+    
+        const token = await Token.findOne({
+          userId: user._id,
+          token: req.params.token,
+        }).exec();
+        if (!token) return res.status(400).send("Token : Invalid link");
+    
+        await User.updateOne({ _id: user._id}, {$set: {verified: true}} );
+        await Token.findByIdAndRemove(token._id);
+    
+        //res.send("email verified sucessfully");
+        res.render("emailVerified", {usr: null, cats: categories});
+      } catch (error) {
+        res.status(400).send("An error occured");
+    }
+
+    // console.log("User email from req: "+req.body.mail);
+    // const user = await User.findOne({ email: req.body.mail }).exec();
+    // console.log("User: "+user);
+    // if (!user) return res.status(400).send("User with given email not found!");
+    // console.log("UserId: "+user._id);
+    // const foundToken = await Token.findOne({ userId: user._id }).exec();
+    // if (!foundToken) return res.status(400).send("Token for given email not found!");
+    // console.log("Token: "+foundToken.token+" - code: "+req.body.emailCode);
+    // if(foundToken.token === req.body.emailCode){
+    //     //Normally will render to user profile
+    //     await User.updateOne({ _id: user._id}, {$set: {verified: true}} );
+    //     console.log("User email has been verified!");
+    //     res.redirect("/");
+        
+    // }else{
+    //     console.log("Codes don't match");
+    // }
+}
 exports.showAboutUsPage = function(req, res){
 
     if(req.isAuthenticated()){
@@ -239,41 +326,41 @@ exports.showServiceRequestPage = function(req, res){
         // otherwise send user to the login page 
 }
 
-    const axios = require('axios');
+const axios = require('axios');
 
-    exports.sendEmail = async function (name, email, subject, message, req, res) {
-        const newUser = new User({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            username: req.body.email,
-            address: req.body.address,
-            createdAt: new Date(),
-            lastUpdate: new Date()
-        });
-        const data = JSON.stringify({
-            "Messages": [{
-            "From": {"Email": process.env.EMAIL_SENDER, "Name": "MosalaPro"},
-            "To": [{"Email": email, "Name": name}],
-            "Subject": subject,
-            "TextPart": message
-            }]
-        });
+global.sendEmail = async function sendEmail(name, email, subject, message, req, res) {
+    
+    const data = JSON.stringify({
+        "Messages": [{
+        "From": {"Email": process.env.EMAIL_SENDER, "Name": "MosalaPro"},
+        "To": [{"Email": email, "Name": name}],
+        "Subject": subject,
+        "TextPart": message
+        }]
+    });
 
-        const config = {
-            method: 'post',
-            url: 'https://api.mailjet.com/v3.1/send',
-            data: data,
-            headers: {'Content-Type': 'application/json'},
-            auth: {username: process.env.MAILJET_API_KEY, password: process.env.MAILJET_API_SECRET},
-        };
-        res.render("emailVerification", {usr: newUser, cats: req.cats});
-        return axios(config)
-            .then(function (response) {
+    const config = {
+        method: 'post',
+        url: 'https://api.mailjet.com/v3.1/send',
+        data: data,
+        headers: {'Content-Type': 'application/json'},
+        auth: {username: process.env.MAILJET_API_KEY, password: process.env.MAILJET_API_SECRET},
+    };
+    
+    return axios(config)
+        .then(function (response) {
             console.log(JSON.stringify(response.data));
-            })
-            .catch(function (error) {
-            console.log(error);
-            });
+        }).catch(function (error) {console.log(error);});
+}
 
-    }
+const generateRandomString = (myLength) => {
+    const chars =
+      "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
+    const randomArray = Array.from(
+      { length: myLength },
+      (v, k) => chars[Math.floor(Math.random() * chars.length)]
+    );
+  
+    const randomString = randomArray.join("");
+    return randomString;
+  };

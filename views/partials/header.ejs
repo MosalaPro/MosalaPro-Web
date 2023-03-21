@@ -43,30 +43,36 @@
             <div class="rd-navbar-aside-outer rd-navbar-collapse">
               <div class="rd-navbar-aside">
                 <div class="rd-navbar-info">
-                  The African Service Finder
+                  Your African Service Finder
+                  <!--div class="float-right">
+                    <a href="https://www.facebook.com/people/Mosalapro/100064060309267/" target="_blank" class="fab fa-facebook ml-3"></a>
+                    <a  href="https://twitter.com/MosalaPro" target="_blank" class="fab fa-twitter ml-3"> </a>
+                    <a href="https://www.linkedin.com/company/mosalapro" target="_blank" class="fa fa-linkedin ml-3"> </a>
+                  </div-->
                 </div>
-
-                <% if(usr){ %>
-                  <ul class="list-lined">
-                    <li>
-                      <div class="btn-group open ">
-                        <a class="btn" data-toggle="dropdown" href="#"><b class="fa fa-user fa-fw mr-1"></b> Hi, <%=usr.firstName %>
-                          <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
-                          <ul class="dropdown-menu ul-none">
-                            <li><a href="#"><b class="fa fa-user-circle mr-1"></b>  Profil</a></li>
-                            <li><a href="#"><b class="fa fa-tasks mr-1"></b>  My Requests</a></li>
-                            <li><a href="/logout"><b class="fa fa-sign-out mr-1"></b>  Logout </a></li>
-                          </ul>
-                        
-                      </div>
-                    </li>
-                  </ul>
-                  <% } else { %>
+                
                     <ul class="list-lined">
-                      <li><a href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Log in</a></li>
-                      <li><a href="#regModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Create an account</a></li>
-                    </ul>
-                  <% } %>
+                    <% if(usr){ %>
+                      <li>
+                        <div class="btn-group open ml-2">
+                          <a class="btn" data-toggle="dropdown" href="#"><b class="fa fa-user fa-fw mr-1"></b> Hi, <%=usr.firstName %>
+                            <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
+                            <ul class="dropdown-menu ul-none">
+                              <li><a href="#"><b class="fa fa-user-circle mr-1"></b>  Profil</a></li>
+                              <li><a href="#"><b class="fa fa-tasks mr-1"></b>  My Requests</a></li>
+                              <li><a href="/logout"><b class="fa fa-sign-out mr-1"></b>  Logout </a></li>
+                            </ul>
+                          
+                        </div>
+                      </li>
+                    <% } else { %>
+                      <li class="ml-2"><a href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp"> Log in</a></li>
+                      <li class="ml-2"><a href="#regModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Create an account</a></li>
+                      <% } %>
+                  </ul>
+                  
+                    
+                  
 
               </div>
             </div>

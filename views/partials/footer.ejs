@@ -88,16 +88,24 @@
                 </div>
               </div>
             </div>
+              
           </div>
-        </div>
+        
         <div class="footer-inner-2">
           <div class="container">
+            <div class="text-center mt-4"> We are proud to be the leader of African Service Finder. <br>Follow us on social media<br>
+              <a href="https://www.facebook.com/people/Mosalapro/100064060309267/" class="fab fa-facebook ml-3"></a>
+              <a  href="https://twitter.com/MosalaPro" class="fab fa-twitter ml-3"> </a>
+              <a href="https://www.linkedin.com/company/mosalapro" class="fa fa-linkedin ml-3"> </a>
+          </div>
             <p class="rights text-center"><span>&copy;&nbsp;</span><span class="copyright-year"></span>. All Rights Reserved. Mosalapro TM</p>
           </div>
         </div>
+      </div>
       </footer>
     </div>
     <div class="snackbars" id="form-output-global"></div>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.min.js"></script>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
@@ -126,6 +134,7 @@
               _('city').innerHTML = items;
           });
       }
+
       _('country_p').onchange = function(){
           filename = "./data/cities/" + _('country_p').value +".json";
           $.getJSON(filename, function(data) {
@@ -139,20 +148,11 @@
           });
         
       }
-      _('country_').onchange = function(){
-      filename = "./data/cities/" + _('country_').value +".json";
-      $.getJSON(filename, function(data) {
-        var items = [];
-        items.push('<option value="">Select City</option>');
-        $.each(data, function( key, val ) {
-              items.push('<option value="' + val.name + '">' + val.name+ '</option>');
-          });
-          _('city_').innerHTML = items;
-      });}
+      
+      
       
     </script>
     <script>
-
       
 addEventListener("DOMContentLoaded", (event) => {
   const password = document.getElementById("password-input");
