@@ -129,7 +129,7 @@
                   </div>
                   <div class="col-lg-8 col-md-6 col-sm-12">
                     <div class=" justify-content-center">
-                      <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" ></div>
+                      <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" data-callback="enableUserRegBtn"></div>
                     </div>
                   </div>
                   <div class="col-lg-2 col-md-3 col-sm-0">
@@ -137,12 +137,14 @@
                 </div>
                   
                 <div class="row">
-                    <div class="col justify-content-center">
+                  <div class="col-2"></div>
+                    <div class="col-8">
                         <div class="mb-1 ">
                                 <!-- Submit button -->
-                                <button type="submit" class="btn button-primary btn-block mb-4" name="register-u">Register</button>
+                                <input type="submit" class="btn button-primary btn-block mb-4" name="register-u" id="register-u" disabled="disabled" value="Register">
                         </div>
                     </div>
+                    <div class="col-2"></div>
                 </div>
             </form>
           </div>
@@ -297,7 +299,7 @@
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12">
                   <div class=" justify-content-center">
-                    <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" ></div>
+                    <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" data-callback="enableProBtn"></div>
                   </div>
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-0">
@@ -305,10 +307,12 @@
               </div>
 
               <div class="row">
-                <div class="col">
+                <div class="col-2"></div>
+                <div class="col-8">
                     <!-- Submit button -->
-                    <button type="submit" class="btn button-primary btn-block mb-4" name="register-p">Register</button>
+                    <input type="submit" class="btn button-primary btn-block mb-4" name="register-p" value="Register" disabled="disabled">
                 </div>
+                <div class="col-2"></div>
               </div>
             </form>
           </div>
@@ -317,5 +321,12 @@
       </div>
     </div>
   </div>
-
+<script>
+  function enableUserRegBtn(){
+    document.getElementById("register-u").disabled = false;
+ }
+ function enableProRegBtn(){
+    document.getElementById("register-p").disabled = false;
+ }
+</script>
   
