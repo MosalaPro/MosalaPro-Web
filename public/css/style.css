@@ -661,7 +661,9 @@ a[href*='tel'], a[href*='mailto'] {
 	min-width: 152px;
 	text-align: center;
 }
-
+.pro-modal{
+	margin-top: 3em;
+}
 @media (min-width: 992px) {
 	.box-image-simple {
 		text-align: left;

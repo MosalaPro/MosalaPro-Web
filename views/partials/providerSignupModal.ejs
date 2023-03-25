@@ -1,10 +1,10 @@
 
-<div class="modal fade" id="proSignModalCta" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade pro-modal" id="proSignModalCta" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
 
     <div id="pills-register">
-        <div class="text-center mb-3">
+        <div class="text-center mb-2">
           <h5 class="title text text-center">Sign Up as Service Provider</h5> 
           <button type="button" class="btn btn-floating mx-1">
             <a class="fab fa-facebook-f" href="/auth/facebook"></a>
@@ -22,7 +22,7 @@
             <a class="fab fa-github"></a>
           </button>
         </div>
-        <p class="big text text-center">Or fill in information below.</p>
+        <p class="text-center mb-4">Or fill in information below.</p>
       
       <form  action="/register-pro" method="post">
         <!-- Company Name input -->
@@ -41,13 +41,13 @@
             </div>
           </div>  
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                 <!-- First name input -->
                 <div class="form-outline  ">
                     <input type="text" id="pRegisterName" class="form-control" placeholder="First Name" name="pFirstName"  required/>
                   </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                 <!-- Last name input -->
                 <div class="form-outline  ">
                     <input type="text" id="pRegisterLastname" class="form-control" placeholder="Last Name" name="pLastName"  required/>
@@ -56,13 +56,13 @@
           </div>
          
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                 <!-- Email input -->
                 <div class="form-outline ">
                     <input type="email" id="pRegisterEmail" class="form-control" placeholder="Email" name="pEmail"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required/>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                  <!-- Phone input -->
                 <div class="form-outline ">
                     <input type="number" id="pRegisterPhone" class="form-control" placeholder="Phone Number" name="pPhone" pattern="/((\+*)((0[ -]*)*|(*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/" required/>
@@ -79,7 +79,7 @@
         </div>
         
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                  <!-- Country input -->
                  <select name="country_p" id="country_p" class="form-control" aria-label="Select Country" style="display: inline;" required>
                     <option selected>Select Country</option>
@@ -88,7 +88,7 @@
                       <% }); %>
                   </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                 <!-- City input -->
                 <select class="form-control" aria-label="Select City"  style="display: inline;" id="city_p" name="city_p" required>
                     <option selected>Select City</option>
@@ -97,7 +97,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                  <!-- Password input -->
                     <div class="form-outline">
                         <input type="password" id="password-input" class="form-control" placeholder="Password" name="password" aria-label="password" aria-describedby="password" autocomplete="off"required/>
@@ -105,7 +105,7 @@
                     <div class="valid-feedback">Good</div>
                     <div class="invalid-feedback">Weak</div>
             </div>
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                 <!-- Conifrm Password input -->
                 <div class="form-outline  ">
                     <input type="password" id="password-input-conf" class="form-control" placeholder="Confirm Password" autocomplete="off" required/>
@@ -156,18 +156,19 @@
             </div>
             <div class="col-lg-8 col-md-6 col-sm-12">
               <div class=" justify-content-center">
-                <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" ></div>
+                <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" data-callback="enableProBtn"></div>
               </div>
             </div>
             <div class="col-lg-2 col-md-3 col-sm-0">
             </div>
           </div>
-
           <div class="row">
-            <div class="col">
-                <!-- Submit button -->
-                <button type="submit" class="btn button-primary btn-block mb-4" name="register-p">Register</button>
-            </div>
+          <div class="col-2"></div>
+          <div class="col-8">
+              <!-- Submit button -->
+              <input type="submit" class="btn button-primary btn-block mb-4" name="register-p" value="Register" disabled="disabled">
+          </div>
+          <div class="col-2"></div>
           </div>
         </form>
     </div>
@@ -187,4 +188,7 @@
           });
           _('city_').innerHTML = items;
       });}
+    function enableProRegBtn(){
+    document.getElementById("register-p").disabled = false;
+  }
 </script>
