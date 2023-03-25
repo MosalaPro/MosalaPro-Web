@@ -21,6 +21,9 @@ module.exports = function(app){
     app.get("/register", function(req, res){
         res.render("register");
     });
+    app.get("/profile", function(req, res){
+        res.render("professionalProfile", {usr: req.user, cats: categories});
+    });
     app.post("/register-user", async (req, res) => {
         model.registerUser(req, res);
     });
@@ -31,6 +34,10 @@ module.exports = function(app){
 
     app.get("/find-services", function(req, res){
         model.showFindProfessionalsPage(req, res);
+    });
+
+    app.get("/find-services-md", function(req, res){
+        model.showFindProfessionalsMdPage(req, res);
     });
 
     app.get("/about-us", function(req, res){

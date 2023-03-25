@@ -317,6 +317,13 @@ exports.showFindProfessionalsPage = function(req, res){
         res.render("findprofessionals", {usr: null});
 }
 
+exports.showFindProfessionalsMdPage = function(req, res){
+    if(req.isAuthenticated())
+        res.render("findProMd", {usr: req.user});
+    else
+        res.render("findProMd", {usr: null});
+}
+
 exports.showServiceRequestPage = function(req, res){
 
     if(req.isAuthenticated()){
