@@ -58,7 +58,11 @@
                           <a class="btn" data-toggle="dropdown" href="#"><b class="fa fa-user fa-fw mr-1"></b> Hi, <%=usr.firstName %>
                             <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
                             <ul class="dropdown-menu ul-none">
-                              <li><a href="/profile"><b class="fa fa-user-circle mr-1"></b>  Profil</a></li>
+                              <% if(usr.categoryId){ %>
+                                <li><a href="/p-profile"><b class="fa fa-user-circle mr-1"></b>  Profil</a></li>
+                              <%}else{%>
+                                <li><a href="/profile"><b class="fa fa-user-circle mr-1"></b>  Profil</a></li>
+                              <%}%>
                               <li><a href="#"><b class="fa fa-tasks mr-1"></b>  My Requests</a></li>
                               <li><a href="/logout"><b class="fa fa-sign-out mr-1"></b>  Logout </a></li>
                             </ul>
@@ -108,7 +112,6 @@
         </div>
       </header>
       
-
 
 <!--TODO: Check if user not logged in, then include-->
 <%- include('loginModal') %>

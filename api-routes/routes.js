@@ -22,17 +22,30 @@ module.exports = function(app){
         res.render("register");
     });
     app.get("/profile", function(req, res){
+        res.render("userProfile", {usr: req.user, cats: categories});
+    });
+    app.get("/p-profile", function(req, res){
         res.render("professionalProfile", {usr: req.user, cats: categories});
     });
     app.post("/register-pro", function(req, res){
         model.registerProvider(req, res);
     });
+    app.get("/register-pro", function(req, res){
+        model.renderEmailVer(req, res, "/verify-p-email");
+    });
+    app.post('/verify-p-email', function(req, res) {
+        model.verifyProviderEmail(req, res);
+    });
     app.post("/register-user", async (req, res) => {
         model.registerUser(req, res);
     });
     app.get("/register-user", function(req, res){
-        model.renderEmailVer(req, res);
+        model.renderEmailVer(req, res, "/verify-u-email");
     });
+    app.post('/verify-u-email', function(req, res) {
+        model.verifyUserEmail(req, res);
+    });
+    
     app.get("/resendCode/:id", function(req, res){
         model.resendCode(req, res);
     });
@@ -76,9 +89,7 @@ module.exports = function(app){
     app.get('*', function (req, res) {
          res.render("page_not_found", {usr: null, cats: categories});
     });
-    app.post('/verify-email', function(req, res) {
-        model.verifyEmail(req, res);
-    });
+   
     
     app.use(function(req, res, next) {
         res.render("page_not_found", {usr: null, cats: categories});

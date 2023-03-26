@@ -101,33 +101,71 @@ exports.loginUser = function(req, res){
     });
 }
 
-exports.registerProvider = function(req, res){
+exports.registerProvider = async function(req, res){
 
-    const proCategory = Category.findOrCreate({name:req.body.category});
-    const newProvider = new Provider({
-        firstName: _.capitalize(req.body.firstName),
-        lastName: _.capitalize(req.body.lastName),
-        email: req.body.email,
-        phone: req.body.phone,
-        address: req.body.address,
-        username: req.body.email,
-        category: proCategory,
+    const category = await Category.findOne({name:req.body.pRegisterCategory}).exec();
+    if(!category) console.log("Provider category not found!");
+    else console.log("Category found: "+category);
+    const newProvider = await new Provider({
+        categoryId : category._id,
+        firstName: _.capitalize(req.body.pFirstName),
+        lastName: _.capitalize(req.body.pLastName),
+        email: req.body.pEmail,
+        phone: req.body.pPhone,
+        address: req.body.pAddress,
+        username: req.body.pEmail,
+        country: req.body.country_p,
+        city: req.body.city_p,
         createdAt: new Date(),
         lastUpdate: new Date()
-      })
+      });
 
-    User.register(newProvider, req.body.password, function(err, user){
-        if (err) {
-          console.log(err);
-          // TODO: activate error message on modal
+      console.log("Provider instance created..");
 
-        } else {
-          passport.authenticate("local")(req, res, function(){
-            console.log("Provider has been successfully registered");
-            res.redirect("/");
-          });
+      try{
+        console.log("Checking if provider email exists: "+req.body.pEmail);
+        let provider = await Provider.findOne({email: req.body.email}).exec();
+        if(provider){
+            console.log("Provider exists already: "+provider +" --");
+            //return res.status(400).send("User with given email already exist!");
+            const msg = "Provider with given email already exists!"; 
+            res.render("register", {usr: newUser, cats: categories, msg: msg});
+        }else{ 
+            console.log("Email is solid, none found.");
         }
-    });
+
+        
+        await Provider.register(newProvider, req.body.pPassword, function(err, u){
+            if (err) {
+              console.log("Provider Registration error: "+err);
+              // TODO: activate error message on modal
+    
+            } else 
+                console.log("Provider has been successfully registered.");
+                //res.redirect("/");
+            });
+
+        const code = generateDigit(6);
+        let token = await new Token({
+          userId: newProvider._id,
+          token: code,
+        }).save();
+        const formAction = "/verify-p-email";
+        const name = req.body.pFirstName; 
+        const email = req.body.pEmail;
+        //const link = `${process.env.BASE_URL}/user/verify/${newUser._id}/${token.token}`;
+        
+        const subject = "Verify Your MosalaPro Email Address";
+        const message = "Hi "+name+",\n\nThank you for signing up with MosalaPro as a service provider. We appreciate your business."+
+        "\nPlease use the code below to verify your MosalaPro Account:\n\n"
+        +code +"\n\nThank you,\nMosalaPro TM";
+        
+        console.log("An Email sent to your account please verify");
+        sendEmail(name, email, subject, message);
+        res.render("emailVerification", {usr: null, cats: categories, userId: newProvider._id, form_action:formAction });
+    }catch(error){
+        res.status(400).send("An error occured (Provider Reg) : "+error);
+    }
 }
 
 exports.loginProvider = function(req, res){
@@ -185,7 +223,9 @@ exports.registerUser = async function(req, res){
             console.log("User that's always there: "+user +" --");
             //return res.status(400).send("User with given email already exist!");
             const msg = "User with given email already exist!"; 
-            res.render("register", {usr: newUser, cats: categories, msg: msg});
+            res.redirect("/");
+            return;
+            //res.render("register", {usr: newUser, cats: categories, msg: msg});
         }else{ 
             console.log("Email is solid, none found.");
         }
@@ -206,7 +246,7 @@ exports.registerUser = async function(req, res){
           userId: newUser._id,
           token: code,
         }).save();
-
+        const formAction = "/verify-u-email";
         const name = req.body.firstName; 
         const email = req.body.email;
         //const link = `${process.env.BASE_URL}/user/verify/${newUser._id}/${token.token}`;
@@ -218,7 +258,7 @@ exports.registerUser = async function(req, res){
         
         console.log("An Email sent to your account please verify");
         sendEmail(name, email, subject, message);
-        res.render("emailVerification", {usr: null, cats: categories, userId: newUser._id});
+        res.render("emailVerification", {usr: null, cats: categories, userId: newUser._id, form_action: formAction});
     }catch(error){
         res.status(400).send("An error occured : "+error);
     }
@@ -258,12 +298,12 @@ exports.resendCode = async function(req, res){
     }
 }
 
-exports.renderEmailVer = function(req, res){
+exports.renderEmailVer = function(req, res, formAction){
 
-    res.render("emailVerification", {usr: null, cats: categories, userId: req.body.id});
+    res.render("emailVerification", {usr: null, cats: categories, userId: req.body.id, form_action: formAction});
 }
 
-exports.verifyEmail = async function(req, res){
+exports.verifyUserEmail = async function(req, res){
 
     try {
         const user = await User.findOne({ _id: req.body.id }).exec();
@@ -278,10 +318,10 @@ exports.verifyEmail = async function(req, res){
             console.log("Code verification successful! logging in the user..")
             req.login(user, function(err){
                 if (err) {
-                    console.log("Je ne sais pas pourquoi: "+err);
+                    console.log("An error occured (Email Verification): "+err);
                     // TODO: activate error message on modal
                 } else {
-                        console.log("User has been successfully logged in");
+                        console.log("Email verification: User has been successfully logged in");
                         User.updateOne({ _id: user._id}, {$set: {verified: true}} );
                         Token.findByIdAndRemove(token._id);
                         res.redirect("/");
@@ -290,34 +330,47 @@ exports.verifyEmail = async function(req, res){
             
         }
         else{
-            console.log("Code entered does not match the one sent!");
+            console.log("Email verification: Code entered does not match the one sent!");
             res.redirect(req.get('referer'));
             //res.render("emailVerification", {usr: null, cats: categories, userId: user._id});
         }
         
       } catch (error) {
-        console.log("An error occured: "+ error);
+        console.log("An error occured (Email verification): "+ error);
         res.status(400).send("An error occured : "+error);
     }
-
-    // console.log("User email from req: "+req.body.mail);
-    // const user = await User.findOne({ email: req.body.mail }).exec();
-    // console.log("User: "+user);
-    // if (!user) return res.status(400).send("User with given email not found!");
-    // console.log("UserId: "+user._id);
-    // const foundToken = await Token.findOne({ userId: user._id }).exec();
-    // if (!foundToken) return res.status(400).send("Token for given email not found!");
-    // console.log("Token: "+foundToken.token+" - code: "+req.body.emailCode);
-    // if(foundToken.token === req.body.emailCode){
-    //     //Normally will render to user profile
-    //     await User.updateOne({ _id: user._id}, {$set: {verified: true}} );
-    //     console.log("User email has been verified!");
-    //     res.redirect("/");
-        
-    // }else{
-    //     console.log("Codes don't match");
-    // }
 }
+
+exports.verifyProviderEmail = async function(req, res){
+
+    try {
+        const provider = await Provider.findOne({ _id: req.body.id }).exec();
+        if (!provider) return res.status(400).send("Provider email verification : Invalid link. Provider id: "+req.body.id);
+    
+        const token = await Token.findOne({ userId: provider._id}).exec();
+
+        if (!token) return res.status(400).send("Token : Invalid link");
+        
+        const codeEntered = ""+req.body.first + req.body.second + req.body.third + req.body.fourth + req.body.fifth + req.body.sixth;
+        if(codeEntered == token.token){
+            console.log("Provider email verifiication: Code verification successful! logging in the provider..")
+            Provider.updateOne({ _id: provider._id}, {$set: {verified: true}} );
+            Token.findByIdAndRemove(token._id);
+            console.log("Email verification: Provider has been successfully logged in");
+            res.redirect("/");
+        }   
+        else{
+            console.log("Email verification: Code entered does not match the one sent!");
+            res.redirect(req.get('referer'));
+            //res.render("emailVerification", {usr: null, cats: categories, userId: user._id});
+        }
+        
+      } catch (error) {
+        console.log("An error occured (Email verification): "+ error);
+        res.status(400).send("An error occured : "+error);
+    }
+}
+
 exports.showAboutUsPage = function(req, res){
 
     if(req.isAuthenticated()){

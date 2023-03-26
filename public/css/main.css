@@ -807,6 +807,17 @@ h4 {
   font-size: 1.1rem;
   border-radius: 0.3rem;
 }
+.alert {
+  animation: autoHide 0s ease-in 4s forwards;
+}
+
+@keyframes autoHide {
+  to {
+      width:0;
+      height:0;
+      overflow:hidden;
+  }
+}
 .btn-purple-ver {
   color: #fff;
   background-color: #6672e8;
@@ -842,6 +853,225 @@ h4 {
   appearance: none;
   border-radius: 0.25rem;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+
+
+.nav-link-u-pro-set {
+  color: #4a5568;
+}
+.card-u-pro-set {
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
+}
+
+.card-u-pro-set {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 0 solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+}
+
+.card-body-u-pro-set {
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1rem;
+}
+
+.gutters-sm-u-pro-set {
+  margin-right: -8px;
+  margin-left: -8px;
+}
+
+.gutters-sm-u-pro-set >.col, .gutters-sm-u-pro-set>[class*=col-] {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.mb-3, .my-3 {
+  margin-bottom: 1rem!important;
+}
+
+.bg-gray-300-u-pro-set{
+  background-color: #e2e8f0;
+}
+.h-100 {
+  height: 100%!important;
+}
+.shadow-none {
+  box-shadow: none!important;
+}
+
+
+.gradient-brand-color {
+  background-image: -webkit-linear-gradient(0deg, #5A9E2F 0%, #2caf09 100%);
+  background-image: -ms-linear-gradient(0deg, #2caf09 0%, #5A9E2F 100%);
+  color: #fff;
+}
+.contact-info__wrapper {
+  overflow: hidden;
+  border-radius: .625rem .625rem 0 0
+}
+
+@media (min-width: 1024px) {
+  .contact-info__wrapper {
+      border-radius: 0 .625rem .625rem 0;
+      padding: 5rem !important
+  }
+}
+.contact-info__list span.position-absolute {
+  left: 0
+}
+.z-index-101 {
+  z-index: 101;
+}
+.list-style--none {
+  list-style: none;
+}
+.contact__wrapper {
+  border-radius: 0 0 .625rem .625rem
+}
+.contact-title{
+  color: white !important;
+}
+
+@media (min-width: 1024px) {
+  .contact__wrapper {
+      border-radius: .625rem 0 .625rem .625rem
+  }
+}
+@media (min-width: 1024px) {
+  .contact-form__wrapper {
+      padding: 5rem !important
+  }
+}
+.shadow-lg, .shadow-lg--on-hover:hover {
+  /*box-shadow: 0 1rem 3rem rgba(132,138,163,0.1) !important;*/
+  box-shadow: 0 10px 13px 0 rgba(0,0,0,.1), 0 10px 12px 0 rgba(0,0,0,.06);
+}
+
+.ftco-section {
+  padding: 7em 0;
+  position: relative;
+}
+.bg-light {
+  background: #f8f9fd !important;
+}
+.ftco-faqs .myaccordion {
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.ftco-faqs .myaccordion .card,
+.ftco-faqs .myaccordion .card:last-child .card-header {
+  border: none;
+  background: transparent;
+}
+
+.ftco-faqs .myaccordion .card-header {
+  border: none;
+  background: transparent;
+}
+.ftco-faqs .myaccordion .card-header p {
+  position: relative;
+  font-weight: 500;
+  font-size: 18px;
+  text-align: left;
+}
+
+.ftco-faqs .myaccordion .fa {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.ftco-faqs .myaccordion .btn {
+  width: 100%;
+  font-weight: 600;
+  color: black;
+  padding: 0;
+  text-transform: capitalize;
+  letter-spacing: 0;
+  border-radius: 0 !important;
+  margin-bottom: 10px;
+  border-radius: 40px !important;
+  -webkit-box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+  -moz-box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+  box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+}
+
+.ftco-faqs .myaccordion .btn-link:hover,
+.ftco-faqs .myaccordion .btn-link:focus {
+  text-decoration: none;
+}
+
+.ftco-faqs button[aria-expanded="true"] {
+  background-color: #00bd56;
+  color: #fff !important;
+}
+
+.ftco-faqs button[aria-expanded="false"] {
+  background-color: #fff;
+}
+.ftco-faqs .card-body {
+  background: #fff;
+  margin-bottom: 10px;
+  border-radius: 30px;
+  -webkit-box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+  -moz-box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+  box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+}
+
+
+.ftco-faqs button[aria-expanded="true"] .fa {
+  color: #fff !important;
+}
+.ftco-faqs .myaccordion .fa {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.ftco-faqs .myaccordion .fa {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.ftco-faqs [data-toggle="collapse"].collapsed .fa:before {
+  content: "\f067";
+  font-family: "FontAwesome";
+  font-style: normal;
+}
+
+.ftco-faqs [data-toggle="collapse"] .fa:before {
+  content: "\f068";
+  font-family: "FontAwesome";
+  font-style: normal;
+}
+
+.ftco-faqs .img {
+  height: 450px;
+  -webkit-box-shadow: 0px 8px 21px -10px rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 0px 8px 21px -10px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 8px 21px -10px rgba(0, 0, 0, 0.12);
+}
+.img, .blog-img, .user-img {
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.align-items-center {
+  -webkit-box-align: center !important;
+  -ms-flex-align: center !important;
+  align-items: center !important;
+}
+.justify-content-center {
+  -webkit-box-pack: center !important;
+  -ms-flex-pack: center !important;
+  justify-content: center !important;
 }
 
 /*# sourceMappingURL=Searchs_010.css.map */

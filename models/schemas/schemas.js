@@ -173,7 +173,10 @@ userSchema.plugin(require("mongoose-findorcreate"));
 //Provider
 const providerSchema = new mongoose.Schema({
     companyName:String,
-    category:categorySchema,
+    categoryId:{   
+        type:String,
+        required: true
+    },
     firstName:{
         type: String,
         required: true,

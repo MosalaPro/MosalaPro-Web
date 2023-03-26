@@ -174,7 +174,7 @@
               <div class="row">
                 <div class="col">
                      <!-- Country input -->
-                     <select class="form-control" aria-label="Select Category" name="pRegisterCategroy" style="display: inline;">
+                     <select class="form-control" aria-label="Select Category" name="pRegisterCategory" style="display: inline;">
                         <option selected>Select Category</option>
 
                         <% if(categories){ categories.forEach(cat=>{ %>
@@ -227,7 +227,7 @@
                      <select name="country_p" id="country_p" class="form-control" aria-label="Select Country" style="display: inline;" required>
                         <option selected>Select Country</option>
                         <% countries.forEach(country => { %> 
-                          <option value="<%= country.name %>"> <%= country.name %></option>
+                          <option value="<%= country.name %>" > <%= country.name %></option>
                           <% }); %>
                       </select>
                 </div>
@@ -243,7 +243,7 @@
                 <div class="col-md-6">
                      <!-- Password input -->
                         <div class="form-outline">
-                            <input type="password" id="password-input" class="form-control" placeholder="Password" name="password" aria-label="password" aria-describedby="password" autocomplete="off"required/>
+                            <input type="password" id="password-input" class="form-control" placeholder="Password" name="pPassword" aria-label="password" aria-describedby="password" autocomplete="off"required/>
                         </div>
                         <div class="valid-feedback">Good</div>
                         <div class="invalid-feedback">Weak</div>
@@ -251,7 +251,7 @@
                 <div class="col-md-6">
                     <!-- Conifrm Password input -->
                     <div class="form-outline  ">
-                        <input type="password" id="password-input-conf" class="form-control" placeholder="Confirm Password" autocomplete="off" required/>
+                        <input type="password" id="password-input-conf" class="form-control" placeholder="Confirm Password" name="pPasswordConf" autocomplete="off" required/>
                     </div>
                     <div class="valid-feedback">Match</div>
                     <div class="invalid-feedback">Do not match</div>
@@ -299,7 +299,7 @@
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12">
                   <div class=" justify-content-center">
-                    <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" data-callback="enableProBtn"></div>
+                    <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" data-callback="enableProRegBtn"></div>
                   </div>
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-0">
@@ -310,7 +310,7 @@
                 <div class="col-2"></div>
                 <div class="col-8">
                     <!-- Submit button -->
-                    <input type="submit" class="btn button-primary btn-block mb-4" name="register-p" value="Register" disabled="disabled">
+                    <input type="submit" class="btn button-primary btn-block mb-4" name="register-p" id="register-p" value="Register" disabled="disabled">
                 </div>
                 <div class="col-2"></div>
               </div>
