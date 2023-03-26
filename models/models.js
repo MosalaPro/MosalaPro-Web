@@ -326,7 +326,67 @@ exports.showServiceRequestPage = function(req, res){
         // otherwise send user to the login page 
 }
 
+
+
+const multer = require("multer");
+const fs = require('fs')
+exports.postServiceRequest = function(req, res) {
+  try {
+    console.log("exports.postServiceRequest");
+    console.log(req.body);
+
+    let { requestTitle, requestDescription, requestCategory } = req.body;
+
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        const dir = './postAttachments';
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir);
+        }
+
+        cb(null, dir); // Save files in the 'uploads' directory
+      },
+      filename: function (req, file, cb) {
+        const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniquePrefix + '-' + file.originalname); // Set a unique filename for the uploaded file
+      }
+    });
+
+    const upload = multer({
+      storage: storage,
+      limits: {
+        fileSize: 1024 * 1024 * 100 // Limit the file size to 100MB
+      },
+      fileFilter: function (req, file, cb) {
+        cb(null, true); // Allow any type of file
+      },
+    }).array('files', 10); // Allow up to 10 files to be uploaded in one request
+
+    upload(req, res, function(err) {
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading
+        console.log(err);
+        res.status(400).send({ responseCode: 400, "responseMessage": "Error uploading files" });
+      } else if (err) {
+        // An unknown error occurred when uploading
+        console.log(err);
+        res.status(400).send({ responseCode: 400, "responseMessage": "Error uploading files" });
+      }
+
+      // Everything went fine
+      console.log(req.files); // Contains information about the uploaded files
+
+      res.send({ responseCode: 14, "responseMessage": "posted successfully",request:req.body });
+    });
+    
+  } catch (e) {
+    console.log(e);
+    res.status(400).send({ responseCode: 400, "responseMessage": "Error posting service request" });
+  }
+};
+
 const axios = require('axios');
+
 
 global.sendEmail = async function sendEmail(name, email, subject, message, req, res) {
     

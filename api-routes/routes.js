@@ -1,4 +1,3 @@
-
 module.exports = function(app){
     require("dotenv").config();
     const root = require('path').resolve('./');
@@ -10,7 +9,6 @@ module.exports = function(app){
     const Location = model.getLocationModel();
     
     app.get("/", function(req, res){
-       
         model.showHomePage(req, res);
     });
 
@@ -59,6 +57,12 @@ module.exports = function(app){
             res.redirect("/");
         });
     });
+
+    app.post("/postServiceRequest",function(req,res){
+        console.log("/postServiceRequest")
+        model.postServiceRequest(req,res);
+    })
+
     app.get('/:anything/', function (req, res) {
         res.render("page_not_found", {usr: null, cats: categories});
    });
@@ -90,14 +94,9 @@ module.exports = function(app){
         model.verifyEmail(req, res);
     });
 
-    
-
-   
     app.post("/register-pro", function(req, res){
         model.registerProvider(req, res);
     });
-
-    
 
 }
 

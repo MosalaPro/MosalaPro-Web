@@ -55,6 +55,7 @@ const countrySchema = new mongoose.Schema({
     longitude: Number,
 
 });
+
 countrySchema.plugin(require("passport-local-mongoose"));
 countrySchema.plugin(require("mongoose-findorcreate"));
 
@@ -88,6 +89,7 @@ const stateSchema = new mongoose.Schema({
     longitude: Number,
 
 });
+
 stateSchema.plugin(require("passport-local-mongoose"));
 stateSchema.plugin(require("mongoose-findorcreate"));
 
@@ -227,6 +229,7 @@ const providerSchema = new mongoose.Schema({
     });
 providerSchema.plugin(require("passport-local-mongoose"));
 providerSchema.plugin(require("mongoose-findorcreate"));
+
 
 module.exports = {
     categorySchema,

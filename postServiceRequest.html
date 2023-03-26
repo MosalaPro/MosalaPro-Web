@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload Files</title>
+  </head>
+  <body>
+    <h1>Upload Files</h1>
+    <form id="upload-form">
+      <label for="requestTitle">Request Title:</label>
+      <input type="text" id="requestTitle" name="requestTitle" required /><br /><br />
+      <label for="requestDescription">Request Description:</label>
+      <textarea id="requestDescription" name="requestDescription" required></textarea><br /><br />
+      <label for="requestCategory">Request Category:</label>
+      <select id="requestCategory" name="requestCategory" required>
+        <option value="">Select a category</option>
+        <option value="Category 1">Category 1</option>
+        <option value="Category 2">Category 2</option>
+        <option value="Category 3">Category 3</option>
+      </select><br /><br />
+      <label for="fileInput">Select Files:</label>
+      <input type="file" id="fileInput" name="files" multiple required /><br /><br />
+      <button type="submit">Upload</button>
+    </form>
+
+    <script>
+      const uploadForm = document.getElementById("upload-form");
+
+      uploadForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const requestTitle = document.getElementById("requestTitle").value;
+        const requestDescription = document.getElementById("requestDescription").value;
+        const requestCategory = document.getElementById("requestCategory").value;
+        const files = document.getElementById("fileInput").files;
+
+        const formData = new FormData();
+        formData.append("requestTitle", requestTitle);
+        formData.append("requestDescription", requestDescription);
+        formData.append("requestCategory", requestCategory);
+
+        for (let i = 0; i < files.length; i++) {
+          formData.append("files", files[i]);
+        }
+
+        fetch("http://localhost:3000/postServiceRequest", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data)
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      });
+    </script>
+  </body>
+</html>
