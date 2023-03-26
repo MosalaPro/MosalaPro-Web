@@ -13,7 +13,7 @@ module.exports = function(app){
        
         model.showHomePage(req, res);
     });
-
+    
     app.post("/login-u", function(req, res){
         model.loginUser(req, res);
     });
@@ -24,10 +24,18 @@ module.exports = function(app){
     app.get("/profile", function(req, res){
         res.render("professionalProfile", {usr: req.user, cats: categories});
     });
+    app.post("/register-pro", function(req, res){
+        model.registerProvider(req, res);
+    });
     app.post("/register-user", async (req, res) => {
         model.registerUser(req, res);
     });
-
+    app.get("/register-user", function(req, res){
+        model.renderEmailVer(req, res);
+    });
+    app.get("/resendCode/:id", function(req, res){
+        model.resendCode(req, res);
+    });
     app.get("/professionals", function(req, res){
         model.showForProPage(req, res);
     });
@@ -51,12 +59,7 @@ module.exports = function(app){
     app.get("/service-request", function(req, res){
         model.showServiceRequestPage(req, res);
     });
-    app.get("/verification", function(req, res){
-        res.render("emailVerification", {usr: null, cats: categories});
-    });
-    app.get("/verified", function(req, res){
-        res.render("emailVerified", {usr:null, cats: categories});
-    });
+    
     app.get("/user/verify/:id/:token", async (req, res) => {
         model.verifyEmail(req, res);
       });
@@ -73,37 +76,13 @@ module.exports = function(app){
     app.get('*', function (req, res) {
          res.render("page_not_found", {usr: null, cats: categories});
     });
-    
+    app.post('/verify-email', function(req, res) {
+        model.verifyEmail(req, res);
+    });
     
     app.use(function(req, res, next) {
         res.render("page_not_found", {usr: null, cats: categories});
     });
-
-    app.post("/verify-email", function(req, res){
-        // if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
-        // {
-        //   console.log("Something went to wrong, please try again");
-        // }
-        // const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-        // const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
-        // request(verificationURL,function(error,response,body) {
-        //   body = JSON.parse(body);
-        //   if(body.success !== undefined && !body.success) {
-        //     console.log("Captcha verification failed");
-        //   }
-        //   res.json({"responseSuccess" : "Sucess"});
-        // });
-       
-        model.verifyEmail(req, res);
-    });
-
-    
-
-   
-    app.post("/register-pro", function(req, res){
-        model.registerProvider(req, res);
-    });
-
     
 
 }

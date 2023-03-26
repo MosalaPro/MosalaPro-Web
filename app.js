@@ -23,13 +23,15 @@ const passportLocalMongoose = require("passport-local-mongoose");
 
 //------------------DATABASE CONNECTION ------------------------------//
 
-mongoose.connect(process.env.DBURI, {
-	useNewUrlParser:true,
-	useUnifiedTopology: true,
-	family:4
-}).then(success=>{
-	console.log("Successfully connected to the database.");
-}).catch(err=>{console.log("Error occured while connecting to the database.\n"+err);});
+const connectDB = (DBURI) => { 
+	mongoose.connect(DBURI, {
+		useNewUrlParser:true,
+		useUnifiedTopology: true,
+		family:4
+	}).then(success=>{
+		console.log("Successfully connected to the database.");
+	}).catch(err=>{console.log("Error occured while connecting to the database.\n"+err);});
+};
 
 //------------------GENERAL CONFIGURATION ------------------------------//
 
@@ -37,15 +39,12 @@ mongoose.connect(process.env.DBURI, {
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook");
 
-const findOrCreate = require("mongoose-findorcreate");
-
-
-
 const app = express();
 
 mongoose.set('strictQuery', false);
 
 app.use(express.static("public"));
+
 app.use(compression());
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({
@@ -162,11 +161,23 @@ app.get('/auth/facebook/mosalapro',
 	console.log("successful FB");
     res.redirect('/');
 });
-  
+
 require('./api-routes/routes')(app);
 
 
-//------------------SETTING UP PORT------------------------------//
-app.listen(process.env.PORT || 3000, function() {
-  console.log("Server successfully started online and locally on port 3000");
-});
+//------------------STARTING UP SERVER------------------------------//
+
+const start = async () => {
+    try {
+        await connectDB(process.env.DBURI);
+        app.listen(process.env.PORT || 3000, function() {
+			console.log("Server successfully started online and locally on port 3000");
+		  });
+    } catch (error) {
+        console.log(error);
+        console.log("Failed to connect to the database, server is not running.");
+    }
+};
+
+start();
+

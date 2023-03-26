@@ -1,68 +1,84 @@
 <%- include('partials/header') %>
-<section class="section verify-section">
-  <div class="container ">
-    <h3 class="text-center text-light">Login </h3>
-      
-    <div class="modal-content">
-      
-      <div class="tab-content ">
-        <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login-u">
+<section class="mt-4">
+  <div class=" mt-4 p-4">
+    <div class="row justify-content-center ">
+      <div class="col-lg-5 text-center">
+      <a href="index.html">
+      <img src="assets/img/svg/logo.svg" alt="">
+      </a>
+      <div class="card mt-5">
+      <div class="card-body py-5 px-lg-5">
+      <div class="svg-icon svg-icon-xl-ver text-purple">
+      <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><title>ionicons-v5-g</title><path d="M336,208V113a80,80,0,0,0-160,0v95" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path><rect x="96" y="208" width="320" height="272" rx="48" ry="48" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></rect></svg>
+      </div>
+      <h3 class="fw-normal text-dark mt-4-ver">
+      2-step verification
+      </h3>
+      <p class="mt-4-ver mb-1">
+      We sent a verification code to your email.
+      </p>
+      <p>
+      Please enter the code in the field below.
+      </p>
+      <form action="/verify-email" method="post">
+        <div class="row mt-4-ver pt-2">
 
-          <div class="text-center ">
-            <h5 class="title text text-center">A verification link has been sent to your email, please verify your email and log in.</h5> 
-              <form action="/login-u" method="post">
-          
-              <div class="row">
-                <div class="col-md-6">
-                    <!-- Email input -->
-                    <div class="form-outline ">
-                        <input type="email" id="loginEmail" class="form-control" placeholder="Email" name="username"  autocomplete="on" required/>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <!-- Password input -->
-                   <div class="form-outline">
-                       <input type="password" id="loginPassword" class="form-control" placeholder="Password" name="password" autocomplete="on"  required/>
-                   </div>
-                </div>
+            <div class="col">
+              <input type="text" name="first" class="form-control form-control-ver form-control-lg-ver text-center py-4" maxlength="1" autofocus="" required>
             </div>
+            <div class="col">
+              <input type="text" name="second" class="form-control form-control-ver form-control-lg-ver text-center py-4" maxlength="1" required>
+            </div>
+            <div class="col">
+              <input type="text" name="third" class="form-control form-control-ver form-control-lg-ver text-center py-4 " maxlength="1" required>
+            </div>
+            <div class="col">
+              <input type="text" name="fourth" class="form-control form-control-ver form-control-lg-ver text-center py-4 " maxlength="1" required>
+            </div>
+            <div class="col">
+              <input type="text" name="fifth" class="form-control form-control-ver form-control-lg-ver text-center py-4 " maxlength="1" required>
+            </div>
+            <div class="col">
+              <input type="text" name="sixth" class="form-control form-control-ver form-control-lg-ver text-center py-4" maxlength="1" required>
+            </div>
+          </div>
+          <input name="id" value="<%=userId%>" style="display: none;" type="text"/>
+          <input type="submit" class="btn button-primary btn-lg w-100 hover-lift-light mt-4-ver" value="Verify m Account" required>
+      </form>
+        
+     
+      </div>
+      </div>
       
-            <div class="row">
-              <div class="col">
-                  <div class="mb-3 justify-content-center">
-                          <!-- Submit button -->
-                          <button type="submit" class="btn button-primary btn-block mb-4" name="login-u">Login</button>
-                  </div>
-              </div>
-             </div>
-          </form>
-        </div>
-       
+      <p class="text-center text-muted mt-4-ver">
+      Didn't receive it?
+      <a href="/resendCode/<%=userId%>" class="text-decoration-none ms-2">
+      Resend code
+      </a>
+      </p>
+      </div>
+      </div>
     
     </div>
-  </div>
-</div>
-    
-      </div>
 </section>
- <!--Google recaptcha-->
- <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
  <script>
- grecaptcha.enterprise.ready(function() {
-     grecaptcha.enterprise.execute('6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6', {action: 'login'}).then(function(token) {
-       
-     });
- });
+  var currentBoxNumber = 0;
+  
+  $(".form-control").keyup(function (event) {
+      //if (event.keyCode == 13) {
+          textboxes = $("input.form-control");
+          currentBoxNumber = textboxes.index(this);
+          //console.log(textboxes.index(this));
+          if (textboxes[currentBoxNumber + 1] != null) {
+              nextBox = textboxes[currentBoxNumber + 1];
+              nextBox.focus();
+              nextBox.select();
+              event.preventDefault();
+              return false;
+          } 
+      //}
+  });
  </script>
-
-<script>
-
-    $('form').submit(function(event) {
-    if ( $('#g-recaptcha-response').val() === '' ) {
-        event.preventDefault();
-        alert('Please check the recaptcha');
-    }
-});
-</script>
 
     <%- include('partials/footer') %>

@@ -10,6 +10,7 @@ require("dotenv").config();
 const {categorySchema, countrySchema, citySchema, stateSchema, 
     locationSchema, tokenSchema, userSchema, providerSchema } = require(__dirname+"/schemas/schemas.js");
 
+const _ = require("lodash");
 const mongoose = require("mongoose");
 mongoose.set('strictQuery', false);
 const passport = require("passport");
@@ -76,7 +77,7 @@ exports.getTokenModel = function(){
 
 exports.loginUser = function(req, res){
     const user = new User({
-		username : req.body.username,
+		username : _.trim(req.body.username),
 		password : req.body.password
 	});
 	req.login(user, function(err){
@@ -104,8 +105,8 @@ exports.registerProvider = function(req, res){
 
     const proCategory = Category.findOrCreate({name:req.body.category});
     const newProvider = new Provider({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
+        firstName: _.capitalize(req.body.firstName),
+        lastName: _.capitalize(req.body.lastName),
         email: req.body.email,
         phone: req.body.phone,
         address: req.body.address,
@@ -131,7 +132,7 @@ exports.registerProvider = function(req, res){
 
 exports.loginProvider = function(req, res){
     const user = new Provider({
-		username : req.body.username,
+		username : _.trim(req.body.username),
 		password : req.body.password
 	});
 	req.login(user, function(err){
@@ -163,31 +164,33 @@ exports.showHomePage = function(req, res){
 
 exports.registerUser = async function(req, res){
 
+    const newUser = new User({
+        firstName: _.capitalize(req.body.firstName),
+        lastName: _.capitalize(req.body.lastName),
+        email: _.trim(req.body.email),
+        phone: req.body.phone,
+        address: req.body.address,
+        username: req.body.email,
+        verified: false,
+        country: req.body.country,
+        city: req.body.city,
+        createdAt: new Date(),
+        lastUpdate: new Date()
+    });
+
     try{
         console.log("User email that always exists: "+req.body.email);
         let user = await User.findOne({email: req.body.email}).exec();
         if(user){
             console.log("User that's always there: "+user +" --");
-            return res.status(400).send("User with given email already exist!"); 
+            //return res.status(400).send("User with given email already exist!");
+            const msg = "User with given email already exist!"; 
+            res.render("register", {usr: newUser, cats: categories, msg: msg});
         }else{ 
             console.log("Email is solid, none found.");
         }
 
-        const code = generateRandomString(10);
-        const newUser = new User({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            phone: req.body.phone,
-            address: req.body.address,
-            username: req.body.email,
-            verified: false,
-            country: req.body.country,
-            city: req.body.city,
-            createdAt: new Date(),
-            lastUpdate: new Date()
-        });
-
+        
         await User.register(newUser, req.body.password, function(err, u){
             if (err) {
               console.log("User Registration error: "+err);
@@ -198,49 +201,103 @@ exports.registerUser = async function(req, res){
                 //res.redirect("/");
             });
 
-    
+        const code = generateDigit(6);
         let token = await new Token({
           userId: newUser._id,
-          token: require('crypto').randomBytes(32).toString('hex'),
+          token: code,
         }).save();
 
         const name = req.body.firstName; 
         const email = req.body.email;
-        const link = `${process.env.BASE_URL}/user/verify/${newUser._id}/${token.token}`;
+        //const link = `${process.env.BASE_URL}/user/verify/${newUser._id}/${token.token}`;
         
         const subject = "Verify Your MosalaPro Email Address";
         const message = "Hi "+name+",\n\nThank you for signing up with MosalaPro. We appreciate your business."+
-        "\nPlease click on this link to verify your MosalaPro Account:\n\n"
-        +link +"\n\nThank you,\nMosalaPro TM";
+        "\nPlease use the code below to verify your MosalaPro Account:\n\n"
+        +code +"\n\nThank you,\nMosalaPro TM";
         
-            //implement your spam protection or checks.
         console.log("An Email sent to your account please verify");
-        sendEmail(name, email, subject, message, req, res, code);
-        res.render("emailVerification", {usr: null, cats: categories});
+        sendEmail(name, email, subject, message);
+        res.render("emailVerification", {usr: null, cats: categories, userId: newUser._id});
     }catch(error){
         res.status(400).send("An error occured : "+error);
     }
 }
 
+exports.resendCode = async function(req, res){
+    try{
+        let user = await User.findOne({_id: req.params.id}).exec();
+        if(user)
+            console.log("User found, resending email: ");
+        else   
+            console.log("User not found, could not resend email.");
+
+        let tok = await Token.findOne({ userId: user._id }).exec();
+        await Token.findByIdAndRemove(tok._id);
+
+        const code = generateDigit(6);
+        let token = await new Token({
+          userId: user._id,
+          token: code,
+        }).save();
+
+        const name = user.firstName;
+        const email = user.email;
+        const subject = "Verify Your MosalaPro Email Address";
+        const message = "Hi "+name+",\n\nThank you for signing up with MosalaPro. We appreciate your business."+
+        "\nPlease use the code below to verify your MosalaPro Account:\n\n"
+        +code +"\n\nThank you,\nMosalaPro TM";
+        
+        console.log("An Email sent to your account please verify");
+        sendEmail(name, email, subject, message);
+        res.redirect(req.get('referer'));
+
+    }catch(error){
+        console.log("An error occured: "+ error);
+        res.status(400).send("An error occured : "+error);
+    }
+}
+
+exports.renderEmailVer = function(req, res){
+
+    res.render("emailVerification", {usr: null, cats: categories, userId: req.body.id});
+}
+
 exports.verifyEmail = async function(req, res){
 
     try {
-        const user = await User.findOne({ _id: req.params.id }).exec();
-        if (!user) return res.status(400).send("User : Invalid link");
+        const user = await User.findOne({ _id: req.body.id }).exec();
+        if (!user) return res.status(400).send("User : Invalid link. User id: "+req.body.id);
     
-        const token = await Token.findOne({
-          userId: user._id,
-          token: req.params.token,
-        }).exec();
+        const token = await Token.findOne({ userId: user._id}).exec();
+
         if (!token) return res.status(400).send("Token : Invalid link");
-    
-        await User.updateOne({ _id: user._id}, {$set: {verified: true}} );
-        await Token.findByIdAndRemove(token._id);
-    
-        //res.send("email verified sucessfully");
-        res.render("emailVerified", {usr: null, cats: categories});
+        
+        const codeEntered = ""+req.body.first + req.body.second + req.body.third + req.body.fourth + req.body.fifth + req.body.sixth;
+        if(codeEntered == token.token){
+            console.log("Code verification successful! logging in the user..")
+            req.login(user, function(err){
+                if (err) {
+                    console.log("Je ne sais pas pourquoi: "+err);
+                    // TODO: activate error message on modal
+                } else {
+                        console.log("User has been successfully logged in");
+                        User.updateOne({ _id: user._id}, {$set: {verified: true}} );
+                        Token.findByIdAndRemove(token._id);
+                        res.redirect("/");
+                }
+            });
+            
+        }
+        else{
+            console.log("Code entered does not match the one sent!");
+            res.redirect(req.get('referer'));
+            //res.render("emailVerification", {usr: null, cats: categories, userId: user._id});
+        }
+        
       } catch (error) {
-        res.status(400).send("An error occured");
+        console.log("An error occured: "+ error);
+        res.status(400).send("An error occured : "+error);
     }
 
     // console.log("User email from req: "+req.body.mail);
@@ -335,7 +392,7 @@ exports.showServiceRequestPage = function(req, res){
 
 const axios = require('axios');
 
-global.sendEmail = async function sendEmail(name, email, subject, message, req, res) {
+global.sendEmail = async function sendEmail(name, email, subject, message) {
     
     const data = JSON.stringify({
         "Messages": [{
@@ -370,4 +427,16 @@ const generateRandomString = (myLength) => {
   
     const randomString = randomArray.join("");
     return randomString;
+  };
+
+  const generateDigit = (myLength) => {
+    const chars =
+      "1234567890";
+    const randomArray = Array.from(
+      { length: myLength },
+      (v, k) => chars[Math.floor(Math.random() * chars.length)]
+    );
+  
+    const randomDigit = randomArray.join("");
+    return randomDigit;
   };
