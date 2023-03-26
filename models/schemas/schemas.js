@@ -104,6 +104,7 @@ const locationSchema = new mongoose.Schema({
         required: true
     }
 });
+
 locationSchema.plugin(require("passport-local-mongoose"));
 locationSchema.plugin(require("mongoose-findorcreate"));
 
@@ -230,6 +231,28 @@ const providerSchema = new mongoose.Schema({
 providerSchema.plugin(require("passport-local-mongoose"));
 providerSchema.plugin(require("mongoose-findorcreate"));
 
+// Location
+const postRequestSchema = new mongoose.Schema({
+    username: { type: String, require:true },
+    requestTitle:{
+        type: String,
+        required: true
+    },
+    requestDescription:{
+        type: String,
+        required: true
+    },
+    requestCategory:{
+        type: String,
+        required: true
+    },
+    files: [{
+        type: String
+    }]
+});
+
+//postRequestSchema.plugin(require("passport-local-mongoose"));
+postRequestSchema.plugin(require("mongoose-findorcreate"));
 
 module.exports = {
     categorySchema,
@@ -239,5 +262,6 @@ module.exports = {
     locationSchema,
     tokenSchema,
     userSchema,
-    providerSchema
+    providerSchema,
+    postRequestSchema
 }

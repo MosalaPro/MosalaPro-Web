@@ -16,13 +16,17 @@ const {
   tokenSchema,
   userSchema,
   providerSchema,
+  postRequestSchema
 } = require(__dirname + "/schemas/schemas.js");
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const passport = require("passport");
 
+const PostRequest = mongoose.model("PostsRequest",postRequestSchema);
+
 const User = mongoose.model("User", userSchema);
+
 passport.use(User.createStrategy());
 
 passport.serializeUser(function (user, done) {
@@ -323,8 +327,7 @@ exports.postServiceRequest = function (req, res) {
       console.log("exports.postServiceRequest");
       console.log(req.body);
 
-      let { requestTitle, requestDescription, requestCategory } = req.body;
-
+      
       const storage = multer.diskStorage({
         destination: function (req, file, cb) {
           const dir = "./postAttachments";
@@ -374,12 +377,29 @@ exports.postServiceRequest = function (req, res) {
 
         // Everything went fine
         console.log(req.files); // Contains information about the uploaded files
-
-        res.send({
-          responseCode: 200,
-          responseMessage: "posted successfully",
-          request: req.body,
-        });
+        //Storing in db
+        const newRequest = new PostRequest({
+            username:req.body.username,
+            requestTitle: req.body.requestTitle,
+            requestDescription: req.body.requestDescription,
+            requestCategory: req.body.requestCategory,
+            files: req.files.map(file => file.filename)
+          });
+          newRequest.save(function(err) {
+            if (err) {
+              console.log(err);
+              res.status(400).send({
+                responseCode: 400,
+                responseMessage: "Error storing service request",
+              });
+            } else {
+              res.send({
+                responseCode: 200,
+                responseMessage: "posted successfully",
+                request: newRequest,
+              });
+            }
+          });          
       });
     } catch (e) {
       console.log(e);
