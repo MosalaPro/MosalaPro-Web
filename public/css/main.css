@@ -1074,4 +1074,55 @@ h4 {
   justify-content: center !important;
 }
 
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.height-5x {
+  height: 3rem!important;
+}
+.width-5x {
+  width: 3rem!important;
+}
+.flex-center {
+  justify-content: center!important;
+}
+.flex-center {
+  align-items: center!important;
+}
+.rounded-circle {
+  border-radius: 50%!important;
+}
+
+.align-items-center {
+  align-items: center!important;
+}
+.flex-grow-1 {
+  flex-grow: 1!important;
+}
+.d-flex {
+  display: flex!important;
+}
+
+.position-relative {
+  position: relative!important;
+}
+.shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(13,15,12,.075)!important;
+}
+
+.ms-n3 {
+  margin-left: -1rem!important;
+}
+.job-cats{
+  margin-top: -2em;
+  background-color: #F2FBF6;
+  padding: 3em;
+}
+.testi-section{
+  padding: 0 6em 6em 6em;
+  margin-bottom: 4em;
+}
 /*# sourceMappingURL=Searchs_010.css.map */
