@@ -22,13 +22,14 @@ const passportLocalMongoose = require("passport-local-mongoose");
 // const emailValidator = required("email-validator");
 
 //------------------DATABASE CONNECTION ------------------------------//
-
+dbConnected = false;
 const connectDB = (DBURI) => { 
 	mongoose.connect(DBURI, {
 		useNewUrlParser:true,
 		useUnifiedTopology: true,
 		family:4
 	}).then(success=>{
+		dbConnected = true;
 		console.log("Successfully connected to the database.");
 	}).catch(err=>{console.log("Error occured while connecting to the database.\n"+err);});
 };
@@ -170,9 +171,9 @@ require('./api-routes/routes')(app);
 const start = async () => {
     try {
         await connectDB(process.env.DBURI);
-        app.listen(process.env.PORT || 3000, function() {
-			console.log("Server successfully started online and locally on port 3000");
-		  });
+			app.listen(process.env.PORT || 3000, function() {
+				console.log("Server successfully started online and locally on port 3000");
+			});
     } catch (error) {
         console.log(error);
         console.log("Failed to connect to the database, server is not running.");
