@@ -63,7 +63,7 @@
                       <li><a href="/">Home</a></li>
                       <li><a href="/search">Search for Services</a></li>
                       <li><a href="/about-us">About Us</a></li>
-
+                      <li><a href="/contact-us">FAQ</a></li>
                       <% if(usr){ %>
                         <li><a href="/service-request" >My Service Requests</a></li>
                         <% } else { %>
@@ -71,7 +71,7 @@
                           <li><a href="#regModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Create an account</a></li>
                         <% } %>
 
-                      <li><a href="/contact-us">Contact Us</a></li>
+                      <li><a href="/contact-us#contact_us">Contact Us</a></li>
                     </ul>
                   </div>
                   </div>
@@ -113,11 +113,15 @@
       </footer>
     </div>
     <div class="snackbars" id="form-output-global"></div>
+    
+    
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.min.js"></script>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
-    
+
     <script>
       function _(element){return document.getElementById(element); }
       _('country_search').onchange = function(){

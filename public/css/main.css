@@ -932,7 +932,8 @@ h4 {
   list-style: none;
 }
 .contact__wrapper {
-  border-radius: 0 0 .625rem .625rem
+  border-radius: 0 0 .625rem .625rem;
+  background-color: white;
 }
 .contact-title{
   color: white !important;
@@ -948,11 +949,17 @@ h4 {
       padding: 5rem !important
   }
 }
-.shadow-lg, .shadow-lg--on-hover:hover {
-  /*box-shadow: 0 1rem 3rem rgba(132,138,163,0.1) !important;*/
-  box-shadow: 0 10px 13px 0 rgba(0,0,0,.1), 0 10px 12px 0 rgba(0,0,0,.06);
+.shadow-lg-contact, .shadow-lg-contact--on-hover:hover {
+  box-shadow: 0px 0px 10px 0px rgb(89 75 128 / 9%);
+  
 }
-
+.contact-section{
+  margin-top: -2em;
+  padding-top: 2em;
+}
+.row-contact{
+  margin-left: -30px;
+}
 .ftco-section {
   padding: 7em 0;
   position: relative;
@@ -1126,3 +1133,54 @@ h4 {
   margin-bottom: 4em;
 }
 /*# sourceMappingURL=Searchs_010.css.map */
+
+
+.widget {
+  background: #fff;
+  margin-bottom: .5rem;
+  display: block;
+  position: relative;
+  margin-top:0.5em;
+}
+.widget-user-list > li {
+  display: inline-block;
+}
+.widget-user-list {
+  padding: 0;
+  list-style-type: none;
+}
+.widget-user-list {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.widget-user-list > li + li {
+  margin-left: -1.125rem;
+}
+.widget-user-list > li a {
+  display: block;
+  border: 0.125rem solid #fff;
+  overflow: hidden;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: -0.3125rem;
+  line-height: 2rem;
+  text-align: center;
+  text-decoration: none;
+  -webkit-border-radius: 2.25rem;
+  -moz-border-radius: 2.25rem;
+  border-radius: 2.25rem;
+}
+.widget-user-list > li a img {
+  display: block;
+  max-width: 100%;
+}
+.widget-user-list > li.number a {
+  background: #c7c7cc;
+  color: #fff;
+}
+.widget-content, .widget-footer {
+  padding: .625rem;
+  background: #fff;
+  position: relative;
+}
