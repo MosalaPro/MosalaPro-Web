@@ -503,7 +503,7 @@ a, a:focus, a:active, a:hover {
 }
 
 a, a:focus, a:active {
-	color: #516ca9;
+	color: grey;
 }
 
 a:hover {
@@ -685,6 +685,7 @@ a[href*='tel'], a[href*='mailto'] {
 
 .post-tasks{
 	background-color: #a4ccae;
+	/*background-image: linear-gradient(white, #a4ccae,#a4ccae white);*/
 }
 .for-pro-banner{
 	padding-top: 4em;
@@ -8305,8 +8306,7 @@ html.rd-navbar-fixed-linked .page {
 	.tabs-line .nav-link {
 		padding: 7px 10px;
 		color: #ffffff;
-		background: #516ca9;
-		border-bottom: 1px solid #516ca9;
+		background: #5A9E2F
 	}
 	.tabs-line .nav-link:first-child {
 		border-top: 1px solid #516ca9;
@@ -8314,8 +8314,7 @@ html.rd-navbar-fixed-linked .page {
 	.tabs-line .nav-link:hover,
 	.tabs-line .nav-link.active {
 		color: #989da7;
-		background: #516ca9;
-		border-color: #516ca9;
+		background: #5A9E2F;
 	}
 }
 
@@ -8330,15 +8329,15 @@ html.rd-navbar-fixed-linked .page {
 	font-weight: 700;
 	line-height: 1.2;
 	color: #ffffff;
-	background: #516ca9;
-	border-bottom: 1px solid #516ca9;
+	background: #5A9E2F;
+	border-bottom: 1px solid #5A9E2F;
 	border-radius: 40px;
 	text-align: center;
 	vertical-align: middle;
 }
 
 .tabs-corporate .nav-link:first-child {
-	border-top: 1px solid #516ca9;
+	border-top: 1px solid #5A9E2F;
 }
 
 .tabs-corporate .nav-link:hover,

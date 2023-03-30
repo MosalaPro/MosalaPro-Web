@@ -8,7 +8,7 @@
 
 require("dotenv").config();
 const {categorySchema, countrySchema, citySchema, stateSchema, 
-    locationSchema, tokenSchema, userSchema, providerSchema } = require(__dirname+"/schemas/schemas.js");
+    locationSchema, tokenSchema, userSchema, providerSchema, postRequestSchema } = require(__dirname+"/schemas/schemas.js");
 
 const _ = require("lodash");
 const mongoose = require("mongoose");
@@ -16,6 +16,9 @@ mongoose.set('strictQuery', false);
 const passport = require("passport");
 
 const User = mongoose.model("User", userSchema);
+
+const PostRequest = mongoose.model("PostRequest", postRequestSchema);
+
 passport.use(User.createStrategy());
 
 passport.serializeUser(function(user, done) {
@@ -434,14 +437,99 @@ exports.showFindProfessionalsMdPage = function(req, res){
         res.render("findProMd", {usr: null});
 }
 
-exports.showServiceRequestPage = function(req, res){
 
-    if(req.isAuthenticated()){
-        // render service requests page for users
-        res.render("forProfessionals", {usr: req.user});
+const multer = require("multer");
+const fs = require("fs");
+exports.postServiceRequest = function (req, res) {
+  //TODO:Uncomment following if to enabled authentication layer
+  //if (req.isAuthenticated()) {
+  if (true) {
+    try {
+      const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+          const dir = "./postAttachments";
+          if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+          }
+
+          cb(null, dir); // Save files in the 'uploads' directory
+        },
+        filename: function (req, file, cb) {
+          const uniquePrefix =
+            Date.now() + "-" + Math.round(Math.random() * 1e9);
+          cb(null, uniquePrefix + "-" + file.originalname); // Set a unique filename for the uploaded file
+        },
+      });
+
+      const upload = multer({
+        storage: storage,
+        limits: {
+          fileSize: 1024 * 1024 * 100, // Limit the file size to 100MB
+        },
+        fileFilter: function (req, file, cb) {
+          cb(null, true); // Allow any type of file
+        },
+      }).array("files", 10); // Allow up to 10 files to be uploaded in one request
+
+      upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+          // A Multer error occurred when uploading
+          console.log(err);
+          res.status(400).send({
+            responseCode: 400,
+            responseMessage: "Error uploading files",
+          });
+        } else if (err) {
+          // An unknown error occurred when uploading
+          console.log(err);
+          res.status(400).send({
+            responseCode: 400,
+            responseMessage: "Error uploading files",
+          });
         }
-        // otherwise send user to the login page 
-}
+
+        // Everything went fine
+        console.log("In the method postRequest.");
+        console.log(req.files); // Contains information about the uploaded files
+        //Storing in db
+        const newRequest = new PostRequest({
+          username: req.body.username,
+          requestTitle: req.body.requestTitle,
+          requestDescription: req.body.requestDescription,
+          requestCategory: req.body.requestCategory,
+          budget: req.body.requestBudget,
+          deadline: req.body.requestDeadline,
+          createdAt: new Date(),
+          lastUpdate: new Date(),
+          files: req.files.map((file) => file.filename),
+        }).save().then(success =>{
+            console.log("Posted successfully!");
+
+            res.redirect("/")
+        }).catch(err => {console.log("Error occured while saving into the db: "+err);});
+       
+      });
+    } catch (e) {
+      console.log(e);
+      res.status(400).send({
+        responseCode: 400,
+        responseMessage: "Error posting service request: "+e,
+      });
+    }
+  } 
+};
+
+exports.serviceRequest = function (req, res) {
+    if(req.isAuthenticated()){
+        console.log("Creating a service request..");
+        res.render("serviceRequest",{usr: req.user});
+    }else{
+        console.log("User not connecting, redirecting to home page..");
+        res.redirect("/");
+    }
+
+  };
+
 
 const axios = require('axios');
 

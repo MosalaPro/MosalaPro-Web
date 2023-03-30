@@ -231,6 +231,38 @@ const providerSchema = new mongoose.Schema({
 providerSchema.plugin(require("passport-local-mongoose"));
 providerSchema.plugin(require("mongoose-findorcreate"));
 
+// Service Request
+const postRequestSchema = new mongoose.Schema({
+    username: { type: String, require:true },
+    requestTitle:{
+        type: String,
+        required: true
+    },
+    requestDescription:{
+        type: String,
+        required: true
+    },
+    requestCategory:{
+        type: String,
+        required: true
+    },
+    budget: Number,
+    deadline: String,
+    createdAt:{
+        type: Date,
+        required: true
+    },
+    lastUpdate:{
+        type: Date,
+        required: true
+    },
+
+    files: [{
+        type: String
+    }]
+});
+postRequestSchema.plugin(require("mongoose-findorcreate"));
+
 module.exports = {
     categorySchema,
     countrySchema,
@@ -239,5 +271,6 @@ module.exports = {
     locationSchema,
     tokenSchema,
     userSchema,
-    providerSchema
+    providerSchema,
+    postRequestSchema
 }

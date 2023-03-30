@@ -858,7 +858,7 @@ h4 {
 
 
 .nav-link-u-pro-set {
-  color: #4a5568;
+  color: #5A9E2F;
 }
 .card-u-pro-set {
   box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
@@ -989,6 +989,30 @@ h4 {
   text-align: left;
 }
 
+.text-danger{
+  color: brown;
+}
+.btn-danger{
+  position: relative;
+	max-width: 100%;
+	overflow: hidden;
+	display: inline-block;
+	padding: 10px 15px;
+	line-height: 1.25;
+	border: 2px solid;
+	font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-weight: 700;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-align: center;
+	border-radius: 40px;
+	cursor: pointer;
+	vertical-align: middle;
+	user-select: none;
+	transition: 250ms all ease-in-out;
+  background-color: brown;
+  color:white;
+}
 .ftco-faqs .myaccordion .fa {
   font-size: 16px;
   color: rgba(0, 0, 0, 0.3);
@@ -1183,4 +1207,186 @@ h4 {
   padding: .625rem;
   background: #fff;
   position: relative;
+}
+
+/** User Profile **/
+.container-profile{
+  display:table;
+  height: 50em;
+}
+
+@media (max-width: 700px) {
+  .container-profile {
+    height: 500px;
+  }
+}
+
+
+/* here we go for service-request css */
+.row-service {
+	display: flex;
+	justify-content: center; /* centers the columns horizontally */
+	flex-wrap: wrap;
+  padding: 2em;
+  }
+  
+  .col-md-6 {
+	width: 50%;
+	padding: 0 10px;
+	box-sizing: border-box;
+  }
+  
+  .service-image{
+	margin-top: 25px;
+	max-width: 300px;
+	max-height: 300px;
+  }
+
+  .alert {
+	background-color: lightblue;
+	border: 1px solid #ebccd1;
+	border-radius: 4px;
+	padding: 15px;
+	/* margin-bottom: 5px; */
+  }
+  
+  .question-label {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+  }
+  
+  .question-mark {
+	background-color: darkblue;
+	color: white;
+	font-size: 20px;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	border-radius: 50%;
+	margin-right: 10px;
+  }
+  
+  .left-text {
+	flex: 1;
+	color: blue;
+	padding-right: 10px;
+  }
+  
+  .right-text {
+	flex: 1;
+	padding-left: 10px;
+	text-align: right;
+  }
+  
+  .alert-text {
+	font-weight: bold;
+  }
+
+  /* css for input field  */
+  .input-field {
+	position: relative;
+	margin-bottom: 20px;
+  }
+  
+  .input-field-input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 16px;
+  }
+
+  .input-field-textarea{
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 16px;
+	resize: vertical;
+	min-height: 100px;
+  }
+
+  
+  .char-limit {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	transform: translateY(-50%);
+	font-size: 12px;
+	color: #666;
+  }
+  
+  /* attach button css */
+  .attach-btn {
+	display: block;
+  text-align: center;
+	padding: 10px;
+	border: 2px solid #ccc;
+	border-radius: 5px;
+	background-color: #fff;
+	color: #333;
+	font-size: 16px;
+	cursor: pointer;
+  }
+  
+  .attach-btn i {
+	margin-right: 10px;
+  }
+  
+  #file-input {
+	display: none;
+  }
+  
+  .attach-btn:hover {
+	border-color: #5A9E2F;
+  }
+    
+  .post-request-section{
+    padding-top: 3.6em;
+  }
+  .next-svg{
+    color: #5A9E2F;
+  }
+  .align-right{
+    position: relative;
+    float: right;
+    margin-top: 2em;
+    margin-bottom: 4em;
+  }
+  .numbering{
+    background-color: #5A9E2F;
+    border-radius: 25px;
+    padding: 5px 10px;
+    color: white;
+    display: inline;
+  }
+
+  
+  .tab {
+    display: none;
+  }
+ .invalid{
+  width: 100%;
+	padding: 10px;
+	border-radius: 4px;
+	font-size: 16px;
+  border: 2px solid rgb(206, 27, 27);
+  border-radius: 4px;
+ }
+
+
+.datepicker td, .datepicker th {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.85rem;
+}
+
+.datepicker {
+    margin-bottom: 3rem;
+}
+
+.datepicker-dropdown {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }

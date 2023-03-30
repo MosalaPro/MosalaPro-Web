@@ -1,17 +1,11 @@
+# Script to create cities data for MosalaPro web app
+# Author: Constant Pagoui
+# Date: 03-08-2023
+
 import json
 import os, os.path 
 import errno
 
-# Data to be written
-dictionary = {
-    "name": "sathiyajith",
-    "rollno": 56,
-    "cgpa": 8.6,
-    "phonenumber": "9976770500"
-}
- 
-# Serializing json
-json_object = json.dumps(dictionary, indent=4)
 
 def mkdir_p(path):
     try:

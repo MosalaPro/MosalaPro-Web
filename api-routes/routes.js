@@ -52,7 +52,13 @@ module.exports = function(app){
     app.get("/professionals", function(req, res){
         model.showForProPage(req, res);
     });
-
+    app.get("/service_request", function (req, res) {
+        model.serviceRequest(req, res);
+      });
+    app.post("/postServiceRequest",function(req,res){
+        console.log("/postServiceRequest")
+        model.postServiceRequest(req,res);
+    });
     app.get("/find-services", function(req, res){
         model.showFindProfessionalsPage(req, res);
     });
