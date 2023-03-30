@@ -98,7 +98,11 @@ exports.loginUser = function(req, res){
                         if(err){return next(err);}
                     });
                 }
-                res.redirect("/");
+                if(req.body.link){
+                    console.log("Redirecting to link: "+req.body.link);
+                    res.redirect(req.body.link);
+                }else
+                    res.redirect("/");
             });
         }
     });
@@ -132,7 +136,7 @@ exports.registerProvider = async function(req, res){
             console.log("Provider exists already: "+provider +" --");
             //return res.status(400).send("User with given email already exist!");
             const msg = "Provider with given email already exists!"; 
-            res.render("register", {usr: newUser, cats: categories, msg: msg});
+            res.render("register", {usr: newUser,link:null, cats: categories, msg: msg});
         }else{ 
             console.log("Email is solid, none found.");
         }
@@ -165,7 +169,7 @@ exports.registerProvider = async function(req, res){
         
         console.log("An Email sent to your account please verify");
         sendEmail(name, email, subject, message);
-        res.render("emailVerification", {usr: null, cats: categories, userId: newProvider._id, form_action:formAction });
+        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: newProvider._id, form_action:formAction });
     }catch(error){
         res.status(400).send("An error occured (Provider Reg) : "+error);
     }
@@ -196,10 +200,10 @@ exports.loginProvider = function(req, res){
 exports.showHomePage = function(req, res){
     
     if(req.isAuthenticated()){
-        res.render("home", {usr: req.user, cats: categories});
+        res.render("home", {usr: req.user, link:null, cats: categories});
     }
     else
-        res.render("home", {usr: null, cats: categories});
+        res.render("home", {usr: null, link:null, cats: categories});
     
 }
 
@@ -261,7 +265,7 @@ exports.registerUser = async function(req, res){
         
         console.log("An Email sent to your account please verify");
         sendEmail(name, email, subject, message);
-        res.render("emailVerification", {usr: null, cats: categories, userId: newUser._id, form_action: formAction});
+        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: newUser._id, form_action: formAction});
     }catch(error){
         res.status(400).send("An error occured : "+error);
     }
@@ -303,7 +307,7 @@ exports.resendCode = async function(req, res){
 
 exports.renderEmailVer = function(req, res, formAction){
 
-    res.render("emailVerification", {usr: null, cats: categories, userId: req.body.id, form_action: formAction});
+    res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.body.id, form_action: formAction});
 }
 
 exports.verifyUserEmail = async function(req, res){
@@ -375,22 +379,22 @@ exports.verifyProviderEmail = async function(req, res){
 }
 
 exports.showAboutUsPage = function(req, res){
-
+ 
     if(req.isAuthenticated()){
-        res.render("about_us", {usr: req.user});
+        res.render("about_us", {link:null, usr: req.user});
     }
     else
-        res.render("about_us", {usr: null});
+        res.render("about_us", {link:null, usr: null});
     
 }
 
 exports.showContactUsPage = function(req, res){
 
     if(req.isAuthenticated()){
-        res.render("contact", {usr: req.user});
+        res.render("contact", {link:null, usr: req.user});
     }
     else
-        res.render("contact", {usr: null});
+        res.render("contact", {link:null, usr: null});
     
 }
 
@@ -417,24 +421,24 @@ exports.getStates = function(country){
 exports.showForProPage = function(req, res){
 
     if(req.isAuthenticated()){
-        res.render("forProfessionals", {usr: req.user});
+        res.render("forProfessionals", {link:null, usr: req.user});
     }
     else
-        res.render("forProfessionals", {usr: null});
+        res.render("forProfessionals", {link:null, usr: null});
 }
 
 exports.showFindProfessionalsPage = function(req, res){
     if(req.isAuthenticated())
-        res.render("findprofessionals", {usr: req.user});
+        res.render("findprofessionals", {link:null, usr: req.user});
     else
-        res.render("findprofessionals", {usr: null});
+        res.render("findprofessionals", {link:null, usr: null});
 }
 
 exports.showFindProfessionalsMdPage = function(req, res){
     if(req.isAuthenticated())
-        res.render("findProMd", {usr: req.user});
+        res.render("findProMd", {link:null, usr: req.user});
     else
-        res.render("findProMd", {usr: null});
+        res.render("findProMd", {link:null, usr: null});
 }
 
 
@@ -522,7 +526,7 @@ exports.postServiceRequest = function (req, res) {
 exports.serviceRequest = function (req, res) {
     if(req.isAuthenticated()){
         console.log("Creating a service request..");
-        res.render("serviceRequest",{usr: req.user});
+        res.render("serviceRequest",{usr: req.user, link:null});
     }else{
         console.log("User not connecting, redirecting to home page..");
         res.redirect("/");

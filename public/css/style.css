@@ -461,6 +461,19 @@ p [style*='max-width'] {
 		font-size: 72px;
 	}
 }
+@media (max-width: 700px) {
+	.title-icon  {
+		align-items: center;
+		display: block;
+		padding: 2px;
+	}
+	.title-icon-2  {
+		align-items: center;
+		text-align: center;
+		display: block;
+		padding: 2px;
+	}
+}
 
 .title-numbered .index-counter {
 	padding-right: 3px;
@@ -2175,6 +2188,12 @@ h5 + .list-marked-big {
 
 .mt-txt-slide{
 	margin-top: -6em;
+}
+@media(max-width:700px){
+	.mt-txt-slide{
+		margin-top: 0.5em;
+		padding: 0 1em;
+	}
 }
 .mt-page{
 	margin-top: 7em;
@@ -5150,8 +5169,12 @@ h5 + .p-offset-1 {
 	padding: 25px 0;
 }
 
-.section-sm,
-.section-md,
+.section-sm{
+	padding: 0;
+}
+.section-md{
+	padding: 1px 0;
+}
 .section-lg,
 .section-xl {
 	padding: 50px 0;
@@ -6346,12 +6369,12 @@ html.tablet .ui-to-top {
 	text-overflow: ellipsis;
 	text-align: left;
 	font-size: 22px;
-	line-height: 46px;
+	line-height: 36px;
 }
 
 .rd-navbar-fixed .rd-navbar-brand img {
 	max-width: 160px;
-	max-height: 50px;
+	max-height: 40px;
 	width: auto;
 	height: auto;
 }
@@ -6423,7 +6446,7 @@ html.tablet .ui-to-top {
 
 .rd-navbar-fixed .rd-nav-link {
 	display: block;
-	padding: 9px 56px 9px 18px;
+	padding: 5px 56px 5px 10px;
 }
 
 .rd-navbar-fixed li.opened > .rd-navbar-dropdown {
@@ -6478,7 +6501,7 @@ html.tablet .ui-to-top {
 .rd-navbar-fixed .rd-megamenu-list > li > a,
 .rd-navbar-fixed .rd-navbar-dropdown > li > a {
 	display: block;
-	padding: 9px 56px 9px 16px;
+	padding: 5px 56px 5px 16px;
 	font-size: 13px;
 	line-height: 1.5;
 }
@@ -7055,13 +7078,13 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .rd-navbar-sidebar-layout.rd-navbar-sidebar.rd-navbar--is-stuck .rd-navbar-main {
-	padding-top: 11px;
-	padding-bottom: 11px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	
 }
 
 .rd-navbar-sidebar-layout.rd-navbar-fixed .rd-navbar-info-wrap > * + * {
-	margin-top: 15px;
+	margin-top: 8px;
 }
 
 .rd-navbar-sidebar-layout.rd-navbar-fixed .rd-navbar-collapse {
@@ -7095,7 +7118,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .rd-navbar-classic.rd-navbar-static .rd-navbar-aside {
-	padding: 10px 0;
+	padding: 5px 0;
 }
 
 .rd-navbar-classic.rd-navbar-static .rd-navbar-main {
@@ -7103,7 +7126,7 @@ html.rd-navbar-fixed-linked .page {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 20px 0;
+	padding: 5px 0;
 }
 
 .rd-navbar-classic.rd-navbar-static .rd-nav-item {
@@ -7141,7 +7164,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .rd-navbar-classic.rd-navbar-static .text-secondary a:hover {
-	color: #31404a;
+	color: #518e2a;
 }
 .text-secondary{
 	color: #464545;
@@ -7176,7 +7199,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .rd-navbar-classic.rd-navbar-static.rd-navbar--is-stuck .rd-navbar-main, .rd-navbar-classic.rd-navbar-static.rd-navbar--is-clone .rd-navbar-main {
-	padding: 17px 0;
+	padding: 5px 0;
 }
 
 .rd-navbar-classic.rd-navbar-static.rd-navbar--is-stuck .rd-navbar-nav-item > .rd-navbar-submenu, .rd-navbar-classic.rd-navbar-static.rd-navbar--is-clone .rd-navbar-nav-item > .rd-navbar-submenu {
@@ -7223,7 +7246,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .rd-navbar-transparent.rd-navbar-static .rd-navbar-aside {
-	padding: 10px 0;
+	padding: 7px 0;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -7251,7 +7274,7 @@ html.rd-navbar-fixed-linked .page {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 15px 0 15px;
+	padding: 7px 0 7px;
 }
 
 .rd-navbar-transparent.rd-navbar-static .rd-navbar-info > * {
@@ -7328,7 +7351,7 @@ html.rd-navbar-fixed-linked .page {
 
 @media (min-width: 1600px) {
 	.rd-navbar-transparent.rd-navbar-static .rd-navbar-main {
-		padding: 20px 0 20px;
+		padding: 7px 0 7px;
 	}
 	.rd-navbar-transparent.rd-navbar-static .rd-menu {
 		margin-top: 34px;
@@ -7347,7 +7370,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .rd-navbar-transparent.rd-navbar-static.rd-navbar--is-stuck .rd-navbar-main, .rd-navbar-transparent.rd-navbar-static.rd-navbar--is-clone .rd-navbar-main {
-	padding: 10px 0;
+	padding: 7px 0;
 }
 
 .rd-navbar-transparent.rd-navbar-static.rd-navbar--is-stuck .rd-menu, .rd-navbar-transparent.rd-navbar-static.rd-navbar--is-clone .rd-menu {
@@ -7730,7 +7753,7 @@ html.rd-navbar-fixed-linked .page {
 
 @media (min-width: 1600px) {
 	.rd-navbar-transparent-wrap + .swiper-slider-1 .swiper-slide-caption {
-		padding: 50px 0 100px;
+		padding: 20px 0 50px;
 	}
 }
 

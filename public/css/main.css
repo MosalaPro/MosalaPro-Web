@@ -1344,7 +1344,7 @@ h4 {
   }
     
   .post-request-section{
-    padding-top: 3.6em;
+    padding-top: 3.0em;
   }
   .next-svg{
     color: #5A9E2F;
@@ -1375,7 +1375,17 @@ h4 {
   border: 2px solid rgb(206, 27, 27);
   border-radius: 4px;
  }
-
+ .sm-scr-show{
+  display: none;
+}
+@media(max-width: 700px){
+  .sm-scr{
+    display: none;
+  }
+  .sm-scr-show{
+    display: block;
+  }
+}
 
 .datepicker td, .datepicker th {
     width: 2.5rem;
