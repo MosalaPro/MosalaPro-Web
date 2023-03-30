@@ -1,11 +1,10 @@
-
 <div class="modal fade pro-modal" id="proSignModalCta" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
-
-    <div id="pills-register">
+    <div id="pills-register" class="adaptive-px">
         <div class="text-center mb-2">
-          <h5 class="title text text-center">Sign Up as Service Provider</h5> 
+          <h6 class="title text text-center">Sign Up as Service Provider</h6> 
+          <span class="mb-2">With </span>
           <button type="button" class="btn btn-floating mx-1">
             <a class="fab fa-facebook-f" href="/auth/facebook"></a>
           </button>
@@ -22,164 +21,147 @@
             <a class="fab fa-github"></a>
           </button>
         </div>
-        <p class="text-center mb-4">Or fill in information below.</p>
+        <p class="text-center mb-2">Or fill in information below.</p>
       
       <form  action="/register-pro" method="post">
         <!-- Company Name input -->
-        <form  action="/register-pro" method="post">
-          <!-- Company Name input -->
-          <div class="row">
-            <div class="col">
-                 <!-- Country input -->
-                 <select class="form-control" aria-label="Select Category" name="pRegisterCategroy" style="display: inline;">
-                    <option selected>Select Category</option>
+        <div class="form-group form-group-sm">
+            <!-- Company Name input -->
+            <div class="row mt-1">
+              <div class="col mb-2">
+                  <!-- Country input -->
+                  <div class="form-outline  ">
+                    <select class="form-control" aria-label="Select Category" name="pRegisterCategory" style="display: inline;">
+                        <option selected>Select Category</option>
 
-                    <% if(categories){ categories.forEach(cat=>{ %>
-                      <option value="<%=cat.name %>"><%=cat.name %></option>
-                    <% });} %>
-                  </select>
-            </div>
-          </div>  
-          <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <!-- First name input -->
-                <div class="form-outline  ">
-                    <input type="text" id="pRegisterName" class="form-control" placeholder="First Name" name="pFirstName"  required/>
+                        <% if(categories){ categories.forEach(cat=>{ %>
+                          <option value="<%=cat.name %>"><%=cat.name %></option>
+                        <% });} %>
+                      </select>
                   </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <!-- Last name input -->
-                <div class="form-outline  ">
-                    <input type="text" id="pRegisterLastname" class="form-control" placeholder="Last Name" name="pLastName"  required/>
-                </div>
-            </div>
-          </div>
-         
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <!-- Email input -->
-                <div class="form-outline ">
-                    <input type="email" id="pRegisterEmail" class="form-control" placeholder="Email" name="pEmail"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required/>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                 <!-- Phone input -->
-                <div class="form-outline ">
-                    <input type="number" id="pRegisterPhone" class="form-control" placeholder="Phone Number" name="pPhone" pattern="/((\+*)((0[ -]*)*|(*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/" required/>
-                </div>
-            </div>
-        </div>
-        <!-- Address input -->
-        <div class="row">
-            <div class="col">
-                <div class="form-outline  ">
-                    <input type="text" id="pRegisterAddress" class="form-control" placeholder="Address" name="pAddress"/>
-                  </div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                 <!-- Country input -->
-                 <select name="country_p" id="country_p" class="form-control" aria-label="Select Country" style="display: inline;" required>
-                    <option selected>Select Country</option>
-                    <% countries.forEach(country => { %> 
-                      <option value="<%= country.name %>"> <%= country.name %></option>
-                      <% }); %>
-                  </select>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <!-- City input -->
-                <select class="form-control" aria-label="Select City"  style="display: inline;" id="city_p" name="city_p" required>
-                    <option selected>Select City</option>
-                  </select>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                 <!-- Password input -->
-                    <div class="form-outline">
-                        <input type="password" id="password-input" class="form-control" placeholder="Password" name="password" aria-label="password" aria-describedby="password" autocomplete="off"required/>
+              </div>
+            </div>  
+            <div class="row mt-1">
+              <div class="col-lg-6 col-md-6 col-sm-12  mb-2">
+                  <!-- First name input -->
+                  <div class="form-outline  ">
+                      <input type="text" id="proRegisterName" class="form-control" placeholder="First Name" name="pFirstName"  required/>
                     </div>
-                    <div class="valid-feedback">Good</div>
-                    <div class="invalid-feedback">Weak</div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 ">
+                  <!-- Last name input -->
+                  <div class="form-outline  ">
+                      <input type="text" id="proRegisterLastname" class="form-control" placeholder="Last Name" name="pLastName"  required/>
+                  </div>
+              </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <!-- Conifrm Password input -->
-                <div class="form-outline  ">
-                    <input type="password" id="password-input-conf" class="form-control" placeholder="Confirm Password" autocomplete="off" required/>
-                </div>
-                <div class="valid-feedback">Match</div>
-                <div class="invalid-feedback">Do not match</div>
-            </div>
-            <div class="alert px-4 py-3 mb-0 d-none" role="alert" data-mdb-color="warning" id="password-alert">
-                <ul class="list-unstyled mb-0">
-                    <li class="requirements leng">
-                    <i class="fas fa-check text-success me-2"></i>
-                    <i class="fas fa-times text-danger me-3"></i>
-                    Your password must have at least 8 chars</li>
-                    <li class="requirements big-letter">
-                    <i class="fas fa-check text-success me-2"></i>
-                    <i class="fas fa-times text-danger me-3"></i>
-                    Your password must have at least 1 big letter.</li>
-                    <li class="requirements num">
-                    <i class="fas fa-check text-success me-2"></i>
-                    <i class="fas fa-times text-danger me-3"></i>
-                    Your password must have at least 1 number.</li>
-                    <li class="requirements special-char">
-                    <i class="fas fa-check text-success me-2"></i>
-                    <i class="fas fa-times text-danger me-3"></i>
-                    Your password must have at least 1 special char.</li>
-                </ul>
-            </div>
-        </div>
-        
+          
+          <div class="row mt-1">
+              <div class="col-lg-6 col-md-6 col-sm-12  mb-2">
+                  <!-- Email input -->
+                  <div class="form-outline ">
+                      <input type="email" id="proRegisterEmail" class="form-control" placeholder="Email" name="pEmail"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required/>
+                  </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 ">
+                  <!-- Phone input -->
+                  <div class="form-outline ">
+                      <input type="number" id="proRegisterPhone" class="form-control" placeholder="Phone Number" name="pPhone" pattern="/((\+*)((0[ -]*)*|(*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/" required/>
+                  </div>
+              </div>
+          </div>
+          <!-- Address input -->
+          <div class="row mt-1">
+              <div class="col mb-2">
+                  <div class="form-outline  ">
+                      <input type="text" id="proRegisterAddress" class="form-control" placeholder="Address" name="pAddress"/>
+                    </div>
+              </div>
+          </div>
+          
+          <div class="row mt-1">
+              <div class="col-lg-6 col-md-6 col-sm-12  mb-2">
+                  <!-- Country input -->
+                  <div class="form-outline  ">
+                    <select name="country_pro" id="country_pro" class="form-control" aria-label="Select Country" style="display: inline;" required>
+                        <option selected>Select Country</option>
+                        <% countries.forEach(country => { %> 
+                          <option value="<%= country.name %>"> <%= country.name %></option>
+                          <% }); %>
+                      </select>
+                    </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 ">
+                  <!-- City input -->
+                  <div class="form-outline  ">
+                    <select class="form-control" aria-label="Select City"  style="display: inline;" id="city_p" name="city_p" required>
+                        <option selected>Select City</option>
+                      </select>
+                    </div>
+              </div>
+          </div>
 
-          <div class="row  ">
-            <div class="col-md-6 d-flex justify-content-center">
-              <!-- Checkbox -->
-              <div class="form-check mb-3 mb-md-0">
-                <input class="form-check-input" type="checkbox" value="" id="termsCheck" unchecked required/>
-                <label class="form-check-label" for="termsCheck"> I have read the terms and conditions.</label>
+          <div class="row mt-1">
+              <div class="col-lg-6 col-md-6 col-sm-12  mb-2">
+                  <!-- Password input -->
+                      <div class="form-outline">
+                          <input type="password" id="pro-password-input" class="form-control" placeholder="Password" name="password" aria-label="password" aria-describedby="password" autocomplete="off"required/>
+                      </div>
+                      <div class="valid-feedback">Good</div>
+                      <div class="invalid-feedback">Weak</div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12  ">
+                  <!-- Conifrm Password input -->
+                  <div class="form-outline  ">
+                      <input type="password" id="pro-password-input-conf" class="form-control" placeholder="Confirm Password" autocomplete="off" required/>
+                  </div>
+                  <div class="valid-feedback">Match</div>
+                  <div class="invalid-feedback">Do not match</div>
               </div>
             </div>
-    
-            <div class="col-md-6 d-flex justify-content-center">
-              <!-- Simple link -->
-              <a href="#!">Read terms and conditions</a>
-            </div>
-          </div>
-    
-          <div class="row  ">
-            <div class="col-lg-2 col-md-3 col-sm-0">
-            </div>
-            <div class="col-lg-8 col-md-6 col-sm-12">
-              <div class=" justify-content-center">
-                <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" data-callback="enableProBtn"></div>
+              
+          
+
+            <div class="row  mt-1">
+              <div class="col-md-6 col-lg-6 col-sm-12  mb-2 ">
+                <!-- Checkbox -->
+                <div class="form-check mb-1">
+                  <input class="form-check-input" type="checkbox" value="" id="proTermsCheck" unchecked required/>
+                  <label class="form-check-label" for="termsCheck"> I have read the terms and conditions.</label>
+                </div>
+              </div>
+      
+              <div class="col-md-6 col-lg-6 col-sm-12  ">
+                <!-- Simple link -->
+                <a href="#!">Read terms and conditions</a>
               </div>
             </div>
-            <div class="col-lg-2 col-md-3 col-sm-0">
+      
+            <div class="row  mt-1 mb-3">
+              <div class="col d-flex flex-column justify-content-center align-items-center">
+                  <div class="g-recaptcha" data-sitekey="6LdUeBMlAAAAAAln0xxrDWAG1kHsZLwtNVVYn8o6" data-callback="enableProBtn"></div>
+              </div>
+            </div>
+            <div class="row mt-2">
+            <div class="col">
+                <!-- Submit button -->
+                <input type="submit" class="btn button-primary btn-block mb-1" name="register-p" value="Register" disabled="disabled">
             </div>
           </div>
-          <div class="row">
-          <div class="col-2"></div>
-          <div class="col-8">
-              <!-- Submit button -->
-              <input type="submit" class="btn button-primary btn-block mb-4" name="register-p" value="Register" disabled="disabled">
-          </div>
-          <div class="col-2"></div>
-          </div>
-        </form>
+        </div>
+      </form>
+        <div class="d-flex flex-column justify-content-center align-items-center"> 
+          <span>Already have an account?  <a class="text-primary" href="#logModalCta" data-toggle="modal" data-dismiss="modal" data-caption-animate="fadeInUp">Sign In</a></span>
+        </div>
     </div>
   </div>
 </div>
 </div>
 
 <script>
-  function _(elt){return document.getElementById(element); }
-  _('country_').onchange = function(){
-      filename = "./data/cities/" + _('country_').value +".json";
+  function _(elt){return document.getElementById(elt); }
+  _('country_pro').onchange = function(){
+      filename = "./data/cities/" + _('country_pro').value +".json";
       $.getJSON(filename, function(data) {
         var items = [];
         items.push('<option value="">Select City</option>');

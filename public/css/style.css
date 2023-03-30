@@ -8294,7 +8294,9 @@ html.rd-navbar-fixed-linked .page {
 	border-radius: 0;
 	border: 0;
 }
-
+.form-outline{
+	margin-bottom: 5px;
+}
 .tabs-custom .nav-link.active {
 	cursor: default;
 	border: 0;
@@ -12021,6 +12023,15 @@ html:not(.ie-11):not(.ios) .parallax-disabled {
 }
 .modal-content{
 	padding: 3em;
+}
+@media(max-width:900px){
+	.modal-content > .tab-content{
+		width: auto;
+		padding: 0.5em 1.5em;
+	}
+	.modal-content{
+		padding: 1em;
+	}
 }
 .text{
 	margin: 0.5em 0 ;
