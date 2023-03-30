@@ -2189,10 +2189,24 @@ h5 + .list-marked-big {
 .mt-txt-slide{
 	margin-top: -6em;
 }
-@media(max-width:700px){
+@media(max-width:900px){
 	.mt-txt-slide{
 		margin-top: 0.5em;
 		padding: 0 1em;
+	}
+	.d-flex-center-sm{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 2em 0;
+	}
+
+	.d-block-center-sm{
+		display: inline-block;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		margin: 2em 0;
 	}
 }
 .mt-page{
@@ -5451,6 +5465,16 @@ html [class*='section-'].section-bottom-0 {
 	margin-top: -6.5em;
 	position: relative;
 	z-index: 1;
+}
+@media(max-width: 900px){
+	.bg-pricing {
+		background-color: #ededed;
+		margin-top: auto;
+		padding-bottom: 2em;
+		position: relative;
+		z-index: 1;
+
+	}
 }
 .bg-pricing:not([style*="background-"]) + .bg-pricing:not([style*="background-"]) {
 	padding-top: 0;
@@ -12267,6 +12291,12 @@ html:not(.ie-11):not(.ios) .parallax-disabled {
 	background-color: #ededed;
 	padding: 1em 4em;
 }
+@media(max-width: 900px){
+	.pricing-container{
+		background-color: #ededed;
+		padding: 1em 2em;
+	}
+}
 .hr-page-sep{
 	margin-top: 7em;
 	color: #494c51;
@@ -12277,7 +12307,7 @@ html:not(.ie-11):not(.ios) .parallax-disabled {
 
 .page-nf-container{
 	width:100vw;
-	height:90vh;
+	height:80vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;

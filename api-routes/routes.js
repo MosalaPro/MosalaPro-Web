@@ -22,10 +22,10 @@ module.exports = function(app){
         res.render("register");
     });
     app.get("/profile", function(req, res){
-        res.render("userProfile", {usr: req.user, cats: categories});
+        res.render("userProfile", {usr: req.user, link:null, cats: categories});
     });
     app.get("/p-profile", function(req, res){
-        res.render("professionalProfile", {usr: req.user, cats: categories});
+        res.render("professionalProfile", {usr: req.user, link:null,  cats: categories});
     });
     app.post("/register-pro", function(req, res){
         model.registerProvider(req, res);
@@ -89,16 +89,16 @@ module.exports = function(app){
         });
     });
     app.get('/:anything/', function (req, res) {
-        res.render("page_not_found", {usr: null, cats: categories});
+        res.render("page_not_found", {usr: null, link:null, cats: categories});
    });
 
     app.get('*', function (req, res) {
-         res.render("page_not_found", {usr: null, cats: categories});
+         res.render("page_not_found", {usr: null, link:null, cats: categories});
     });
    
     
     app.use(function(req, res, next) {
-        res.render("page_not_found", {usr: null, cats: categories});
+        res.render("page_not_found", {usr: null, link:null, cats: categories});
     });
     
 
