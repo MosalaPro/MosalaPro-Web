@@ -5,7 +5,6 @@
 *	Copyright: MosalaPro TM
 *
 **********************************************************************************************************/
-const ProviderModel = require("../models/provider");
 const UserModel = require("../models/user");
 const CategoryModel = require("../models/category");
 const PostRequestModel = require("../models/postRequest");
