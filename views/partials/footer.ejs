@@ -1,9 +1,17 @@
 
+<% if(usr){ }else{%>
+  
+  <%-include('loginModal') %>
+  <%-include('registerModal') %>
+  
+<% } %>
+<%- include('paymentModal') %>
+
       <footer class="section footer-classic">
         <div class="footer-inner-1">
           <div class="container">
-            <div class="row row-40">
-              <div class="col-md-3 col-lg-3 col-sm-12">
+            <div class="row row-40 mx-1">
+              <div class="col-md-3 col-lg-3 col-sm-6 col-6 ">
                 <h5>Our Contacts</h5>
                 <ul class="contact-list font-weight-bold">
                   <li>
@@ -35,9 +43,9 @@
                       </div>
                     </div>
                   </li>
-                </ul><a class="d-inline-block big" href="mailto:#">support@mosalapro.com</a>
+                </ul><a class="d-inline-block" href="mailto:#">info@mosalapro.com</a>
               </div>
-              <div class="col-md-3 col-lg-3 col-sm-12">
+              <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                 <h5>Company Info</h5>
                 <div class="row row-5 justify-content-between">
                   <div class="col-sm-8">
@@ -48,14 +56,13 @@
                       <li><a href="#">Privacy Policy</a></li>
                       <li><a href="#">Do not Sell</a></li>
                       <li><a href="#">Help</a></li>
-                      <li><a href="#">Retirement</a></li>
                     </ul>
                   </div>
 				  
                   
                 </div>
               </div>
-              <div class="col-md-3 col-lg-3 col-sm-12">
+              <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                 <h5 class="left">Quick Links</h5>
                 <div class="row row-5 justify-content-between">
                   <div class="col-sm-8">
@@ -76,7 +83,7 @@
                   </div>
                   </div>
               </div>
-              <div class="col-md-3 col-lg-3 col-sm-12">
+              <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                 <h5>Categories</h5>
                 <div class="row row-5 justify-content-between">
                   <div class="col-sm-8">

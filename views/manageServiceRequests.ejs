@@ -1,0 +1,133 @@
+<%- include('partials/header') %>
+<section class="bg-light mt-4 pt-4">
+    <div class="container p-4">
+      <div class="page-content container container-profile p-4 note-has-grid">
+        <ul class="nav nav-pills p-3 bg-white mb-3 rounded-pill align-items-center">
+        <li class="nav-item">
+        <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2 active" id="note-important">
+        <i class="icon-layers mr-1"></i><span class="d-none d-md-block">Active</span>
+        </a>
+        </li>
+        <li class="nav-item">
+        <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="note-business"> <i class="icon-briefcase mr-1"></i><span class="d-none d-md-block">Completed</span></a>
+        </li>
+        <li class="nav-item">
+        <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="note-social"> <i class="icon-share-alt mr-1"></i><span class="d-none d-md-block">Cancelled</span></a>
+        </li>
+        <li class="nav-item">
+          <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="note-missing"> <i class="icon-share-alt mr-1"></i><span class="d-none d-md-block">Missing details</span></a>
+          </li>
+        <li class="nav-item">
+        <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="all-category"> <i class="icon-tag mr-1"></i><span class="d-none d-md-block">All</span></a>
+        </li>
+        
+        </ul>
+        <div class="tab-content bg-transparent px-4">
+        <div id="note-full-container" class="note-has-grid row">
+        <% if(postRequests) postRequests.forEach(request=>{ 
+          
+          if(request.status === "active") { %>
+            <div class="col-md-4 single-note-item all-category note-important" >
+            <div class="card-msr card-body">
+            <span class="active_side-stick"></span>
+            <h5 class="note-title text-truncate w-75 mb-2" data-noteheading="<%= request.requestTitle %>"><%= request.requestTitle %><b class="point fa fa-circle ml-1 font-10 active_request"></b></h5>
+            <span class="note-date font-12 text-light ">Request date: <b class="request_date"><%= request.createdAt.getUTCMonth() + 1 %>/<%= request.createdAt.getUTCDate()%>/<%= request.createdAt.getUTCFullYear() %></b></span>
+            <span class="note-date font-12 text-light ">Request deadline: <b class="request_deadline"><%= request.deadline %></b></span>
+            <span class="note-inner-content text-muted"> Category: <b class="request_category"><%= request.requestCategory %></b></span>
+            <span class="note-inner-content text-muted"> Budget: $<b class="request_budeget"><%= request.budget %></b></span>
+            <span class="note-inner-content text-muted"> Status: <b class="status"> <%= request.status %></b></span>
+            <div class="note-content">
+            <span> Description: <b class="note-inner-content text-muted" data-notecontent="<%=request.requestDescription%>"><%= request.requestDescription %></b></span>
+            </div>
+            </div>
+            </div>
+
+        <% } if(request.status === "completed") { %>
+          <div class="col-md-4 single-note-item all-category note-business d-none">
+          <div class="card-msr card-body">
+          <span class="completed_side-stick"></span>
+          <h5 class="note-title text-truncate w-75 mb-2" data-noteheading="<%= request.requestTitle %>"><%= request.requestTitle %><b class="point fa fa-circle ml-1 font-10 completed_request"></b></h5>
+          <span class="note-date font-12 text-light ">Request date: <b class="request_date"><%= request.createdAt.getUTCMonth() + 1 %>/<%= request.createdAt.getUTCDate()%>/<%= request.createdAt.getUTCFullYear() %></b></span>
+          <span class="note-date font-12 text-light ">Request deadline: <b class="request_deadline"><%= request.deadline %></b></span>
+          <span class="note-inner-content text-muted"> Category: <b class="request_category"><%= request.requestCategory %></b></span>
+          <span class="note-inner-content text-muted"> Budget: $<b class="request_budeget"><%= request.budget %></b></span>
+          <span class="note-inner-content text-muted"> Status: <b class="status">  <%= request.status %></b></span>
+          <div class="note-content">
+          <span> Description: <b class="note-inner-content text-muted" data-notecontent="<%=request.requestDescription%>"><%= request.requestDescription %></b></span>
+          </div>
+          </div>
+          </div>
+      
+      <% } %>
+      <% if(request.status === "cancelled") { %>
+        <div class="col-md-4 single-note-item all-category note-social d-none">
+        <div class="card-msr card-body">
+        <span class="completed_side-stick"></span>
+        <h5 class="note-title text-truncate w-75 mb-2" data-noteheading="<%= request.requestTitle %>"><%= request.requestTitle %><b class="point fa fa-circle ml-1 font-10 completed_request"></b></h5>
+        <span class="note-date font-12 text-light ">Request date: <b class="request_date"><%= request.createdAt.getUTCMonth() + 1 %>/<%= request.createdAt.getUTCDate()%>/<%= request.createdAt.getUTCFullYear() %></b></span>
+        <span class="note-date font-12 text-light ">Request deadline: <b class="request_deadline"><%= request.deadline %></b></span>
+        <span class="note-inner-content text-muted"> Category: <b class="request_category"><%= request.requestCategory %></b></span>
+        <span class="note-inner-content text-muted"> Budget: $<b class="request_budeget"><%= request.budget %></b></span>
+        <span class="note-inner-content text-muted"> Status: <b class="status">  <%= request.status %></b></span>
+        <div class="note-content">
+        <span> Description: <b class="note-inner-content text-muted" data-notecontent="<%=request.requestDescription%>"><%= request.requestDescription %></b></span>
+        </div>
+        </div>
+        </div>
+    
+    
+    <% } else {%>
+          <!-- All requestes -->
+            <div class="col-md-4 single-note-item all-category d-none">
+            <div class="card-msr card-body">
+            <span class="active_side-stick"></span>
+            <h5 class="note-title text-truncate w-75 mb-2" data-noteheading="<%= request.requestTitle %>"><%= request.requestTitle %><b class="point fa fa-circle ml-1 font-10 active_request"></b></h5>
+            <span class="note-date font-12 text-light ">Request date: <b class="request_date"><%= request.createdAt.getUTCMonth() + 1 %>/<%= request.createdAt.getUTCDate()%>/<%= request.createdAt.getUTCFullYear() %></b></span>
+            <span class="note-date font-12 text-light ">Request deadline: <b class="request_deadline"><%= request.deadline %></b></span>
+            <span class="note-inner-content text-muted"> Category: <b class="request_category"><%= request.requestCategory %></b></span>
+            <span class="note-inner-content text-muted"> Budget: $<b class="request_budeget"><%= request.budget %></b></span>
+            <span class="note-inner-content text-muted"> Status: <b class="status"> <%= request.status %></b></span>
+            <div class="note-content">
+            <span> Description: <b class="note-inner-content text-muted" data-notecontent="<%=request.requestDescription%>"><%= request.requestDescription %></b></span>
+            </div>
+            </div>
+            </div>
+    
+    <% } }); %>
+       
+        </div>
+        </div>
+        </div>
+
+      </div>
+</section>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">
+
+var $btns = $('.note-link').click(function() {
+        if (this.id == 'important') {
+          var $el = $('.' + this.id).fadeIn();
+          $('#note-full-container > div').not($el).hide();
+          this.removeClass("d-none");
+        } if (this.id == 'all-category') {
+          $('all-category').removeClass("d-none");
+          var $el = $('.' + this.id).fadeIn();
+          $('#note-full-container > div').not($el).hide();
+        }if (this.id == 'missing') {
+          var $el = $('.' + this.id).fadeIn();
+          $('#note-full-container > div').not($el).hide();
+          $('missing').removeClass("d-none");
+        }
+        else {
+          $('#note-full-container > div').removeClass("d-none");
+          var $el = $('.' + this.id).fadeIn();
+          $('#note-full-container > div').not($el).hide();
+        }
+        $btns.removeClass('active');
+        $(this).addClass('active');  
+    })
+
+</script>
+
+<%- include('partials/footer') %>

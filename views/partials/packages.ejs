@@ -4,7 +4,7 @@
           <h2 class="text-center mb"></span><span>Join as service provider. <span class="text-light">Choose the right package for you.</span></span></h2>
           <div class="row row-30 justify-content-center">
             <div class="col-sm-3 ">
-              <div class="box-pricing box-pricing-black">
+              <div class="box-pricing box-pricing-black box-pricing-popular">
                 <div class="box-pricing-body">
                   <h5 class="box-pricing-title ">Trial</h5>
                   <h3 class="box-pricing-price ">Free</h3>
@@ -24,12 +24,20 @@
                     <li>Full Support</li>
                   </ul>
                 </div>
-                <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#proSignModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+                <% if(usr) { 
+                    if (usr.subscriptionPlan == "trial") {%>
+                      <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block disabled_link"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Current Plan</a></div>
+                      <div class="box-pricing-current">Current Plan</div>
+                    <% }else{ %>
+                      <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+                <% } } else { %>
+                <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+                 <% }%>
               </div>
             </div>
 
             <div class="col-sm-3 ">
-              <div class="box-pricing box-pricing-black">
+              <div class="box-pricing box-pricing-black box-pricing-popular">
                 <div class="box-pricing-body">
                   <h5 class="box-pricing-title">Bronze</h5>
                   <h3 class="box-pricing-price">$50.00</h3>
@@ -49,8 +57,16 @@
                     <li>Full Support</li>
                   </ul>
                 </div>
-                <div class="box-pricing-button"><a class="button-lg button-block button-gray-4 " href="#proSignModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
-              </div>
+                <% if(usr) { 
+                  if (usr.subscriptionPlan == "bronze") {%>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block disabled_link"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Current plan</a></div>
+                    <div class="box-pricing-current">Current Plan</div>
+                  <% }else{ %>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp" onclick="openSubscriptionModal('bronze')">Get Started</a></div>
+              <% } } else { %>
+              <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+               <% }%>
+                </div>
             </div>
 
             <div class="col-sm-3 ">
@@ -74,8 +90,18 @@
                     <li>Full Support</li>
                   </ul>
                 </div>
-                <div class="box-pricing-button"><a class=" button-lg button-block button-gray-4"  href="#proSignModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
-                <div class="box-pricing-badge">popular</div>
+                <% if(usr) { 
+                  if (usr.subscriptionPlan == "gold") {%>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block disabled_link"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Current Plan</a></div>
+                    <div class="box-pricing-current">Current Plan</div>
+                  <% }else{ %>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#payModalCta" data-toggle="modal" onclick="openSubscriptionModal('gold')" data-caption-animate="fadeInUp">Get Started</a></div>
+                    <div class="box-pricing-badge">popular</div>
+                  <% } } else { %>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+                    <div class="box-pricing-badge">popular</div>
+              <% }%>
+                
               </div>
             </div>
             <div class="col-sm-3">
@@ -99,7 +125,15 @@
                     <li class="active">Full Support</li>
                   </ul>
                 </div>
-                <div class="box-pricing-button"><a class="button-lg button-block button-gray-4" href="#proSignModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+                <% if(usr) { 
+                  if (usr.subscriptionPlan == "Platinum") {%>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block disabled_link"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Current Plan</a></div>
+                    <div class="box-pricing-current">Current Plan</div>
+                  <% }else{ %>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#payModalCta" data-toggle="modal" onclick="openSubscriptionModal('platinum')" data-caption-animate="fadeInUp">Get Started</a></div>
+              <% } } else { %>
+              <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+               <% }%>
               </div>
             </div>
           </div>

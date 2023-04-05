@@ -1,51 +1,57 @@
 
 <div class="modal fade" id="logModalCta" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      
       <div class="modal-content">
+        
         <ul class="nav nav-tabs nav-justified mb-1" id="ex1" role="tablist">
           <li class="nav-item" role="presentation">
             <a class="nav-link active " id="tab-login-u" data-toggle="pill" href="#pills-login" role="tab"
-              aria-controls="pills-login" aria-selected="true">USER</a>
+              aria-controls="pills-login" aria-selected="true">LOGIN</a>
           </li>
-          <li class="nav-item" role="presentation">
+          <!--li class="nav-item" role="presentation">
             <a class="nav-link" id="tab-login-p" data-toggle="pill" href="#pills-login-p" role="tab"
               aria-controls="pills-login-p" aria-selected="false">SERVICE PROVIDER</a>
-          </li>
+          </li-->
         </ul>
         <!-- Pills navs -->
         <!-- Pills content -->
         <div class="tab-content ">
           <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login-u">
-
+            
             <div class="text-center ">
-              <h5 class="title text text-center">Sign In as User</h5> 
-              <span>With </span>
+              <h6 class="text text-center">Sign In </h6> 
+              <span class="small-text">With </span>
               </div>
             <div class="text-center">
               <a class="btn btn-primary ml-1" style="background-color: #3b5998;" href="/auth/facebook" role="button">
-                <b class="fab fa-facebook me-2"> </b></a>
+                <b class="fab fa-facebook"> </b></a>
               
               <a class="btn btn-primary ml-1" style="background-color: #7e2b12;" href="/auth/google" role="button">
-                <b class="fab fa-google me-2"></b> </a>
+                <b class="fab fa-google "></b> </a>
       
               <a class="btn btn-primary ml-1" style="background-color: #55acee;" href="#!" role="button">
-                <b class="fab fa-twitter me-2"></b> </a>
+                <b class="fab fa-twitter "></b> </a>
 
               <a class="btn btn-primary ml-1" style="background-color: #0082ca;" href="#!" role="button">
-                <b class="fa fa-linkedin me-2"></b> </a>
+                <b class="fa fa-linkedin "></b> </a>
             </div>
 
-                <p class="big text text-center">Or fill in information below.</p>
+                <p class="text text-center">Or fill in information below.</p>
                 <form action="/login-u" method="post">
-            
-                <div class="row">
-                  <div class="col-md-6">
+                  <% if(link) { %>
+                    <input name="link" value="<%=link%>" style="display:none"> 
+                  <% } %>
+                <div class="row mt-1">
+                  <div class="col">
                       <!-- Email input -->
                       <div class="form-outline ">
                           <input type="email" id="loginEmail" class="form-control" placeholder="Email" name="username"  autocomplete="on" required/>
                       </div>
                   </div>
-                  <div class="col-md-6">
+                </div>
+                <div class="row mt-2">
+                  <div class="col">
                       <!-- Password input -->
                      <div class="form-outline">
                          <input type="password" id="loginPassword" class="form-control" placeholder="Password" name="password" autocomplete="on"  required/>
@@ -53,60 +59,66 @@
                   </div>
               </div>
         
-              <div class="row">
+              <div class="row mt-1">
                 <div class="col">
-                    <div class="mb-3 justify-content-center">
                             <!-- Submit button -->
-                            <button type="submit" class="btn button-primary btn-block mb-4" name="login-u">Login</button>
-                    </div>
+                        <button type="submit" class="btn button-primary btn-block mb-2" name="login-u">Login</button>
                 </div>
                </div>
             </form>
+            <div  class="d-flex flex-column justify-content-center align-items-center"> 
+              <span>New here?  <a class="text-primary" href="#regModalCta" data-toggle="modal" data-dismiss="modal" data-caption-animate="fadeInUp">Create an account</a></span>
+            </div>
           </div>
-          <div class="tab-pane fade" id="pills-login-p" role="tabpanel" aria-labelledby="tab-login-p">
+          <!--div class="tab-pane fade" id="pills-login-p" role="tabpanel" aria-labelledby="tab-login-p">
             
             <div class="text-center ">
-              <h5 class="title text text-center">Sign In as Provider</h5> 
-              <span>With </span>
+              <h6 class="text text-center">Sign In as Provider</h6> 
+              <span class="small-text">With </span>
               </div>
             <div class="text-center">
               <a class="btn btn-primary ml-1" style="background-color: #3b5998;" href="/auth/facebook" role="button">
-                <b class="fab fa-facebook me-2"> </b></a>
+                <b class="fab fa-facebook "> </b></a>
               
               <a class="btn btn-primary ml-1" style="background-color: #7e2b12;" href="/auth/google" role="button">
-                <b class="fab fa-google me-2"></b> </a>
+                <b class="fab fa-google "></b> </a>
       
               <a class="btn btn-primary ml-1" style="background-color: #55acee;" href="#!" role="button">
-                <b class="fab fa-twitter me-2"></b> </a>
+                <b class="fab fa-twitter "></b> </a>
 
               <a class="btn btn-primary ml-1" style="background-color: #0082ca;" href="#!" role="button">
-                <b class="fa fa-linkedin me-2"></b> </a>
+                <b class="fa fa-linkedin "></b> </a>
             </div>
-              <p class="big text text-center">Or fill in information below.</p>
+              <p class="text text-center">Or fill in information below.</p>
             <form  action="/login-p" method="post">
-            <div class="row">
-                <div class="col-md-6">
-                    <!-- Email input -->
-                    <div class="form-outline ">
-                        <input type="email" id="ploginEmail" class="form-control" placeholder="Email" name="username" autocomplete="on" required/>
+              <% if(link) { %>
+                <input name="link" value="<%=link%>" style="display:none"> 
+              <% } %>
+                <div class="row mt-1">
+                  <div class="col">
+                    <div class="form-outline">
+                      <input type="email" id="ploginEmail" class="form-control" placeholder="Email" name="pUsername" autocomplete="on" required/>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <!-- Password input -->
-                   <div class="form-outline">
-                       <input type="password" id="ploginPassword" class="form-control" placeholder="Password" name="password" autocomplete="on" required/>
-                   </div>
+                  </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col">
+                    <div class="form-outline">
+                       <input type="password" id="ploginPassword" class="form-control" placeholder="Password" name="pPassword" autocomplete="on" required/>
+                    </div>
                 </div>
             </div>
           
-              <div class="row">
+              <div class="row mt-1">
                 <div class="col">
-                    <!-- Submit button -->
-                    <button type="submit" class="btn button-primary btn-block mb-4" name="login-p">Log in</button>
+                    <button type="submit" class="btn button-primary btn-block mb-2" name="login-p">Log in</button>
                 </div>
               </div>
             </form>
-          </div>
+            <div  class="d-flex flex-column justify-content-center align-items-center"> 
+              <span>New here?  <a class="text-primary" href="#regModalCta" data-toggle="modal" data-dismiss="modal" data-caption-animate="fadeInUp">Create an account</a></span>
+            </div>
+          </div-->
         </div>
       
       </div>

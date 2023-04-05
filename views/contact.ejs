@@ -14,7 +14,7 @@
             <h3 class="contact-title mb-5">Get in Touch</h3>
             <ul class="contact-info__list list-style--none position-relative z-index-101">
             <li class="mb-4 pl-4">
-            <span class="position-absolute"><b class="fas fa-envelope "></b></span> <a href="/cdn-cgi/l/email-protection" class="__cf_email__ contact-title" data-cfemail="f4878184849b8680b4969b9b8090918dda979b99">infos@mosalapro.com</a>
+            <span class="position-absolute"><b class="fas fa-envelope "></b></span> <a href="/cdn-cgi/l/email-protection" class="__cf_email__ contact-title" data-cfemail="f4878184849b8680b4969b9b8090918dda979b99">info@mosalapro.com</a>
             </li>
             <li class="mb-4 pl-4">
             <span class="position-absolute"><b class="fas fa-phone"></b></span> (021)-241454-545
@@ -47,25 +47,41 @@
             <div class="col-sm-6 mb-3">
             <div class="form-group">
             <label class="required-field" for="firstName">First Name</label>
-            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Wendy">
+            <% if(usr) {%>
+                <input type="text" class="form-control" id="contactFirstName" name="contactFirstName" value="<%=usr.firstName%>" readonly>
+            <% }else {%>
+              <input type="text" class="form-control" id="contactFirstName" name="contactFirstName" placeholder="Enter first name" required>
+              <%  } %>
             </div>
             </div>
             <div class="col-sm-6 mb-3">
             <div class="form-group">
             <label for="lastName">Last Name</label>
-            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Appleseed">
+            <% if(usr) {%>
+              <input type="text" class="form-control" id="contactLastName" name="contactLastName" value="<%=usr.lastName%>" readonly>
+            <% }else {%>
+              <input type="text" class="form-control" id="contactLastName" name="contactLastName" placeholder="Enter last name" required>
+              <%  } %>
             </div>
             </div>
             <div class="col-sm-6 mb-3">
             <div class="form-group">
             <label class="required-field" for="email">Email</label>
-            <input type="text" class="form-control" id="email" name="email" placeholder="wendy.apple@seed.com">
+            <% if(usr) {%>
+              <input type="text" class="form-control" id="contactEmail" name="contactEmail" value="<%=usr.email%>" readonly>
+            <% }else {%>
+              <input type="text" class="form-control" id="contactEmail" name="contactEmail" placeholder="Enter email" required>
+            <%  } %>
             </div>
             </div>
             <div class="col-sm-6 mb-3">
             <div class="form-group">
             <label for="phone">Phone Number</label>
-            <input type="tel" class="form-control" id="phone" name="phone" placeholder="(021)-454-545">
+            <% if(usr) {%>
+              <input type="text" class="form-control" id="contactPhone" name="contactPhone" value="<%=usr.phone%>" readonly>
+            <% }else {%>
+              <input type="text" class="form-control" id="contactPhone" name="contactPhone" placeholder="Enter phone number">
+            <%  } %>
             </div>
             </div>
             <div class="col-sm-12 mb-3">
