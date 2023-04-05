@@ -718,7 +718,7 @@ a[href*='tel'], a[href*='mailto'] {
 
 
 .search-pro-section{
-	margin-top: 8em;
+	padding-top: 8em;
 
 }
 
@@ -2809,7 +2809,7 @@ hr {
 	max-width: 100%;
 	overflow: hidden;
 	display: inline-block;
-	padding: 10px 15px;
+	padding: 8px 10px;
 	font-size: 18px;
 	line-height: 1.25;
 	border: 2px solid;

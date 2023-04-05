@@ -89,9 +89,8 @@
 			pageTransition({
 				target: document.querySelector( '.page' ),
 				delay: 0,
-				duration: 500,
+				duration: 100,
 				classIn: 'fadeIn',
-				classOut: 'fadeOut',
 				classActive: 'animated',
 				conditions: function (event, link) {
 					return link && !/(\#|javascript:void\(0\)|callto:|tel:|mailto:|:\/\/)/.test(link) && !event.currentTarget.hasAttribute('data-lightgallery');
@@ -99,7 +98,7 @@
 				onTransitionStart: function ( options ) {
 					setTimeout( function () {
 						plugins.preloader.removeClass('loaded');
-					}, options.duration * .75 );
+					}, options.duration * .25 );
 				},
 				onReady: function () {
 					plugins.preloader.addClass('loaded');

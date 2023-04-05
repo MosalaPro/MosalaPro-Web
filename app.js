@@ -13,7 +13,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-const models = require(__dirname + "/models/models.js");
+const UserModel = require(__dirname+"/models/user");
+
 const compression = require("compression");
 const session = require("express-session");
 const passport = require("passport");
@@ -51,6 +52,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
+app.use("/photo", express.static("uploads"));
 
 app.use(session({
 	secret: process.env.SESSION_SECRET,
@@ -62,17 +64,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-const User = models.getUserModel();
-
-passport.use(User.createStrategy()); 
+passport.use(UserModel.createStrategy()); 
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
+  UserModel.findById(id, function(err, user) {
     done(err, user);
   });
 });
@@ -86,7 +85,7 @@ passport.use(new GoogleStrategy ({
 	function(accessToken, refreshToken, profile, cb){
 		console.log(profile);
 
-		User.findOne({google_id: profile.id}, function(err, existingUser){
+		UserModel.findOne({google_id: profile.id}, function(err, existingUser){
 			if(existingUser){
 				return cb(err, existingUser);
 			}else{
@@ -119,7 +118,7 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, cb) {
 	  console.log(profile);
-	User.findOne({facebook_id: profile.id}, function(err, existingUser){
+	UserModel.findOne({facebook_id: profile.id}, function(err, existingUser){
 		if(existingUser){
 			return cb(err, existingUser);
 		}else{
