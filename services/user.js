@@ -32,32 +32,34 @@ passport.deserializeUser(function(id, done) {
 const UserService = {
   login: async (req, res) => {
     const user = new UserModel({
-      username : _.trim(req.body.username),
+      username : _.trim(_.toLower(req.body.username)),
       password : req.body.password
     });
     req.login(user, function(err){
           if (err) {
-              console.log(err);
+              console.log("USER:: An error occured : ", err);
+              res.status(400).send({ error: "Wrong username or password" });
+              return;
               // TODO: activate error message on modal
           } else {
               passport.authenticate("local")(req, res, function(){
                   if(req.user.verified === true){
                       console.log("User has been successfully logged in");
-                      
+                      res.status(200).send("Ok");
+                      //res.redirect("/");
+                      return;
                   }else{
-                      console.log("User has not been verified");
+                      res.status(400).send("Your account has not been verified." );
                       req.logout(function(err){
                           if(err){return next(err);}
                       });
+                      return;
                   }
-                  if(req.body.link){
-                      console.log("Redirecting to link: "+req.body.link);
-                      res.redirect(req.body.link);
-                  }else
-                      res.redirect("/");
+                  
               });
           }
       });
+      return;
   },
   register: async (req, res) => {
     let newUser = null;
@@ -70,7 +72,7 @@ const UserService = {
         category: category.name,
         firstName: _.capitalize(req.body.pFirstName),
         lastName: _.capitalize(req.body.pLastName),
-        email: req.body.pEmail,
+        email: _.toLower(req.body.pEmail),
         phone: req.body.pPhone,
         address: req.body.pAddress,
         username: req.body.pEmail,
@@ -90,10 +92,11 @@ const UserService = {
         email: _.trim(req.body.email),
         phone: req.body.phone,
         address: req.body.address,
-        username: req.body.email,
+        username: _.toLower(req.body.email),
         accountType: req.body.userType,
         verified: false,
         country: req.body.country,
+        subscriptionPlan: "",
         city: req.body.city,
         createdAt: new Date(),
         lastUpdate: new Date()
@@ -109,7 +112,7 @@ const UserService = {
           console.log("USER:: User that's always there: "+user +" --");
           //return res.status(400).send("User with given email already exist!");
           const msg = "User with given email already exist!"; 
-          res.redirect("/");
+          res.status(300).send(msg);
           return;
           //res.render("register", {usr: newUser, cats: categories, msg: msg});
       }else{ 
@@ -117,34 +120,43 @@ const UserService = {
           await UserModel.register(newUser, password, function(err, u){
           if (err) {
             console.log("USER:: User Registration error: "+err);
-            // TODO: activate error message on modal
-
+            res.status(409).send({error: err});
+            return;
           } else {
               let tok = TokenModel.findOne({ userId: newUser._id }).exec();
-              TokenModel.findByIdAndRemove(tok._id);
+              TokenModel.findByIdAndRemove(tok._id).exec();
               console.log("User has been successfully registered.");
+              if(isPro){
+                if(userEmailSender.sendProCode(6, newUser)){
+                    //res.render("emailVerification", {usr: null, link:null, cats: categories, userId: newUser._id});
+                    res.status(200).send({userId: newUser._id, status:200});
+                    return;
+                }else{
+                    console.log("USER:: Could not send code!");
+                    res.status(408).send({error: "USER:: Could not send code!"});
+                    return;
+                }
+              }
+              else{
+                if(userEmailSender.sendCode(6, newUser)){
+                    res.status(200).send({userId: newUser._id, status:200});
+                      return;
+                }else{
+                    console.log("USER:: Could not send code!");
+                    res.status(408).send({error: "USER:: Could not send code!"});
+                    return;
+                }
+              }
           }
-              //res.redirect("/");
           });
-          if(isPro){
-            if(userEmailSender.sendProCode(6, newUser)){
-                res.render("emailVerification", {usr: null, link:null, cats: categories, userId: newUser._id});
-            }else{
-                console.log("USER:: Could not send code!");
-            }
-          }
-          else{
-            if(userEmailSender.sendCode(6, newUser)){
-              res.render("emailVerification", {usr: null, link:null, cats: categories, userId: newUser._id});
-          }else{
-              console.log("USER:: Could not send code!");
-          }
-          }
+          return;
           
       }
     }catch(error){
         res.status(400).send("USER:: An error occured : "+error);
+        return;
     }
+    return;
   
   },
 
@@ -160,14 +172,20 @@ const UserService = {
             res.render("emailVerification", {usr: null, link:null, cats: categories, userId: user._id});
           }else{
               console.log("USER:: Could not resend code!");
+              
           }
       }
-      else   
+      else{
           console.log("USER:: User not found, could not resend email.");
+          res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.params.id});
+          return;
+      }
       
     }catch(error){
         console.log("USER:: An error occured: "+ error);
-        res.status(400).send("USER:: An error occured : "+error);
+        //res.status(400).send("USER:: An error occured : "+error);
+        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.params.id});
+        return;
     }
   },
 
@@ -226,6 +244,10 @@ const UserService = {
     const res = await UserModel.find(filters);
     return res;
   },
+  getProviders : async()=>{
+    const providers = await UserModel.find({accountType:"provider"}).limit(8).exec();
+    return providers;
+  },
   update: async (data) => {
     data.skills = data.skills.toString().split(",").filter(skill => skill !== '');
     const res = await UserModel.findByIdAndUpdate(data._id, data);
@@ -249,9 +271,35 @@ const UserService = {
       plan: type,
     }
     const res = await UserModel.findByIdAndUpdate(_id, { subscription });
+  },
+
+  updateUser: async (userData) => {
+    const result = await UserModel.findByIdAndUpdate(userData._id, userData);
+    if(result)
+      console.log("USER:: User updated");
+    else
+      console.log("USER:: Update failed");
+  }, 
+  updatePassword : async(req, res)=>{
+      req.user.authenticate(req.body.accountPassword, function(err,model,passwordError){
+        if(passwordError){
+          console.log("USER:: Error occured while authenticating user: "+err);
+          res.status(400).send('The given password is incorrect!!');
+          return;
+         } else if(model) {
+          console.log(`USER:: Correct password ${model}`)
+          req.user.setPassword(req.body.newPassword, function(){
+            req.user.save();
+            res.status(200).send('Password has been updated successfully!');
+            return;
+            });
+          } else {
+            console.log('USER:: Incorrect password');
+            res.status(304).send("Inccorect password");
+            return;
+        }
+    return;
+    });
   }
 }
-
-
-
 module.exports = UserService;

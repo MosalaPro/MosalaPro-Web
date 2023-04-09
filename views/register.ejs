@@ -81,7 +81,7 @@
                       <div class="row">
                         <div class="col-md-6">
                             <!-- Country input -->
-                            <select name="country" id="country" class="form-control" aria-label="Select Country" style="display: inline;" required>
+                            <select name="regCountry" id="regCountry" class="form-control" aria-label="Select Country" style="display: inline;" required>
                                 <option >Select Country</option>
                                 <% countries.forEach(country => { %> 
                                   <option value="<%= country.name %>"> <%= country.name %></option>
@@ -90,7 +90,7 @@
                         </div>
                         <div class="col-md-6">
                             <!-- City input -->
-                            <select class="form-control" aria-label="Select City"  style="display: inline;" id="city" name="city" required>
+                            <select class="form-control" aria-label="Select City"  style="display: inline;" id="regCity" name="regCity" required>
                                 <option>Select City</option>
                               </select>
                         </div>
@@ -226,7 +226,7 @@
                   <div class="row">
                       <div class="col-md-6">
                           <!-- Country input -->
-                          <select name="country_p" id="country_p" class="form-control" aria-label="Select Country" style="display: inline;" required>
+                          <select name="country_pro" id="country_pro" class="form-control" aria-label="Select Country" style="display: inline;" required>
                               <option selected>Select Country</option>
                               <% countries.forEach(country => { %> 
                                 <option value="<%= country.name %>"> <%= country.name %></option>
@@ -235,7 +235,7 @@
                       </div>
                       <div class="col-md-6">
                           <!-- City input -->
-                          <select class="form-control" aria-label="Select City"  style="display: inline;" id="city_p" name="city_p" required>
+                          <select class="form-control" aria-label="Select City"  style="display: inline;" id="city_pro" name="city_pro" required>
                               <option selected>Select City</option>
                             </select>
                       </div>

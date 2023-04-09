@@ -94,7 +94,7 @@
               <div class="col-lg-6 col-md-6 col-sm-12 ">
                   <!-- City input -->
                   <div class="form-outline  ">
-                    <select class="form-control" aria-label="Select City"  style="display: inline;" id="city_p" name="city_p" required>
+                    <select class="form-control" aria-label="Select City"  style="display: inline;" id="city_pro" name="city_pro" required>
                         <option selected>Select City</option>
                       </select>
                     </div>
@@ -145,7 +145,7 @@
             <div class="row mt-2">
             <div class="col">
                 <!-- Submit button -->
-                <input type="submit" class="btn button-primary btn-block mb-1" name="register-p" value="Register" disabled="disabled">
+                <input type="submit" class="btn button-primary btn-block mb-1" name="register_pro" id="register_pro" value="Register" disabled="disabled">
             </div>
           </div>
         </div>
@@ -168,9 +168,9 @@
         $.each(data, function( key, val ) {
               items.push('<option value="' + val.name + '">' + val.name+ '</option>');
           });
-          _('city_').innerHTML = items;
+          _('city_pro').innerHTML = items;
       });}
   function enableProRegBtn(){
-    document.getElementById("register-p").disabled = false;
+    document.getElementById("register_pro").disabled = false;
   }
 </script>

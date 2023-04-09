@@ -1,5 +1,5 @@
 
-<% if(usr){ }else{%>
+<% if(!usr){%>
   
   <%-include('loginModal') %>
   <%-include('registerModal') %>
@@ -89,7 +89,7 @@
                   <div class="col-sm-8">
                     <ul class="footer-list big">
                       <% if(dbConnected) { for(let i = 0; i < 6; i++){ %>
-                        <li><a href="/<%=categories[i].name%>"><%=categories[i].name%></a></li>
+                        <li><a href="/<%=cats[i].name%>"><%=cats[i].name%></a></li>
                       <%} }%>
                     </ul>
                 <!--h5>Partners</h5-->
@@ -128,197 +128,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.min.js"></script>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
-
-    <script>
-      function _(element){return document.getElementById(element); }
-      _('country_search').onchange = function(){
-      filename = "./data/cities/" + _('country_search').value +".json";
-      $.getJSON(filename, function(data) {
-        var items = [];
-        items.push('<option value="">City</option>');
-        $.each(data, function( key, val ) {
-              items.push('<option value="' + val.name + '">' + val.name+ '</option>');
-          });
-          _('city_search').innerHTML = items;
-       });
-      }
-      _('country').onchange = function(){
-          filename = "./data/cities/" + _('country').value +".json";
-          $.getJSON(filename, function(data) {
-            var items = [];
-            items.push('<option value="">Select City</option>');
-            $.each(data, function( key, val ) {
-                  items.push('<option value="' + val.name + '">' + val.name+ '</option>');
-              });
-
-              _('city').innerHTML = items;
-          });
-      }
-
-      _('country_p').onchange = function(){
-          filename = "./data/cities/" + _('country_p').value +".json";
-          $.getJSON(filename, function(data) {
-            var items = [];
-            items.push('<option value="">Select City</option>');
-            $.each(data, function( key, val ) {
-                  items.push('<option value="' + val.name + '">' + val.name+ '</option>');
-              });
-
-              _('city_p').innerHTML = items;
-          });
-        
-      }
-      
-      
-      
-    </script>
-    <script>
-      
-addEventListener("DOMContentLoaded", (event) => {
-  const password = document.getElementById("password-input");
-  const passwordAlert = document.getElementById("password-alert");
-  const requirements = document.querySelectorAll(".requirements");
-  let lengBoolean, bigLetterBoolean, numBoolean, specialCharBoolean;
-  let leng = document.querySelector(".leng");
-  let bigLetter = document.querySelector(".big-letter");
-  let num = document.querySelector(".num");
-  let specialChar = document.querySelector(".special-char");
-  const specialChars = "!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?`~";
-  const numbers = "0123456789";
-
-  requirements.forEach((element) => element.classList.add("wrong"));
-
-  password.addEventListener("focus", () => {
-      passwordAlert.classList.remove("d-none");
-      if (!password.classList.contains("is-valid")) {
-          password.classList.add("is-invalid");
-      }
-  });
-
-  password.addEventListener("input", () => {
-      let value = password.value;
-      if (value.length < 8) {
-          lengBoolean = false;
-      } else if (value.length > 7) {
-          lengBoolean = true;
-      }
-
-      if (value.toLowerCase() == value) {
-          bigLetterBoolean = false;
-      } else {
-          bigLetterBoolean = true;
-      }
-
-      numBoolean = false;
-      for (let i = 0; i < value.length; i++) {
-          for (let j = 0; j < numbers.length; j++) {
-              if (value[i] == numbers[j]) {
-                  numBoolean = true;
-              }
-          }
-      }
-
-      specialCharBoolean = false;
-      for (let i = 0; i < value.length; i++) {
-          for (let j = 0; j < specialChars.length; j++) {
-              if (value[i] == specialChars[j]) {
-                  specialCharBoolean = true;
-              }
-          }
-      }
-
-      if (lengBoolean == true && bigLetterBoolean == true && numBoolean == true && specialCharBoolean == true) {
-          password.classList.remove("is-invalid");
-          password.classList.add("is-valid");
-
-          requirements.forEach((element) => {
-              element.classList.remove("wrong");
-              element.classList.add("good");
-          });
-          passwordAlert.classList.remove("alert-warning");
-          passwordAlert.classList.add("alert-success");
-      } else {
-          password.classList.remove("is-valid");
-          password.classList.add("is-invalid");
-
-          passwordAlert.classList.add("alert-warning");
-          passwordAlert.classList.remove("alert-success");
-
-          if (lengBoolean == false) {
-              leng.classList.add("wrong");
-              leng.classList.remove("good");
-          } else {
-              leng.classList.add("good");
-              leng.classList.remove("wrong");
-          }
-
-          if (bigLetterBoolean == false) {
-              bigLetter.classList.add("wrong");
-              bigLetter.classList.remove("good");
-          } else {
-              bigLetter.classList.add("good");
-              bigLetter.classList.remove("wrong");
-          }
-
-          if (numBoolean == false) {
-              num.classList.add("wrong");
-              num.classList.remove("good");
-          } else {
-              num.classList.add("good");
-              num.classList.remove("wrong");
-          }
-
-          if (specialCharBoolean == false) {
-              specialChar.classList.add("wrong");
-              specialChar.classList.remove("good");
-          } else {
-              specialChar.classList.add("good");
-              specialChar.classList.remove("wrong");
-          }
-      }
-  });
-
-  password.addEventListener("blur", () => {
-      passwordAlert.classList.add("d-none");
-  });
-});
-
-let t1 = gsap.timeline();
-let t2 = gsap.timeline();
-let t3 = gsap.timeline();
-
-t1.to(".page-nf-cog1",
-{
-  transformOrigin:"50% 50%",
-  rotation:"+=360",
-  repeat:-1,
-  ease:Linear.easeNone,
-  duration:8
-});
-
-t2.to(".page-nf-cog2",
-{
-  transformOrigin:"50% 50%",
-  rotation:"-=360",
-  repeat:-1,
-  ease:Linear.easeNone,
-  duration:8
-});
-
-t3.fromTo(".page-nf-wrong-para",
-{
-  opacity:0
-},
-{
-  opacity:1,
-  duration:1,
-  stagger:{
-    repeat:-1,
-    yoyo:true
-  }
-});
-
-
-    </script>
+    <% if(!usr){%>
+      <script src="js/registerUser.js"></script>
+      <script src="js/registerProvider.js"></script>
+      <script src="js/login.js"></script>
+      <script>
+        $(document).ready(function() {
+            $('#regModalCta').on('hidden', function() {
+              $(':input', this).val('');
+            });
+        });
+      </script>
+    <% } %>
+    <script src="js/pageNotFound.js"></script>
   </body>
 </html>
