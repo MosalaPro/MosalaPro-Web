@@ -1,6 +1,6 @@
 /*********************************************************************************************************
-*	postrequest.js : Handle service request submitted by the end user etc.
-*   Author: Constant Pagoui.
+*	postrequest.js : Handles service request submitted by the end user etc.
+* Author: Constant Pagoui.
 *	Date: 03-19-2023
 *	Copyright: MosalaPro TM
 *

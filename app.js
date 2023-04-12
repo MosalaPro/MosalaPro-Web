@@ -89,9 +89,9 @@ passport.use(new GoogleStrategy ({
 			if(existingUser){
 				return cb(err, existingUser);
 			}else{
-				var newUser = new User({
+				var newUser = new UserModel({
 					google_id : profile.id,
-					google_photo : profile.photos[0].value,
+					photo : profile.photos[0].value,
 					email : profile.email,
 					display_name : profile.displayName,
 					username: profile.email,
@@ -122,14 +122,15 @@ passport.use(new FacebookStrategy({
 		if(existingUser){
 			return cb(err, existingUser);
 		}else{
-			var newUser = new User({
+			var newUser = new UserModel({
 				facebook_id : profile.id,
-				facebook_photo : profile.photos[0].value,
+				photo : profile.photos[0].value,
 				email : profile.email,
 				display_name : profile.displayName,
 				username: profile.email,
 				firstName: profile._json.first_name,
 				lastName: profile._json.last_name,
+				facebookProfileLink:  "https://www.facebook.com/profile.php?"+profile.id,
 				createdAt: new Date(),
 				lastUpdate: new Date()
 			}).save(function(err,newUser){
@@ -147,19 +148,23 @@ app.get("/auth/google",
 	passport.authenticate("google", {scope: ["profile"]}));
 	
 app.get("/auth/google/mosalapro", 
-	passport.authenticate("google", {failureRedirect: "/login"}), function(err, res){
-		res.redirect("/");
+	passport.authenticate("google", {failureRedirect: "/"}), function(err, res){
+		if(!req.user.email)
+			res.redirect('/profile');
+		else res.redirect('/');
 	});
 	
 app.get("/auth/facebook",
   passport.authenticate("facebook"));
 
 app.get('/auth/facebook/mosalapro',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
     // Successful authentication, redirect home.
 	console.log("successful FB");
-    res.redirect('/');
+	if(!req.user.email)
+    	res.redirect('/profile');
+	else res.redirect('/');
 });
 
 require('./api-routes/routes')(app);

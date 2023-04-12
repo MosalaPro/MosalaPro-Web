@@ -36,9 +36,9 @@
             <span class="note-inner-content text-muted"> Category: <b class="request_category"><%= request.requestCategory %></b></span>
             <span class="note-inner-content text-muted"> Budget: $<b class="request_budeget"><%= request.budget %></b></span>
             <span class="note-inner-content text-muted"> Status: <b class="status"> <%= request.status %></b></span>
-            <div class="note-content">
+            <!--div class="note-content">
             <span> Description: <b class="note-inner-content text-muted" data-notecontent="<%=request.requestDescription%>"><%= request.requestDescription %></b></span>
-            </div>
+            </div-->
             </div>
             </div>
 
@@ -52,9 +52,9 @@
           <span class="note-inner-content text-muted"> Category: <b class="request_category"><%= request.requestCategory %></b></span>
           <span class="note-inner-content text-muted"> Budget: $<b class="request_budeget"><%= request.budget %></b></span>
           <span class="note-inner-content text-muted"> Status: <b class="status">  <%= request.status %></b></span>
-          <div class="note-content">
+          <!--div class="note-content">
           <span> Description: <b class="note-inner-content text-muted" data-notecontent="<%=request.requestDescription%>"><%= request.requestDescription %></b></span>
-          </div>
+          </div-->
           </div>
           </div>
       
@@ -69,15 +69,15 @@
         <span class="note-inner-content text-muted"> Category: <b class="request_category"><%= request.requestCategory %></b></span>
         <span class="note-inner-content text-muted"> Budget: $<b class="request_budeget"><%= request.budget %></b></span>
         <span class="note-inner-content text-muted"> Status: <b class="status">  <%= request.status %></b></span>
-        <div class="note-content">
+        <!--div class="note-content">
         <span> Description: <b class="note-inner-content text-muted" data-notecontent="<%=request.requestDescription%>"><%= request.requestDescription %></b></span>
-        </div>
+        </div-->
         </div>
         </div>
     
     
     <% } else {%>
-          <!-- All requestes -->
+          <!-- All requestes >
             <div class="col-md-4 single-note-item all-category d-none">
             <div class="card-msr card-body">
             <span class="active_side-stick"></span>
@@ -91,9 +91,14 @@
             <span> Description: <b class="note-inner-content text-muted" data-notecontent="<%=request.requestDescription%>"><%= request.requestDescription %></b></span>
             </div>
             </div>
-            </div>
+            </div-->
     
-    <% } }); %>
+    <% } }); if(postRequests.length < 1) { %>
+      <div  class="d-flex flex-column justify-content-center align-items-center"> 
+        <span class="big ml-4 mt-4"><b class="fa fa-ban mr-2" aria-hidden="true"></b>No requests found.</span>
+      </div>
+      <% }%>
+
        
         </div>
         </div>

@@ -1,14 +1,18 @@
 <%- include('partials/header') %>
 <% if(usr) { 
     const usrFullName = usr.firstName +" " + usr.lastName;
-    const usrLocation = usr.country+", "+usr.city;
+    let usrLocation = "";
+    if(usr.country){
+        usrLocation = usr.country+", "+usr.city;
+    }
+
     %>
 <section class="bg-light p-4">
     <div class="container p-4">
         <div class="container-profile p-4">
             <nav aria-label="breadcrumb" class="main-breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
                     <li class="breadcrumb-item"><a href="javascript:void(0)">User</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Profile Settings</li>
                 </ol>
@@ -63,31 +67,71 @@
                             <div class="tab-pane active" id="profile">
                                 <h6>YOUR PROFILE INFORMATION</h6>
                                 <hr>
-                                <form>
+                                <form action="/profile" method="post" id="profileInfo">
                                     <div class="form-group">
                                         <label for="fullName">Full Name</label>
-                                        <input type="text" class="form-control" id="fullName" aria-describedby="fullNameHelp" placeholder="Enter your fullname" value="<%=usrFullName%>">
+                                        <input type="text" class="form-control" id="fullName" aria-describedby="fullNameHelp" placeholder="Enter your fullname" value="<%=usrFullName%>" readonly>
                                         <small id="fullNameHelp" class="form-text text-muted">Your name may appear around here where you are mentioned.</small>
                                     </div>
                                     <div class="form-group">
                                         <label for="profileEmail">Email</label>
-                                        <input type="text" class="form-control" id="profileEmail" aria-describedby="fullNameHelp" placeholder="Enter your email" value="<%=usr.email%>" readonly>
-                                        <small id="fullNameHelp" class="form-text text-muted">Your email has been verified. Contact technical support to change</small>
+                                        <% if(usr.email) { %>
+                                            <input type="text" class="form-control" id="profileEmail" name="email" aria-describedby="fullNameHelp" placeholder="Enter your email" value="<%=usr.email%>" readonly>
+                                            <small id="fullNameHelp" class="form-text text-muted">Your email has been verified. Contact technical support to change</small>
+                                        <% } else { %>
+                                            <input type="text" class="form-control" id="profileEmail" name="email" aria-describedby="fullNameHelp" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" placeholder="Enter your email" required>
+                                        <% }%>
+                                        
                                     </div>
                                     <div class="form-group">
                                         <label for="profilePhone">Phone number</label>
-                                        <input type="text" class="form-control" id="profilePhone" placeholder="Enter your phone number" value="<%=usr.phone%>">
+                                        <input type="tel" class="form-control" id="profilePhone" name="phone" placeholder="Enter your phone number" value="<%=usr.phone%>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profilePhone">LinkedIn Profile Link</label>
+                                        <input type="url" class="form-control" id="linkedinProfileLink" name="linkedin_link" placeholder="Enter your LinkedIn profile link" >
                                     </div>
                                     <div class="form-group">
                                         <label for="location">Location</label>
-                                        <input type="text" class="form-control" id="location" placeholder="Enter your location" value="<%=usrLocation%>" readonly>
+                                        <% if(usrLocation) { %>
+                                            <input type="text" class="form-control" id="location" placeholder="Enter your location" value="<%=usrLocation%>" readonly>
+                                        <% } else { %>
+                                            <div class="row mt-1">
+                                                <div class="col mb-2">
+                                                    <div class="form-outline  ">
+                                                        <input type="text" id="updateAddress" class="form-control" placeholder="Address" name="address" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-1">
+                                              <div class="col-lg-6 col-md-6 col-sm-12 col-12 mb-2">
+                                                  <!-- Country input -->
+                                                  <div class="form-outline  ">
+                                                    <select name="country" id="updateCountry" class="form-control" aria-label="Select Country" style="display: inline;" required/>
+                                                        <option value="">Select Country</option>
+                                                        <% countries.forEach(country => { %> 
+                                                          <option value="<%= country.name %>"> <%= country.name %></option>
+                                                          <% }); %>
+                                                      </select>
+                                                    </div>
+                                              </div>
+                                              <div class="col-lg-6 col-md-6 col-sm-12 col-12 ">
+                                                  <!-- City input -->
+                                                  <div class="form-outline  ">
+                                                    <select class="form-control" aria-label="Select City"  style="display: inline;" id="updateCity" name="city" required>
+                                                        <option value="">Select City</option>
+                                                      </select>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <% } %>
                                     </div>
                                     <div class="form-group small text-muted">
                                         All of the fields on this page can be edited at any time, and by filling them out, you're giving us consent to share this data wherever your user profile appears.
                                     </div>
                                     <div class="d-inline-block mx-auto">
-                                        <button type="button" class="btn button-primary">Update Profile</button>
-                                        <button type="reset" class="btn button-secondary">Reset Changes</button>
+                                        <button type="submit" class="simple-btn">Update Profile</button>
+                                        <button onClick="reset()" type="reset" class="simple-btn ml-3">Reset Changes</button>
 
                                     </div>
                                     
@@ -99,38 +143,53 @@
                                 <form>
                                     <div class="form-group">
                                     <label for="username">Username</label>
-                                    <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter your username" value="<%=usr.username%>">
-                                    <small id="usernameHelp" class="form-text text-muted">After changing your username, your old username becomes available for anyone else to claim.</small>
+                                    <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter your username" value="<%=usr.username%>" readonly>
+                                    <!--small id="usernameHelp" class="form-text text-muted">After changing your username, your old username becomes available for anyone else to claim.</small>
+                                    <button type="button" class="simple-btn mt-2" onClick="" id="updateUsername">Update username</button-->
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="account-type">Account type</label>
+                                        <div class="row mt-1">
+                                            <div class="col-lg-6 col-md6 col-sm-12 col-12">
+                                                <input type="text" class="form-control" id="accountType" name="accountType" aria-describedby="usernameHelp" placeholder="Enter your username" value="<%=usr.accountType%>" readonly>
+                                            </div>
+                                            <div class="col-lg-6 col-md6 col-sm-12 col-12">
+                                                <a role="button" href="/professionals" class="simple-btn btn" > Join as provider</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     <hr>
                                     <div class="form-group">
-                                    <label class="d-block text-danger">Delete Account</label>
-                                    <p class="text-muted font-size-sm">Once you delete your account, there is no going back. Please be certain.</p>
+                                    <label class="d-block text-danger mt-3"><b>Delete Account</b></label>
+                                    <p class="text-muted font-size-sm mt-1">Once you delete your account, there is no going back. Please be certain.</p>
                                     </div>
                                     <button class="btn btn-danger" type="button">Delete Account</button>
                                 </form>
                             </div>
                             <div class="tab-pane" id="security">
                             <h6>SECURITY SETTINGS</h6>
-                            <hr>
-                            <form>
+                            <hr> 
+
                             <div class="form-group">
+                            <span class="error_message" id="message"></span>
                             <label class="d-block">Change Password</label>
-                            <input type="password" class="form-control" placeholder="Enter your old password">
-                            <input type="password" class="form-control mt-1" placeholder="New password">
-                            <input type="password" class="form-control mt-1" placeholder="Confirm new password">
+                            <input type="password" id="currentPass" name="currentPass" class="form-control" placeholder="Enter current password">
+                            <input type="password" id="newPass" class="form-control mt-1" placeholder="New password">
+                            <input type="password" id="newPassConf" class="form-control mt-1" placeholder="Confirm new password">
                             </div>
-                            </form>
                             <hr>
-                            <form>
                             <div class="form-group">
                             <label class="d-block">Two Factor Authentication</label>
-                            <button class="btn button-primary" type="button">Enable two-factor authentication</button>
+                            <div class="d-flex">
+                                <span class="dark-text big mr-4 ">Enable two factor authentication</span>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
                             <p class="small text-muted mt-2">Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</p>
                             </div>
-                            </form>
                             <hr>
-                            <form>
                             <div class="form-group mb-0">
                             <label class="d-block">Sessions</label>
                             <p class="font-size-sm text-secondary">This is a list of devices that have logged into your account. Revoke any sessions that you do not recognize.</p>
@@ -145,9 +204,8 @@
                             </ul>
                             </div>
                             <div class=" mt-2 mx-auto mb-2">
-                                <button type="button" class="btn button-primary">Save changes</button>
+                                <button type="button" class="simple-btn" onClick="changePassword()" >Save changes</button>
                             </div>
-                            </form>
                             </div>
                             <div class="tab-pane" id="notification">
                             <h6>NOTIFICATION SETTINGS</h6>
@@ -186,7 +244,7 @@
                             <div class="form-group">
                             <label class="d-block mb-0">Payment Method</label>
                             <div class="small text-muted mb-3">You have not added a payment method</div>
-                            <button class="btn button-primary" type="button">Add Payment Method</button>
+                            <button class="simple-btn" type="button">Add Payment Method</button>
                             </div>
                             <div class="form-group mb-0">
                             <label class="d-block">Payment History</label>
@@ -201,7 +259,132 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.getElementById('updateCountry').onchange = function(){
+      filename = "./data/cities/" + document.getElementById('updateCountry').value +".json";
+      $.getJSON(filename, function(data) {
+        var items = [];
+        items.push('<option value="">Select City</option>');
+        $.each(data, function( key, val ) {
+              items.push('<option value="' + val.name + '">' + val.name+ '</option>');
+          });
+
+          document.getElementById('updateCity').innerHTML = items;
+      });
+    
+  }
+</script>
+
+<script>
+
+    function reset(){
+        $( "#profileInfo" ).load( "/profile #profileInfo" );
+    }
+    
+    const changePassword = async()=> {
+  
+    const oldPass = document.getElementById("currentPass").value;
+    const newPass = document.getElementById("newPass");
+    const newPassConf = document.getElementById("newPassConf");
+    const message = document.getElementById("message");
+
+    if (newPass.value != newPassConf.value) {
+    //alert("Passwords Do not match");
+        newPass.classList.add("invalid");
+        newPassConf.classList.add("invalid");
+        message.innerHTML = "Passwords do not match!";
+        return;
+    }
+    if(newPass.value.length < 6){
+        newPass.classList.add("invalid");
+        newPassConf.classList.add("invalid");
+        message.innerHTML = "Password is too short, enter a longer password.";
+        return;
+    }
+    else{
+        const specialChars = "!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?`~";
+        let letterBoolean = newPass.value.match(/[a-z]/i);
+        let numBoolean = false;
+        for (let i = 0; i < newPass.value.length; i++) {
+            if(!isNaN(newPass.value[i]))
+            numBoolean = true;
+        }
+
+        let specialCharBoolean = false;
+            for (let i = 0; i < newPass.value.length; i++) {
+            for (let j = 0; j < specialChars.length; j++) {
+                if (newPass.value[i] == specialChars[j]) {
+                specialCharBoolean = true;
+                }
+            }
+        }
+        if(!letterBoolean){
+            newPass.classList.add("invalid");
+            newPassConf.classList.add("invalid");
+            message.innerHTML = "Include at least letter in password.";
+            return;
+        }
+        if(!numBoolean){
+            newPass.classList.add("invalid");
+            newPassConf.classList.add("invalid");
+            message.innerHTML = "Include at least a number in your password.";
+            return;
+        }
+        if(!specialCharBoolean){
+            newPass.classList.add("invalid");
+            newPassConf.classList.add("invalid");
+            message.innerHTML = "Include at least a special char in your password";
+            return;
+        }
+    }
+
+    requestData = {
+        accountPassword: oldPass,
+        newPassword: newPass.value
+    }
+
+    _postData('/update-password', requestData )
+        .then(async response => {
+        if(response.status == 200){
+            message.classList.remove('error_message');
+            message.classList.add('success_message');
+            message.innerHTML = "Password has been successfully updated!";
+        }
+        else{
+            message.innerHTML = "Current password is not correct.";
+        }
+        
+        }).catch(err => {
+        console.log(err) // Handle errors
+        message.innerHTML = "Current password is not correct. ";
+        });
+    }
+
+    async function _postData(url = '', data = {}) {
+    const response = await fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        },
+        body: JSON.stringify(data)
+    });
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.indexOf("application/json") !== -1) {
+        return response.json();
+    }else{ return response;}
+    }
+
+    
+</script>
+
 <% }%>
 <%- include('partials/footer') %>
+
 
 

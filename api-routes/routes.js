@@ -1,6 +1,6 @@
 
 /*********************************************************************************************************
-*	Route.js : Handles web app routing and url requests.
+*	Routes.js : Handles web app routing and url requests.
 *   Author: Constant Pagoui.
 *	Date: 03-22-2023
 *	Copyright: MosalaPro TM
@@ -9,6 +9,8 @@
 
 const CategoryModel = require("../models/category");
 const CountryModel = require("../models/country");
+const Message = require("../services/message");
+const messageHander = new Message();
 const UserService = require("../services/user");
 const PostRequestModel = require("../models/postRequest");
 const PostRequestService = require("../services/postrequest");
@@ -16,6 +18,7 @@ const stripe = require('stripe')(process.env.STRIPE_SEC_KEY);
 const multer = require("multer");
 const path = require("path");
 const crypto = require("crypto");
+const _ = require("lodash");
 const link = null;
 
 const storage = multer.diskStorage({
@@ -58,14 +61,18 @@ module.exports = function(app){
     require("dotenv").config();
     const root = require('path').resolve('./');
     
-    app.get("/", async function(req, res){
+app.get("/", async function(req, res){
 
         if(req.isAuthenticated()){
-            if(req.user.role == "provider")
+            if(req.user.accountType=="provider")
                 res.render("home", {usr: req.user, cats: categories, countries: countries});
             else  {
-                const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
-                res.render("userDashboard", {usr: req.user, postRequests: pRequests, cats: categories, countries: countries});
+                const pRequests = await PostRequestModel.find({username:req.user.username}).limit(8).exec();
+                requestProviders = await UserService.getProviders();
+                // pRequests.forEach(request =>{
+                //     provider = await UserModel.find
+                // })
+                res.render("userDashboard", {usr: req.user, link: null, postRequests: pRequests, providers: requestProviders, cats: categories, countries: countries});
             }
         }
         else
@@ -132,6 +139,7 @@ module.exports = function(app){
               usr: req.user,
               cats: categories,
               countries: countries,
+              link: null
             });
           } else {
             res.redirect("/");
@@ -144,6 +152,7 @@ module.exports = function(app){
               usr: req.user,
               cats: categories,
               countries: countries,
+              link:null
             });
           } else {
             res.redirect("/");
@@ -157,20 +166,13 @@ module.exports = function(app){
           if (UserService.update({ _id: req.user._id, ...req.body })) {
             res.redirect("/user");
           } else {
-            res.redirect("/user-edit", { cats: categories });
+            res.redirect("/user-edit", { link: null, cats: categories });
           }
         } else {
           res.redirect("/");
         }
       });
 
-    app.get("/login", function(req, res){
-        res.render("login", {usr: null});
-    });
-    
-    app.get("/register", function(req, res){
-        res.render("register");
-    });
 
     app.post("/register-user", async (req, res) => {
         UserService.register(req, res);
@@ -189,9 +191,9 @@ module.exports = function(app){
 
     app.get("/professionals", function(req, res){
         if(req.isAuthenticated())
-            res.render("forProfessionals", {usr: req.user});
+            res.render("forProfessionals", {usr: req.user, link: req.link, cats: categories, countries: countries});
         else
-            res.render("forProfessionals", {usr: null});
+            res.render("forProfessionals", {usr: null, link:null, cats: categories, countries: countries});
     });
 
     app.get("/find-services", async function(req, res){
@@ -205,16 +207,16 @@ module.exports = function(app){
 
     app.get("/about-us", function(req, res){
         if(req.isAuthenticated())
-            res.render("about_us", {usr: req.user});
+            res.render("about_us", {usr: req.user, link:null, cats: categories});
         else
-            res.render("about_us", {usr: null, link: null});
+            res.render("about_us", {usr: null, link: null, cats: categories});
     });
 
     app.get("/contact-us", function(req, res){
         if(req.isAuthenticated())
-            res.render("contact", {usr: req.user, link: null});
+            res.render("contact", {usr: req.user, link: null, cats: categories});
         else
-            res.render("contact", {usr: null, link: null});
+            res.render("contact", {usr: null, link: null,  cats: categories});
     });
 
     app.get("/myrequests", async function(req, res){
@@ -225,18 +227,22 @@ module.exports = function(app){
         }else{
             console.log("No requests found with username: "+req.user.username);
         }
-        res.render("manageServiceRequests", {usr: req.user, postRequests: pRequests, link: null});
+        res.render("manageServiceRequests", {usr: req.user, postRequests: pRequests, link: null,  cats: categories});
     }
     else
         res.redirect("/");
-    })
-    
-    // app.post("/login-u", function(req, res){
-    //     model.loginUser(req, res);
-    // });
+    });
 
-    app.get("/verification", function(req, res){
-        res.render("emailVerification", {usr: null, cats: categories, userId: "testingMF43345", link: null});
+    app.post('/update-password', function(req, res){
+        if(req.isAuthenticated())
+            UserService.updatePassword(req, res);
+        else
+            res.redirect("/");
+    });
+    
+    app.post("/authenticate", function(req, res){
+        console.log("User Id: "+req.body.iddl);
+        res.render("emailVerification", {usr: null, cats: categories, userId: req.body.iddl, link: null});
     });
     app.get("/userdash", async function(req, res){
         
@@ -271,29 +277,50 @@ module.exports = function(app){
     });
   
     app.get("/profile", function(req, res){
-        res.render("userProfile", {usr: req.user, link:null, cats: categories});
+        if(req.isAuthenticated()){
+            res.render("userProfile", {usr: req.user, link:null, cats: categories, countries: countries});
+        }else   res.redirect("/");
+    });
+
+    app.post("/profile", function(req, res){
+        if(req.isAuthenticated()){
+            if(UserService.updateUser({_id: req.user._id, ...req.body}))
+                res.redirect("/profile");
+            else
+                console.log("Update failed!");
+            
+        }else res.redirect("/");
+        
     });
     app.get("/p-profile", function(req, res){
         if(req.isAuthenticated()){
             res.render("userEdit", {usr: req.user, link:null,  cats: categories, countries: countries});
         }else{res.redirect("/");}
     });
-    // app.post("/register-pro", function(req, res){
-    //     model.registerProvider(req, res);
-    // });
+
+    app.get('/pro-profile/:id/', async function (req, res) {
+        let provider = await UserService.findUser(req, res);
+        // if(!provider){
+        //     provider = await UserService.find({facebook_id: req.body.proId}); 
+        // }
+        if( req.isAuthenticated() && provider){
+                res.render("proProfile", {usr: req.user, pro: provider, cats: categories, link:req.link});
+            
+        }else
+         res.redirect("/");
+   });
     
     app.post('/verify-p-email', function(req, res) {
         //model.verifyProviderEmail(req, res);
         UserService.verifyEmail(req, res);
     });
-    // app.post("/register-user", async (req, res) => {
-    //     model.registerUser(req, res);
-    // });
     
-    // app.post('/verify-u-email', function(req, res) {
-    //     model.verifyUserEmail(req, res);
-    // });
-    
+    app.post("/send-message", function(req, res){
+        console.log("About to send message..");
+        messageHander.sendMessage(req, res);
+
+    });
+
     app.get("/resendCode/:id", function(req, res){
         //model.resendCode(req, res);
         UserService.resendCode(req, res);
@@ -304,7 +331,7 @@ module.exports = function(app){
     app.get("/service_request", function (req, res) {
         if(req.isAuthenticated()){
             console.log("Creating a service request..");
-            res.render("serviceRequest",{usr: req.user, link:null});
+            res.render("serviceRequest",{usr: req.user, link:null,  cats: categories});
         }else{
             console.log("User not connecting, redirecting to home page..");
             res.redirect("/");
@@ -324,9 +351,9 @@ module.exports = function(app){
     app.get("/find-services-md", function(req, res){
         
         if(req.isAuthenticated())
-            res.render("findProMd", {link:null, usr: req.user});
+            res.render("findProMd", {link:null, usr: req.user, cats: categories});
         else
-            res.render("findProMd", {link:null, usr: null});
+            res.render("findProMd", {link:null, usr: null,  cats: categories});
     });
 
 

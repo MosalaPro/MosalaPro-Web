@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <base href="/" />
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,900">
     <link rel="stylesheet" href="css/bootstrap.css">
@@ -13,6 +14,7 @@
     <link rel="stylesheet" href="css/input.css">
     <link rel="stylesheet" href="css/searchpro.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/toggle.css">
     <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <script src="https://js.stripe.com/v3/"></script>
     <script src="js/home.js"></script>
@@ -35,6 +37,7 @@
         <p>Loading...</p>
       </div>
     </div>
+       
     <% if(dbConnected){ %>
     <div class="page"><!--a class="banner banner-top" href="https://www.templatemonster.com/website-templates/monstroid2.html" target="_blank"><img src="images/monstroid.jpg" alt="" height="0"></a-->
       <header class="section page-header rd-navbar-transparent-wrap">
@@ -53,10 +56,10 @@
                     <% if(usr){ %>
                       <li>
                         <div class="btn-group open ">
-                          <a class="btn" data-toggle="dropdown" href="#"><b class="fa fa-user fa-fw "></b> Hi <%=usr.firstName %>
+                          <a class="btn" data-toggle="dropdown" href="#" class="text-transform-none"><b class="fa fa-user fa-fw  "></b> <%=usr.firstName %>
                             <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
                             <ul class="dropdown-menu ul-none">
-                              <% if(usr.role=="provider"){ %>
+                              <% if(usr.accountType=="provider"){ %>
                                 <li><a href="/p-profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
                                 <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Tasks</a></li>
                                 <li><a href="#"><b class="fa fa-bar-chart "></b>  Dashboard</a></li>
@@ -72,7 +75,10 @@
                         </div>
                       </li>
                     <% } else { %>
-                      <li class="ml-2 mb-2"><a href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp"> 
+                      <li class="ml-2 mb-2">
+                        <!--To keep modal up even when the user clicks away, uncomment link below and use it-->
+                        <!--<a href="#logModalCta" data-controls-modal="#logModalCta" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-caption-animate="fadeInUp"> -->
+                        <a href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp"> 
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lock mr-1 mb-1" viewBox="0 0 16 16">
                           <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 5.996V14H3s-1 0-1-1 1-4 6-4c.564 0 1.077.038 1.544.107a4.524 4.524 0 0 0-.803.918A10.46 10.46 0 0 0 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h5ZM9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2Zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1Z"/>
                         </svg> Log in</a></li>
@@ -150,7 +156,7 @@
                         <li class="rd-nav-item">
                           <div class="btn-group open ml-2"> 
                             <% if(usr){ %>
-                                <a class="btn" data-toggle="dropdown" href="#">
+                                <a class="btn mb-2" data-toggle="dropdown" href="#">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
                                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                                     <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
@@ -202,8 +208,12 @@
  
 
 <!--TODO: Check if user not logged in, then include-->
+<script>
 
+//location.reload();
+</script>
 
 <% } %>
+
 
         
