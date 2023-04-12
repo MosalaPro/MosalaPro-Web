@@ -1398,15 +1398,7 @@ h4 {
     cursor: pointer;
     font-size: 16px;
     }
-  .simple-btn :hover {
-      text-align: center;
-      padding: 8px 12px;
-      border-radius: 5px;
-      background-color: #2c6409;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-    }
+ 
     
   .post-request-section{
     padding-top: 3.0em;

@@ -15,6 +15,7 @@ const _ = require("lodash");
 const mongoose = require("mongoose");
 mongoose.set('strictQuery', false);
 const passport = require("passport");
+const CountryModel = require("../models/country");
 const userEmailSender = new EmailSender();
 
 passport.use(UserModel.createStrategy());
@@ -45,7 +46,7 @@ const UserService = {
               passport.authenticate("local")(req, res, function(){
                   if(req.user.verified === true){
                       console.log("User has been successfully logged in");
-                      res.status(200).send("Ok");
+                      res.status(200).send({message:"Ok", status:200});
                       //res.redirect("/");
                       return;
                   }else{
@@ -65,8 +66,10 @@ const UserService = {
     let newUser = null;
     let password = "";
     let isPro = false;
+    
     if(req.body.userType == "provider"){
       const category = await CategoryModel.findOne({name:req.body.pCategory}).exec();
+      const countryCode = await CountryModel.findOne({name: req.body.country_p}).exec();
       newUser = await new UserModel({
         categoryId : category._id,
         category: category.name,
@@ -76,6 +79,7 @@ const UserService = {
         phone: req.body.pPhone,
         address: req.body.pAddress,
         username: req.body.pEmail,
+        countryCode: countryCode.phone_code,
         country: req.body.country_p,
         city: req.body.city_p,
         accountType: req.body.userType,
@@ -86,6 +90,7 @@ const UserService = {
       password = req.body.pPassword;
     }
     else{
+      const countryCode = await CountryModel.findOne({name: req.body.country}).exec();
       newUser = new UserModel({
         firstName: _.capitalize(req.body.firstName),
         lastName: _.capitalize(req.body.lastName),
@@ -94,6 +99,7 @@ const UserService = {
         address: req.body.address,
         username: _.toLower(req.body.email),
         accountType: req.body.userType,
+        countryCode: countryCode.phone_code,
         verified: false,
         country: req.body.country,
         subscriptionPlan: "",
@@ -109,7 +115,7 @@ const UserService = {
       console.log("USER:: User email that always exists: "+newUser.email);
       let user = await UserModel.findOne({email: newUser.email}).exec();
       if(user){
-          console.log("USER:: User that's always there: "+user +" --");
+          console.log("USER:: User already exists: "+user +" --");
           //return res.status(400).send("User with given email already exist!");
           const msg = "User with given email already exist!"; 
           res.status(300).send(msg);
@@ -300,6 +306,20 @@ const UserService = {
         }
     return;
     });
+  },
+
+  findUser: async(req, res)=>{
+    let user = await UserModel.findOne({_id: req.params.id}).exec();
+    if(user)
+      return user;
+    else{
+      user = await UserModel.findOne({facebook_id: req.params.id}).exec();
+      if(user)
+        return user;
+      else user = await UserModel.findOne({google_id: req.params.id}).exec();
+        return user;
+    }
+    return;
   }
 }
 module.exports = UserService;

@@ -88,7 +88,7 @@
                 <div class="row row-5 justify-content-between">
                   <div class="col-sm-8">
                     <ul class="footer-list big">
-                      <% if(dbConnected) { for(let i = 0; i < 6; i++){ %>
+                      <% if(dbConnected && cats) { for(let i = 0; i < 6; i++){ %>
                         <li><a href="/<%=cats[i].name%>"><%=cats[i].name%></a></li>
                       <%} }%>
                     </ul>
@@ -141,5 +141,19 @@
       </script>
     <% } %>
     <script src="js/pageNotFound.js"></script>
+    <script src="js/message.js"></script>
+    <script>
+
+      window.addEventListener( "pageshow", function ( event ) {
+          var historyTraversal = event.persisted || 
+                                ( typeof window.performance != "undefined" && 
+                                      window.performance.navigation.type === 2 );
+          if ( historyTraversal ) {
+            // Handle page restore.
+            window.location.reload();
+          }
+        });
+      
+    </script>
   </body>
 </html>

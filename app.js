@@ -130,6 +130,7 @@ passport.use(new FacebookStrategy({
 				username: profile.email,
 				firstName: profile._json.first_name,
 				lastName: profile._json.last_name,
+				facebookProfileLink:  "https://www.facebook.com/profile.php?"+profile.id,
 				createdAt: new Date(),
 				lastUpdate: new Date()
 			}).save(function(err,newUser){

@@ -15,16 +15,16 @@ const onLoginSubmit = async()=> {
             message.classList.remove('error_message');
             message.classList.add('success_message');
             message.innerHTML = "Login successful! Redirecting..";
-            await new Promise(r => setTimeout(r, 1000));
+            await new Promise(r => setTimeout(r, 700));
             window.location.reload();
         }
         else{
-            message.innerHTML = "Wrong username or password! ";
+            message.innerHTML = "Wrong username or password! "+json.status;
         }
         
       }).catch(err => {
         console.log(err) // Handle errors
-        message.innerHTML = "Wrong username or password! ";
+        message.innerHTML = "Wrong username or password! Merde "+err;
       });
   }
 

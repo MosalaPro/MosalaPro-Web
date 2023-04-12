@@ -11,17 +11,17 @@
                                 <h6><%=provider.firstName %> <%=provider.lastName %> </h6>
                                 <span class="text-muted "><%=provider.role %>  </span>
                                 <ul class="rating " data-mdb-toggle="rating" data-mdb-readonly="true" data-mdb-value="3"> 
-                                    <li class="d-inline"><b class="fa-star fa-sm rating-star-color fas active"></b></li>
-                                    <li class="d-inline"><b class="fa-star fa-sm rating-star-color fas "></b></li>
-                                    <li class="d-inline"><b class="fa-star fa-sm rating-star-color fas"></b></li>
-                                    <li class="d-inline"><b class="fas fa-star fa-sm rating-star-color "></b></li>
-                                    <li class="d-inline"> <b class="fas fa-star fa-sm rating-star-color"></b></li><span>(44)</span>
+                                    <% let i = 0; for(i = 0; i < provider.rating; i++) { %>
+                                        <li class="d-inline"><b class="fa-star fa-sm rating-star-color fas "></b></li>
+                                    <% } if(i < 5) while(i < 5) { %>
+                                        <li class="d-inline"><b class="fa-star-o fa-sm rating-star-color fas "></b></li>
+                                    <% i++; } %>
                                 </ul>
                             </div>
                             <ul class="social-links list-inline">
-                                <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><b class="fa fa-facebook"></b></a></li>
-                                <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="LinkedIn"><b class="fa fa-linkedin"></b></a></li>
-                                <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Whatsapp"><b class="fa fa-whatsapp"></b></a></li>
+                                <li class="list-inline-item"><a title="Contact <%=provider.firstName%>" data-toggle="tooltip" data-placement="top"  class="tooltips" href="/pro-profile/<%=provider._id%>" data-toggle="modal" data-caption-animate="fadeInUp"><b class="fa fa-envelope-o"></b></a></li>
+                                <li class="list-inline-item"><a title="Visit <%=provider.firstName%> LinkedIn profile" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="LinkedIn"><b class="fa fa-linkedin"></b></a></li>
+                                <li class="list-inline-item"><a title="Send a Whatsapp message to <%=provider.firstName%>" data-placement="top" data-toggle="tooltip" href="https://wa.me/<%=provider.countryCode%><%=provider.phone%>" target="_blank" data-original-title="Whatsapp"><b class="fa fa-whatsapp"></b></a></li>
                             </ul>
                     
                         </div>

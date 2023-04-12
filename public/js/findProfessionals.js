@@ -15,6 +15,10 @@ _('country_search').onchange = function(){
 _("city_search").onchange = function(){
       handleSearch();
 }
+
+_("selected_category").onchange = function(){
+    handleSearch();
+}
     
 
 // search result based on filters
@@ -53,7 +57,8 @@ const handleSearch = async () => {
   const country = document.getElementById("country_search");
   const city = document.getElementById("city_search");
   const search = document.getElementById("search");
-  const categoryParam = !params.get("category") || params.get("category") === "" ? "" : params.get("category");
+  const categoryParam = document.getElementById("selected_category");
+  //const categoryParam = !params.get("category") || params.get("category") === "" ? document.getElementById("selected_category").value : params.get("category");
   
 
   console.log("country", country)
@@ -63,14 +68,14 @@ const handleSearch = async () => {
   const url = new URL(window.location.href);
 
   console.log(url);
-  url.searchParams.set('category', categoryParam);
+  url.searchParams.set('category', categoryParam.value);
   url.searchParams.set('country_search', country.value);
   url.searchParams.set('city_search', city.value);
   url.searchParams.set('search', search.value);
 
   window.history.replaceState(null, null, url); 
   
-  const res = await fetch(`/find-professionals?category=${categoryParam}&country_search=${country.value}&city_search=${city.value}&search=${search.value}`);
+  const res = await fetch(`/find-professionals?category=${categoryParam.value}&country_search=${country.value}&city_search=${city.value}&search=${search.value}`);
   const professionals = await res.json();
   const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
 
@@ -91,8 +96,8 @@ const handleSearch = async () => {
             </td>
             <td>
                 <div class="widget-26-job-title">
-                    <a href="#">${prof.firstName} ${prof.lastName }</a>
-                    <p class="m-0"><a href="#" class="employer-name">${prof.role}</a> </p>
+                    <a href="/pro-profile/${prof._id}">${prof.firstName} ${prof.lastName }</a>
+                    <p class="m-0">${prof.role}</a> </p>
                 </div>
             </td>
             <td>

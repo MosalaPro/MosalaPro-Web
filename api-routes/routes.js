@@ -9,6 +9,8 @@
 
 const CategoryModel = require("../models/category");
 const CountryModel = require("../models/country");
+const Message = require("../services/message");
+const messageHander = new Message();
 const UserService = require("../services/user");
 const PostRequestModel = require("../models/postRequest");
 const PostRequestService = require("../services/postrequest");
@@ -295,12 +297,30 @@ app.get("/", async function(req, res){
             res.render("userEdit", {usr: req.user, link:null,  cats: categories, countries: countries});
         }else{res.redirect("/");}
     });
+
+    app.get('/pro-profile/:id/', async function (req, res) {
+        let provider = await UserService.findUser(req, res);
+        // if(!provider){
+        //     provider = await UserService.find({facebook_id: req.body.proId}); 
+        // }
+        if( req.isAuthenticated() && provider){
+                res.render("proProfile", {usr: req.user, pro: provider, cats: categories, link:req.link});
+            
+        }else
+         res.redirect("/");
+   });
     
     app.post('/verify-p-email', function(req, res) {
         //model.verifyProviderEmail(req, res);
         UserService.verifyEmail(req, res);
     });
     
+    app.post("/send-message", function(req, res){
+        console.log("About to send message..");
+        messageHander.sendMessage(req, res);
+
+    });
+
     app.get("/resendCode/:id", function(req, res){
         //model.resendCode(req, res);
         UserService.resendCode(req, res);

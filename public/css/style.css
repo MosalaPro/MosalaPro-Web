@@ -512,9 +512,6 @@ a, a:focus, a:active, a:hover {
 	text-decoration: none;
 }
 
-a, a:focus, a:active {
-	color: grey;
-}
 
 a[href*='tel'], a[href*='mailto'] {
 	white-space: nowrap;
@@ -6687,10 +6684,6 @@ html.tablet .ui-to-top {
 	border-bottom: 1px solid #dde1e4;
 }
 
-.rd-navbar-fixed .rd-navbar-megamenu .rd-megamenu-title a, .rd-navbar-fixed .rd-navbar-megamenu .rd-megamenu-title a:focus, .rd-navbar-fixed .rd-navbar-megamenu .rd-megamenu-title a:active {
-	color: #516ca9;
-}
-
 .rd-navbar-fixed .rd-navbar-megamenu .rd-megamenu-title {
 	color: #31404a;
 }
@@ -9990,9 +9983,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 	font-size: 12px;
 }
 
-.lg-outer .lg-dropdown a:hover {
-	background-color: rgba(0, 0, 0, 0.07);
-}
 
 .lg-outer .lg-dropdown .lg-dropdown-text {
 	display: inline-block;

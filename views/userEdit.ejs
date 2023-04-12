@@ -52,7 +52,7 @@
                         </div>
                       </div>
                     
-                        <div class="row">
+                        <div class="row mt-2">
                             <div class="col-md-6">
                                 <!-- Email input -->
                                 <div class="form-outline">
@@ -66,15 +66,29 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-2">
+                          <div class="col-md-6">
+                              <!-- Email input -->
+                              <div class="form-outline">
+                                  <input id="facebookLink" class="form-control has-success" placeholder="Facebook profile link" type="url" name="facebook_link" />
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                              <!-- Phone input -->
+                              <div class="form-outline">
+                                <input id="linkedinLink" class="form-control" placeholder="LinkedIn Profile Link" name="linkedin_link" type="url"  required/>
+                              </div>
+                          </div>
+                      </div>
                         <!-- Address input -->
-                        <div class="row">
+                        <div class="row mt-2">
                             <div class="col">
                                 <div class="form-outline">
                                   <input type="text" id="registerAddress" class="form-control" placeholder="Address" name="address" value="<%=usr.address %>" required/>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-2">
                           <div class="col">
                               <select class="form-control" aria-label="Select Category" name="category" id="user-category" style="display: inline;">
                                   <option selected>Select Category</option>
@@ -85,7 +99,7 @@
                                 </select>
                           </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-2">
                           <div class="col-md-6">
                               <!-- Country input -->
                               <select name="country" id="country_search" class="form-control" aria-label="Select Country" value="<%=usr.firstName %>"style="display: inline;" required>
@@ -102,7 +116,7 @@
                                 </select>
                           </div>
                       </div>
-                      <div class="row">
+                      <div class="row mt-3">
                         <div class="col-md-6">
                             <div class="form-outline">
                               <input type="text" id="role" class="form-control has-success" placeholder="Role" value="<%=usr.role %>"  name="role" />
@@ -114,7 +128,7 @@
                             </div>
                         </div>
                       </div>
-                      <div class="row">
+                      <div class="row mt-2">
                         <div class="col-md-12">
                             <div class="form-outline">
                                 <textarea rows="5" type="text" id="description" class="form-control has-success" placeholder="Description" name="description"><%=usr.description %></textarea>

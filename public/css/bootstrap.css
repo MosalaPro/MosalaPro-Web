@@ -129,7 +129,7 @@ sup {
 }
 
 a {
-	color: #516ca9;
+	color:#3d3d3d;
 	text-decoration: none;
 	background-color: transparent;
 	-webkit-text-decoration-skip: objects;
@@ -3598,7 +3598,7 @@ input[type="button"].btn-block {
 	color: rgba(0, 0, 0, 0.9);
 }
 
-.navbar-light .navbar-text a:hover, .navbar-light .navbar-text a:focus {
+.navbar-light .navbar-text .navbar-light .navbar-text a:focus {
 	color: rgba(0, 0, 0, 0.9);
 }
 

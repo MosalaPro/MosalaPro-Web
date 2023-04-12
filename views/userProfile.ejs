@@ -88,6 +88,10 @@
                                         <input type="tel" class="form-control" id="profilePhone" name="phone" placeholder="Enter your phone number" value="<%=usr.phone%>">
                                     </div>
                                     <div class="form-group">
+                                        <label for="profilePhone">LinkedIn Profile Link</label>
+                                        <input type="url" class="form-control" id="linkedinProfileLink" name="linkedin_link" placeholder="Enter your LinkedIn profile link" >
+                                    </div>
+                                    <div class="form-group">
                                         <label for="location">Location</label>
                                         <% if(usrLocation) { %>
                                             <input type="text" class="form-control" id="location" placeholder="Enter your location" value="<%=usrLocation%>" readonly>

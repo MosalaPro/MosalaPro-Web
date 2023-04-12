@@ -63,6 +63,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  facebookProfileLink: String,
+  linkedinProfileLink: String,
+  countryCode: String,
   rate: {
     type: Number,
     default:"",

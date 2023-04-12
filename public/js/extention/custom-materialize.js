@@ -5216,7 +5216,8 @@ $jscomp.polyfill = function (e, r, p, m) {
           this.counterInterval = setInterval(function () {
             // If toast is not being dragged, decrease its time remaining
             if (!_this29.panning) {
-              _this29.timeRemaining -= 20;
+              _this29.dismiss();
+              //_this29.timeRemaining -= 20;
             }
 
             // Animate toast out
@@ -5236,7 +5237,8 @@ $jscomp.polyfill = function (e, r, p, m) {
       value: function dismiss() {
         var _this30 = this;
 
-        window.clearInterval(this.counterInterval);
+        //window.clearInterval(this.counterInterval);
+        window.clearInterval(50);
         var activationDistance = this.el.offsetWidth * this.options.activationPercent;
 
         if (this.wasSwiped) {
