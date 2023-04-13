@@ -177,8 +177,18 @@ app.get("/", async function(req, res){
     app.post("/register-user", async (req, res) => {
         UserService.register(req, res);
     });
+
     app.get("/register-user", function(req, res){
         res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.body.id, form_action: "/verify-u-email"});
+    });
+
+    app.get("/service-requests", async function(req, res){
+        const jobRequests = await PostRequestService.getActiveRequests();
+        if(req.isAuthenticated())
+            res.render("jobRequests", {usr: req.user, jobs: jobRequests, link:null, cats: categories});
+        else{
+            res.redirect("/");
+        }
     });
 
     app.post("/login-u", function(req, res){

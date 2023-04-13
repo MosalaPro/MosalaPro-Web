@@ -1,0 +1,64 @@
+
+<%- include('partials/header') %>
+<section class="bg-light p-4">
+    <div class="container p-4">
+        <div class=" pt-4">
+            <nav aria-label="breadcrumb" class="main-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/find-services">Find Services</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Professional profile</li>
+                </ol>
+            </nav>
+            <div class="tab-content text-left">
+                <div role="tabpanel" class="tab-pane fade active show" id="hot-jobs">
+                    <div class="row">
+                        <% if (jobs) { jobs.forEach(job=> {  %>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="job-item">
+                                <div class="item-overlay">
+                                    <div class="job-info">
+                                        <span class="tr-title">
+                                            <a href="#"><%=job.requestTitle%></a>
+                                            <span><a href="#"><%=job.requestCategory %></a></span>
+                                        </span>
+                                        <ul class="tr-list job-meta">
+                                            <li><b class="fa fa-map-signs" aria-hidden="true"></b> <%=job.requestCategory %></li>
+                                            <li><b class="fa fa-briefcase" aria-hidden="true"></b> <%=job.deadline%></li>
+                                            <li><b class="fa fa-money" aria-hidden="true"></b> <%=job.budget%></li>
+                                        </ul>
+                                        <ul class="job-social tr-list">
+                                            <li><a href="#"><b class="fa fa-heart-o" aria-hidden="true"></b></a></li>
+                                            <li><a href="#"><b class="fa fa-expand" aria-hidden="true"></b></a></li>
+                                            <li><a href="#"><b class="fa fa-bookmark-o" aria-hidden="true"></b></a></li>
+                                            <li><a href="#"><b class="fa fa-long-arrow-right" aria-hidden="true"></b></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            <div class="job-info">
+                                <div class="company-logo">
+                                    <img src="https://www.bootdey.com/image/300x100/7B68EE/000000" alt="images" class="img-fluid">
+                                </div>
+                                <span class="tr-title">
+                                    <a href="#"><%=job.requestTitle%></a>
+                                </span>
+                                <ul class="tr-list job-meta">
+                                    <li><span><b class="fa fa-map-signs" aria-hidden="true"></b> <%=job.requestCategory %></li>
+                                    <li><span><b class="fa fa-briefcase" aria-hidden="true"></b> <%=job.deadline%></li>
+                                    <li><span><b class="fa fa-money" aria-hidden="true"></b> <%=job.budget%></li>
+                                </ul>
+                                <div class="time"><a href="#"><span>Apply</span></a>
+                                    <span class="pull-right mt-1">Posted on <%= job.createdAt.getUTCMonth() + 1 %>/<%= job.createdAt.getUTCDate()%>/<%= job.createdAt.getUTCFullYear() %></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% } ); } %>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>
+<%- include('partials/footer') %>

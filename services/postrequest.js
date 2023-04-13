@@ -91,6 +91,12 @@ const PostRequestService =  {
             });
           }
         } 
+      },
+
+      getActiveRequests: async()=>{
+        const result = await PostRequestModel.find({status: "active"}).exec();
+        return result;
+
       }
 
 
