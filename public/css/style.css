@@ -11952,7 +11952,7 @@ html:not(.ie-11):not(.ios) .parallax-disabled {
 .ul-none {
 	background: #ffffff;
 	
-	padding: 1rem;
+	padding: 0.5rem;
 }
 .ul-none > li{
 	text-transform: initial;

@@ -1,3 +1,11 @@
+const input = document.getElementById("search");
+input.addEventListener("keyup", getKey);
+function getKey(e) {
+  if(e.code == 'Enter'){
+    handleSearch();
+  }
+}
+
 // country and city selection options
 function _(element){return document.getElementById(element); }
 _('country_search').onchange = function(){

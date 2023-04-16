@@ -9,6 +9,8 @@ const UserModel = require("../models/user");
 const CategoryModel = require("../models/category");
 const PostRequestModel = require("../models/postRequest");
 const passport = require("passport");
+const JobApplication = require("./jobApplication");
+const JobApplicationModel = require("../models/jobApplication");
 
 const PostRequestService =  {
   
@@ -44,7 +46,7 @@ const PostRequestService =  {
               },
             }).array("files", 10); // Allow up to 10 files to be uploaded in one request
       
-            upload(req, res, function (err) {
+            upload(req, res, async function (err) {
               if (err instanceof multer.MulterError) {
                 // A Multer error occurred when uploading
                 console.log(err);
@@ -64,12 +66,14 @@ const PostRequestService =  {
               // Everything went fine
               console.log("In the method postRequest.");
               console.log(req.files); // Contains information about the uploaded files
+              const cat = await CategoryModel.findOne({name: req.body.requestCategory}).exec();
               //Storing in db
               const newRequest = new PostRequestModel({
                 username: req.body.username,
                 requestTitle: req.body.requestTitle,
                 requestDescription: req.body.requestDescription,
-                requestCategory: req.body.requestCategory,
+                requestCategory: cat.name,
+                requestCategoryIcon: cat.icon,
                 budget: req.body.requestBudget,
                 deadline: req.body.requestDeadline,
                 status: "active",
@@ -93,8 +97,9 @@ const PostRequestService =  {
         } 
       },
 
-      getActiveRequests: async()=>{
+      getActiveRequests: async(req, res)=>{
         const result = await PostRequestModel.find({status: "active"}).exec();
+       
         return result;
 
       }

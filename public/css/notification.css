@@ -1,0 +1,35 @@
+.dropdown-list-image {
+    position: relative;
+    height: 2.5rem;
+    width: 2.5rem;
+}
+.dropdown-list-image img {
+    height: 2.5rem;
+    width: 2.5rem;
+}
+.btn-light {
+    color: #5A9E2F;
+    background-color: #e5f7f0;
+    border-color: #d8f7eb;
+}
+.btn-outline-success{
+    color: #5A9E2F;
+}
+.unread {
+    background-color: #e5f7f0;
+    color: darkslategrey;
+}
+.unread .btn-outline-success {
+    color: #5A9E2F;
+    background-color: #fff;
+}
+.rounded-pill-notification{
+    background-color: #ec0033;
+    border-radius: 1em;
+    padding: 0.5em;
+    color: #fff;
+    margin-right: 0.2em;
+    font-size: xx-small;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+}

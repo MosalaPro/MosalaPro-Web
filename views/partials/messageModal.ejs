@@ -12,7 +12,9 @@
                   <span class="d-none" name="error" id="err"></span>
                   <div class="row mt-1">
                   <div class="col-lg-12 col-md-12 col-12">
-                    <input class="d-none" name="proId" value="<%=pro._id %>" id="proId"> <input class="d-none"  name="userId" id="userId" value="<%=usr._id %>" >
+                  <% if(usr) { %>
+                    <input class="d-none" name="proId" value="<%=pro._id %>" id="proId">
+                  <% } %>
                   <div class="form-group">
                   <label class="required-field" for="firstName">Full Name</label>
                   <% if(usr) {%>

@@ -1,8 +1,8 @@
 const sendMessage = async()=> {
+
     const messageTitle = document.getElementById("messageTitle");
     const message = document.getElementById("messageContent");
     const err = document.getElementById("err");
-    const user_id = document.getElementById("userId");
     const pro_id = document.getElementById("proId");
     err.innerHTML = "";
     
@@ -22,7 +22,6 @@ const sendMessage = async()=> {
     }
 
     requestData = {
-        userId: user_id.value,
         proId: pro_id.value,
         messageTitle: messageTitle.value,
         content: message.value

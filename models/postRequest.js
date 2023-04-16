@@ -15,6 +15,10 @@ const postRequestSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    requestCategoryIcon:{
+        type: String
+    },
+    providerId : String,
     budget: Number,
     deadline: String,
     status:{

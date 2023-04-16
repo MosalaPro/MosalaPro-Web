@@ -18,7 +18,8 @@ const UserModel = require(__dirname+"/models/user");
 const compression = require("compression");
 const session = require("express-session");
 const passport = require("passport");
-const passportLocalMongoose = require("passport-local-mongoose");
+const LocalStrategy = require("passport-local").Strategy;
+const MongoStore = require('connect-mongo');
 
 // const emailValidator = required("email-validator");
 
@@ -53,29 +54,45 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 app.use("/photo", express.static("uploads"));
+app.use("/files", express.static("postAttachements"));
 
 app.use(session({
 	secret: process.env.SESSION_SECRET,
 	resave: false,
-	saveUninitialized: true,
-	cookie: { secure: true }
+	saveUninitialized: false,
+	cookie: {
+		maxAge: 1000 * 3600 * 24 * 365
+	},
+	store: MongoStore.create({
+		mongoUrl: process.env.DBURI,
+		autoRemove: 'interval',
+		autoRemoveInterval: 10, // In minutes. Default
+		crypto: {
+			secret: process.env.SESSION_SECRET,
+		  },
+		
+	  })
 }));
 
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(UserModel.createStrategy()); 
+passport.use(new LocalStrategy(UserModel.authenticate()));
 
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
+passport.serializeUser(UserModel.serializeUser());
+passport.deserializeUser(UserModel.deserializeUser());
+//passport.use(UserModel.createStrategy()); 
 
-passport.deserializeUser(function(id, done) {
-  UserModel.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
+// passport.serializeUser(function(user, done) {
+//   done(null, user.id);
+// });
+
+// passport.deserializeUser(function(id, done) {
+//   UserModel.findById(id, function(err, user) {
+//     done(err, user);
+//   });
+// });
 
 passport.use(new GoogleStrategy ({
 	clientID: process.env.CLIENT_ID,
