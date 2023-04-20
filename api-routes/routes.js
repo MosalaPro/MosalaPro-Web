@@ -40,24 +40,45 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 categories = [];
-CategoryModel.find({"name":{$ne:null}}, function(err, foundCategories){
-    if(err){
-        console.log(err);
-    }
-    else{
-        console.log("Categories found: "+foundCategories.length);
-        categories = foundCategories;
-    }
+const fs = require('fs')
+
+fs.readFile('./public/data/categories.json', 'utf8', (err, data) => {
+  if (err) {
+    console.log('APP:: Error reading file from disk: '+err)
+  } else {
+    // parse JSON string to JSON object
+    const cates = JSON.parse(data)
+
+    // print all databases
+    cates.forEach(kat => {
+      //console.log(`${kat.name}: ${kat.icon}`);
+      categories.push(kat);
+    })
+  }
 });
 
+
 countries = [];
-CountryModel.find({"name":{$ne:null}}, function(err, foundCountries){
-    if(err){console.log(err);}
-    else{
-        console.log("Countries found: "+foundCountries.length);
-        countries = foundCountries;
+fs.readFile('./public/data/countries.json', 'utf8', (err, data) => {
+    if (err) {
+      console.log('APP:: Error reading file from disk: '+err)
+    } else {
+      // parse JSON string to JSON object
+      const kountries = JSON.parse(data)
+  
+      // print all databases
+      kountries.forEach(ctry => {
+        countries.push(ctry);
+      })
     }
-});
+  });
+// CountryModel.find({"name":{$ne:null}}, function(err, foundCountries){
+//     if(err){console.log(err);}
+//     else{
+//         console.log("Countries found: "+foundCountries.length);
+//         countries = foundCountries;
+//     }
+// });
 
 
 module.exports = function(app){
@@ -71,7 +92,7 @@ app.get("/", async function(req, res){
             if(req.user.accountType=="provider")
                 res.render("home", {usr: req.user, notifications: notifs, cats: categories, countries: countries});
             else  {
-                const pRequests = await PostRequestModel.find({username:req.user.username}).limit(8).exec();
+                const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
                 requestProviders = await UserService.getProviders();
                 // pRequests.forEach(request =>{
                 //     provider = await UserModel.find
@@ -299,7 +320,7 @@ app.get("/", async function(req, res){
             res.render("userDashboard", {usr: req.user, notifications: notifs, cats: categories, postRequests: pRequests, link: null});
         }
         else
-        res.render("userDashboard", {usr: req.user, notifications:null, cats: categories, postRequests: null, link: null});
+        res.redirect("/");
     });
     app.get("/verified", function(req, res){
         res.render("emailVerified", {usr:null, cats: categories});
@@ -321,12 +342,14 @@ app.get("/", async function(req, res){
         UserService.register(req, res);
     });
     app.get("/register-pro", function(req, res){
-        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.body.id, form_action: "verify-email"});
+        
+        res.render("emailVerification", {usr: null, link:null,  notifications:null, cats: categories, userId: req.body.id, form_action: "verify-email"});
     });
   
-    app.get("/profile", function(req, res){
+    app.get("/profile", async function(req, res){
         if(req.isAuthenticated()){
-            res.render("userProfile", {usr: req.user, link:null, cats: categories, countries: countries});
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+            res.render("userProfile", {usr: req.user, notifications: notifs, link:null, cats: categories, countries: countries});
         }else   res.redirect("/");
     });
 
@@ -346,9 +369,10 @@ app.get("/", async function(req, res){
         jobApplicationHander.apply(req, res);
     });
 
-    app.get("/p-profile", function(req, res){
+    app.get("/p-profile", async function(req, res){
         if(req.isAuthenticated()){
-            res.render("userEdit", {usr: req.user, link:null,  cats: categories, countries: countries});
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+            res.render("userEdit", {usr: req.user, notifications: notifs, link:null,  cats: categories, countries: countries});
         }else{res.redirect("/");}
     });
 

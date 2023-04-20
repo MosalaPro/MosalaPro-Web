@@ -360,6 +360,9 @@
 45deg
 , #ffdf40, #ff8359)!important;
 }
-.project-row{
-  cursor: pointer;
+@media (min-width: 900px)/* The minimum width of the display area, such as a browser window*/
+{
+  .modal-dialog {
+      width: 700px;
+  }
 }

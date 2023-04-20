@@ -25,15 +25,18 @@ const MongoStore = require('connect-mongo');
 
 //------------------DATABASE CONNECTION ------------------------------//
 dbConnected = false;
-const connectDB = (DBURI) => { 
-	mongoose.connect(DBURI, {
+const connectDB = async(DBURI) => { 
+	await mongoose.connect(DBURI, {
 		useNewUrlParser:true,
 		useUnifiedTopology: true,
 		family:4
 	}).then(success=>{
 		dbConnected = true;
-		console.log("Successfully connected to the database.");
-	}).catch(err=>{console.log("Error occured while connecting to the database.\n"+err);});
+		console.log("APP:: Successfully connected to the database.");
+		return true;
+	}).catch(err=>{console.log("APP:: Error occured while connecting to the database.\n"+err);
+		return false;
+	});
 };
 
 //------------------GENERAL CONFIGURATION ------------------------------//
@@ -192,14 +195,16 @@ require('./api-routes/routes')(app);
 
 const start = async () => {
     try {
-        await connectDB(process.env.DBURI);
+        await connectDB(process.env.DBURI).then(async function (success) {
+			while(!dbConnected){
+				await delay(1000);
+			}
 			app.listen(process.env.PORT || 3000, function() {
-				console.log("Server successfully started online and locally on port 3000");
+			console.log("APP:: Server successfully started online and locally on port 3000");
 			});
-    } catch (error) {
-        console.log(error);
-        console.log("Failed to connect to the database, server is not running.");
-    }
+		}).catch(function (error) {console.log(error);});
+		
+	}catch(error) {console.log("APP:: Error occured while connecting to the db: "+error);}
 };
 
 start();
