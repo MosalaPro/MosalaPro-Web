@@ -196,13 +196,10 @@ require('./api-routes/routes')(app);
 const start = async () => {
     try {
         await connectDB(process.env.DBURI).then(async function (success) {
-			while(!dbConnected){
-				await delay(1000);
-			}
 			app.listen(process.env.PORT || 3000, function() {
 			console.log("APP:: Server successfully started online and locally on port 3000");
 			});
-		}).catch(function (error) {console.log(error);});
+		}).catch(function (error) {console.log("APP:: Error"+error);});
 		
 	}catch(error) {console.log("APP:: Error occured while connecting to the db: "+error);}
 };
