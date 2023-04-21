@@ -1,9 +1,29 @@
+const loginPassInput = document.getElementById("password");
+
+loginPassInput.addEventListener("keyup", logKey);
+
+function logKey(e) {
+  if(e.code == 'Enter'){
+    onLoginSubmit();
+  }
+}
+
 const onLoginSubmit = async()=> {
   
     const username_ = document.getElementById("username").value;
     const password_ = document.getElementById("password").value;
     const message = document.getElementById("message");
-    
+    message.innerHTML = "";
+    if(username_.length < 6){
+      message.classList.add('error_message');
+      message.innerHTML = "Please enter a valid username";
+      return;
+    }
+    if(password_ == "" || password_.length < 1){
+      message.classList.add('error_message');
+      message.innerHTML = "Please enter a password to login.";
+      return;
+    }
     requestData = {
         username: username_,
         password: password_
@@ -24,7 +44,7 @@ const onLoginSubmit = async()=> {
         
       }).catch(err => {
         console.log(err) // Handle errors
-        message.innerHTML = "Wrong username or password! Merde "+err;
+        message.innerHTML = "Wrong username or password!";
       });
   }
 

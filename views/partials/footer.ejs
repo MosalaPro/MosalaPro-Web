@@ -109,9 +109,9 @@
         <div class="footer-inner-2">
           <div class="container">
             <div class="text-center mt-4"> We are proud to be the leader of African Service Finder. <br>Follow us on social media<br>
-              <a href="https://www.facebook.com/people/Mosalapro/100064060309267/" class="fab fa-facebook ml-3"></a>
-              <a  href="https://twitter.com/MosalaPro" class="fab fa-twitter ml-3"> </a>
-              <a href="https://www.linkedin.com/company/mosalapro" class="fa fa-linkedin ml-3"> </a>
+              <a href="https://www.facebook.com/people/Mosalapro/100064060309267/" target="_blank" class="fab fa-facebook ml-3"></a>
+              <a  href="https://twitter.com/MosalaPro" target="_blank" class="fab fa-twitter ml-3"> </a>
+              <a href="https://www.linkedin.com/company/mosalapro" target="_blank" class="fa fa-linkedin ml-3"> </a>
           </div>
             <p class="rights text-center"><span>&copy;&nbsp;</span><span class="copyright-year"></span>. All Rights Reserved. Mosalapro TM</p>
           </div>
@@ -144,16 +144,26 @@
     <script src="js/message.js"></script>
     <script>
 
-      window.addEventListener( "pageshow", function ( event ) {
-          var historyTraversal = event.persisted || 
-                                ( typeof window.performance != "undefined" && 
-                                      window.performance.navigation.type === 2 );
-          if ( historyTraversal ) {
-            // Handle page restore.
-            window.location.reload();
-          }
-        });
-      
+      $(window).load(async function(){
+        // PAGE IS FULLY LOADED  
+        // FADE OUT YOUR OVERLAYING DIV
+        $('#preloader').fadeOut();
+      });
+            
     </script>
+
+<script>
+
+  window.addEventListener( "pageshow", function ( event ) {
+            var historyTraversal = event.persisted || 
+                                  ( typeof window.performance != "undefined" && 
+                                        window.performance.navigation.type === 2 );
+            if ( historyTraversal ) {
+              // Handle page restore.
+              window.location.reload();
+            }
+          });
+          
+   </script>
   </body>
 </html>

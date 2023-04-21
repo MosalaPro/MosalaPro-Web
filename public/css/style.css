@@ -3141,7 +3141,7 @@ hr {
 
 .btn-primary {
 	font-weight: 700;
-	letter-spacing: .05em;
+	letter-spacing: .03em;
 }
 
 .btn-primary, .btn-primary:active, .btn-primary:focus {
@@ -11952,7 +11952,7 @@ html:not(.ie-11):not(.ios) .parallax-disabled {
 .ul-none {
 	background: #ffffff;
 	
-	padding: 1rem;
+	padding: 0.5rem;
 }
 .ul-none > li{
 	text-transform: initial;

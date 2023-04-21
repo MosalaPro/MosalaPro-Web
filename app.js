@@ -18,21 +18,25 @@ const UserModel = require(__dirname+"/models/user");
 const compression = require("compression");
 const session = require("express-session");
 const passport = require("passport");
-const passportLocalMongoose = require("passport-local-mongoose");
+const LocalStrategy = require("passport-local").Strategy;
+const MongoStore = require('connect-mongo');
 
 // const emailValidator = required("email-validator");
 
 //------------------DATABASE CONNECTION ------------------------------//
 dbConnected = false;
-const connectDB = (DBURI) => { 
-	mongoose.connect(DBURI, {
+const connectDB = async(DBURI) => { 
+	await mongoose.connect(DBURI, {
 		useNewUrlParser:true,
 		useUnifiedTopology: true,
 		family:4
 	}).then(success=>{
 		dbConnected = true;
-		console.log("Successfully connected to the database.");
-	}).catch(err=>{console.log("Error occured while connecting to the database.\n"+err);});
+		console.log("APP:: Successfully connected to the database.");
+		return true;
+	}).catch(err=>{console.log("APP:: Error occured while connecting to the database.\n"+err);
+		return false;
+	});
 };
 
 //------------------GENERAL CONFIGURATION ------------------------------//
@@ -53,28 +57,45 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 app.use("/photo", express.static("uploads"));
+app.use("/files", express.static("postAttachements"));
 
 app.use(session({
 	secret: process.env.SESSION_SECRET,
 	resave: false,
-	saveUninitialized: false
+	saveUninitialized: false,
+	cookie: {
+		maxAge: 1000 * 3600 * 24 * 365
+	},
+	store: MongoStore.create({
+		mongoUrl: process.env.DBURI,
+		autoRemove: 'interval',
+		autoRemoveInterval: 10, // In minutes. Default
+		crypto: {
+			secret: process.env.SESSION_SECRET,
+		  },
+		
+	  })
 }));
 
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(UserModel.createStrategy()); 
+passport.use(new LocalStrategy(UserModel.authenticate()));
 
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
+passport.serializeUser(UserModel.serializeUser());
+passport.deserializeUser(UserModel.deserializeUser());
+//passport.use(UserModel.createStrategy()); 
 
-passport.deserializeUser(function(id, done) {
-  UserModel.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
+// passport.serializeUser(function(user, done) {
+//   done(null, user.id);
+// });
+
+// passport.deserializeUser(function(id, done) {
+//   UserModel.findById(id, function(err, user) {
+//     done(err, user);
+//   });
+// });
 
 passport.use(new GoogleStrategy ({
 	clientID: process.env.CLIENT_ID,
@@ -174,14 +195,13 @@ require('./api-routes/routes')(app);
 
 const start = async () => {
     try {
-        await connectDB(process.env.DBURI);
+        await connectDB(process.env.DBURI).then(async function (success) {
 			app.listen(process.env.PORT || 3000, function() {
-				console.log("Server successfully started online and locally on port 3000");
+			console.log("APP:: Server successfully started online and locally on port 3000");
 			});
-    } catch (error) {
-        console.log(error);
-        console.log("Failed to connect to the database, server is not running.");
-    }
+		}).catch(function (error) {console.log("APP:: Error"+error);});
+		
+	}catch(error) {console.log("APP:: Error occured while connecting to the db: "+error);}
 };
 
 start();

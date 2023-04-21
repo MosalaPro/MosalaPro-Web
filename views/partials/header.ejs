@@ -15,13 +15,15 @@
     <link rel="stylesheet" href="css/searchpro.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/toggle.css">
+    <link rel="stylesheet" href="css/job.css">
+    <link rel="stylesheet" href="css/notification.css">
     <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <script src="https://js.stripe.com/v3/"></script>
     <script src="js/home.js"></script>
   </head>
   <body>
     <!--div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div-->
-    <div class="preloader">
+    <div class="preloader" id="preloader">
       <div class="preloader-body">
         <div class="loader">
           <div></div>
@@ -38,7 +40,6 @@
       </div>
     </div>
        
-    <% if(dbConnected){ %>
     <div class="page"><!--a class="banner banner-top" href="https://www.templatemonster.com/website-templates/monstroid2.html" target="_blank"><img src="images/monstroid.jpg" alt="" height="0"></a-->
       <header class="section page-header rd-navbar-transparent-wrap">
         <!--RD Navbar-->
@@ -56,19 +57,35 @@
                     <% if(usr){ %>
                       <li>
                         <div class="btn-group open ">
-                          <a class="btn" data-toggle="dropdown" href="#" class="text-transform-none"><b class="fa fa-user fa-fw  "></b> <%=usr.firstName %>
+                          
+                          <a class="btn position-relative" data-toggle="dropdown" href="#" class="text-transform-none"><b class="fa fa-user fa-fw ">
+                            <% let unread = 0;
+                              if(notifications) 
+                                notifications.forEach(notif=>{
+                                  if(notif.status == "unread")
+                                    unread++;
+                                });  
+                              if (unread >  0) {  %>
+                            <span class="position-absolute top-0 start-100  badge rounded-pill-notification"> <%=unread %>
+                            </span>
+                            <% } %>
+                            </b> <%=usr.firstName %>
                             <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
                             <ul class="dropdown-menu ul-none">
                               <% if(usr.accountType=="provider"){ %>
                                 <li><a href="/p-profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
                                 <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Tasks</a></li>
-                                <li><a href="#"><b class="fa fa-bar-chart "></b>  Dashboard</a></li>
+                                <li><a href="#"><b class="fa fa-bar-chart mr-1"></b>  Dashboard</a></li>
                               <%}else{%>
                                 <li><a href="/profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
                                 <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>
                                 <li><a href="/professionals"><b class="fa fa-id-card-o mr-1"></b>  Become a pro</a></li>
                               <%}%>
-                              
+                              <% if (unread >  0) { %>
+                              <li><a href="/notifications"><b class="fa fa-bell mr-2"></b>  Notifications (<%=unread%>)</a></li>
+                              <% } else { %>
+                              <li><a href="/notifications"><b class="fa fa-bell mr-2"></b>  Notifications</a></li>
+                              <% } %>
                               <li><a href="/logout"><b class="fa fa-sign-out mr-2"></b>  Logout </a></li>
                             </ul>
                           
@@ -111,9 +128,6 @@
                         <path d="M14.247 14.269c1.01 0 1.587-.857 1.587-2.025v-.21C15.834 10.43 14.64 9 12.52 9h-.035C10.42 9 9 10.36 9 12.432v.214C9 14.82 10.438 16 12.358 16h.044c.594 0 1.018-.074 1.237-.175v-.73c-.245.11-.673.18-1.18.18h-.044c-1.334 0-2.571-.788-2.571-2.655v-.157c0-1.657 1.058-2.724 2.64-2.724h.04c1.535 0 2.484 1.05 2.484 2.326v.118c0 .975-.324 1.39-.639 1.39-.232 0-.41-.148-.41-.42v-2.19h-.906v.569h-.03c-.084-.298-.368-.63-.954-.63-.778 0-1.259.555-1.259 1.4v.528c0 .892.49 1.434 1.26 1.434.471 0 .896-.227 1.014-.643h.043c.118.42.617.648 1.12.648Zm-2.453-1.588v-.227c0-.546.227-.791.573-.791.297 0 .572.192.572.708v.367c0 .573-.253.744-.564.744-.354 0-.581-.215-.581-.8Z"/>
                       </svg>Contact Us</a></li>
                   </ul>
-                      
-                
-                  
 
               </div>
             </div>
@@ -135,9 +149,9 @@
                           <li class="rd-nav-item active"><a class="rd-nav-link" href="/">Dashboard</a>
                           </li>
                           <li class="rd-nav-item"><a class="rd-nav-link" href="/find-services">Find Services</a></li>
-                          <li class="rd-nav-item"><a class="rd-nav-link" href="/about-us">About us</a></li>
+                          <!--li class="rd-nav-item"><a class="rd-nav-link" href="/about-us">About us</a></li-->
                           <% if(usr.accountType=="provider"){ %>
-                            <li class="rd-nav-item"><a class="rd-nav-link" href="#">Service requests</a></li>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/service-requests">Service requests</a></li>
                           <% } else { %>
                             <li class="rd-nav-item"><a class="rd-nav-link" href="/professionals">For Professionals</a></li>
                           <% } %>
@@ -156,22 +170,38 @@
                         <li class="rd-nav-item">
                           <div class="btn-group open ml-2"> 
                             <% if(usr){ %>
-                                <a class="btn mb-2" data-toggle="dropdown" href="#">
+                                <a class="btn  position-relative mb-2 " data-toggle="dropdown" href="#">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
                                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                                     <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
                                   </svg>
+                                  <% let unread = 0;
+                                    if(notifications) 
+                                      notifications.forEach(notif=>{
+                                        if(notif.status == "unread")
+                                          unread++;
+                                      });  
+                                    if (unread >  0) {  %>
+                                    <span class="position-absolute top-0 start-100  badge rounded-pill-notification"> <%=unread %>
+                                    </span>
+                                    <% } %>
                                   <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
                                   <ul class="dropdown-menu ul-none">
                                 
                                     <% if(usr.accountType=="provider"){ %>
                                       <li><a href="/p-profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
                                       <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My orders</a></li>
-                                      <li><a href="#"><b class="fa fa-bar-chart "></b>  Dashboard</a></li>
+                                      <li><a href="#"><b class="fa fa-bar-chart mr-1"></b>  Dashboard</a></li>
                                     <%}else{%>
                                       <li><a href="/profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
                                       <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>
                                       <li><a href="/professionals"><b class="fa fa-id-card-o mr-1"></b>  Become a pro</a></li>
+                                    <%}%>
+                                    
+                                    <% if (unread > 0) { %>
+                                      <li><a href="/notifications"><b class="fa fa-bell mr-2"></b>  Notifications(<%=unread %>)</a></li>
+                                      <% } else { %>
+                                      <li><a href="/notifications"><b class="fa fa-bell mr-2"></b>  Notifications</a></li>
                                     <%}%>
                                   <li><a href="/logout"><b class="fa fa-sign-out mr-2"></b>  Logout </a></li>
                                 <%} else{ %>
@@ -190,7 +220,7 @@
                                       <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
                                       <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
                                     </svg> Signup</a></li>
-                                <%}%>
+                                <% } %>
                               </ul>
                             
                           </div>
@@ -205,15 +235,11 @@
         </div>
       </header>
   
- 
-
 <!--TODO: Check if user not logged in, then include-->
 <script>
 
 //location.reload();
 </script>
-
-<% } %>
 
 
         
