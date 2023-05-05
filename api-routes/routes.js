@@ -281,6 +281,30 @@ app.get("/", async function(req, res){
             res.render("findprofessionals", {usr: null, notifications: null, link:null, cats: categories, countries: countries, professionals: result});
     });
 
+    app.get("/term-of-use", function(req, res){
+        if(req.isAuthenticated()){
+            res.render("termsAndConditions", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
+        }
+        else
+            res.render("termsAndConditions", {usr: null, notifications: null, link:null, cats: categories, countries: countries});
+    });
+
+    app.get("/do-not-sell", function(req, res){
+        if(req.isAuthenticated()){
+            res.render("doNotSell", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
+        }
+        else
+            res.render("doNotSell", {usr: null, notifications: null, link:null, cats: categories, countries: countries});
+    });
+
+    app.get("/privacy-policy", function(req, res){
+        if(req.isAuthenticated()){
+            res.render("privacyPolicy", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
+        }
+        else
+            res.render("privacyPolicy", {usr: null, notifications: null, link:null, cats: categories, countries: countries});
+    })
+
     app.get("/about-us", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
