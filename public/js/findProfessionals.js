@@ -34,6 +34,7 @@ const prepareProfessionalsSearch = () => {
   const country = document.getElementById("country_search");
   const city = document.getElementById("city_search");
   const search = document.getElementById("search");
+  const category = document.getElementById("selected_category");
   console.log('country', country)
   console.log('city', city)
   console.log('search', search)
@@ -42,9 +43,10 @@ const prepareProfessionalsSearch = () => {
   const countryParam = !params.get("country_search") || params.get("country_search") === "Country" ? "" : params.get("country_search");
   const cityParam = !params.get("city_search") || params.get("city_search") === "Select City" ? "" : params.get("city_search");
   const searchParam = !params.get("search") || params.get("search") === "" ? "" : params.get("search");
-  const categoryParam = !params.get("category") || params.get("category") === "" ? "" : params.get("category");
+  const categoryParam = !params.get("selected_category") || params.get("selected_category") === "" ? "" : params.get("selected_category");
   
   country.value = countryParam;
+  category.value = categoryParam;
   setTimeout(() =>  {
     const event = new Event('change');
     country.dispatchEvent(event);
@@ -68,15 +70,10 @@ const handleSearch = async () => {
   const categoryParam = document.getElementById("selected_category");
   //const categoryParam = !params.get("category") || params.get("category") === "" ? document.getElementById("selected_category").value : params.get("category");
   
-
-  console.log("country", country)
-  console.log("city", city)
-  console.log("search", search)
-
   const url = new URL(window.location.href);
 
   console.log(url);
-  url.searchParams.set('category', categoryParam.value);
+  url.searchParams.set('selected_category', categoryParam.value);
   url.searchParams.set('country_search', country.value);
   url.searchParams.set('city_search', city.value);
   url.searchParams.set('search', search.value);

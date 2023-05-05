@@ -9,8 +9,8 @@
                     <div class="col-md-4">
 
                         <div class="dropdown dropdown-search">
-                            <select class="form-control search-input-s" aria-label="Select Category" name="category" style="display: inline;">
-                                <option selected>Select Category</option>
+                            <select class="form-control search-input-s" aria-label="Select Category" name="selected_category" id="selected_category" style="display: inline;">
+                                <option value="">Category</option>
                                 <% if(categories){ categories.forEach(cat=>{ %>
                                     <option value="<%=cat.name %>"><%=cat.name %></option>
                                 <% });} %>
@@ -21,7 +21,7 @@
                     <div class="col-md-8">
                         <div class="input-group">
                             <input type="search" class="form-control search-input rounded " name="search" placeholder=" Keyword.. eg. Architect" aria-label="Search" aria-describedby="search-addon" />
-                            <button type="submit" class="btn-outline-primary search-btn">search</button>
+                            <button type="submit" class="btn-outline-primary search-btn" onclick="handleSearch()" >search</button>
                         </div>
                         
                     </div>

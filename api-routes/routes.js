@@ -160,7 +160,7 @@ app.get("/", async function(req, res){
 
     app.get("/notifications", async function(req, res){
         if (req.isAuthenticated()) {
-            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).limit(4).exec();
             res.render("notifications", {
               usr: req.user,
               cats: categories,
@@ -171,6 +171,20 @@ app.get("/", async function(req, res){
           } else {
             res.redirect("/");
           }
+    });
+    app.post("/notifications", async function(req, res){
+        const limit = req.body.lim;
+        console.log("Limit sent: "+limit);
+        let notifs = await NotificationModel.find({receiverId: req.user._id}).limit(limit).exec();
+        notifis = [];
+        notifs.forEach(not =>{
+            not.age = Math.floor(Math.abs( new Date() - not.createdAt ) / (1000*3600*24));
+            console.log("Age: "+not.age);
+        });
+        console.log("Notifications loaded: "+notifs.length);
+        res.status(200).send({message:"Ok", status:200, notifications:notifs});
+        return;
+
     });
     app.get("/user", async function(req, res){
         console.log(req.isAuthenticated());
@@ -407,7 +421,7 @@ app.get("/", async function(req, res){
     // app.get("/professionals", function(req, res){
     //     model.showForProPage(req, res);
     // });
-    app.get("/service_request", async function (req, res) {
+    app.get("/service-request", async function (req, res) {
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             console.log("Creating a service request..");

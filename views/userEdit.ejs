@@ -20,7 +20,7 @@
                     ></div>
                     <div class="d-flex justify-content-center mt-3">
                       <label for="photoInput" class="custom-file-upload profile-btn simple-btn ">
-                        Upload
+                        Upload Profile Picture</Picture>
                       </label>
                       <input type="file" id="photoInput" name="photo" style="display: none;" onchange="onPhotoChange()"/>
                     </div>
@@ -88,6 +88,16 @@
                                 </div>
                             </div>
                         </div>
+                        <% if(usr.category)  {%>
+                          <div class="row mt-2">
+                            <div class="col">
+                                <div class="form-outline">
+                                  <input type="text" id="categoryId" class="form-control" placeholder="Category" name="category" value="<%=usr.category %>" readonly/>
+                                </div>
+                            </div>
+                          </div>
+                        <% } else { %>
+ 
                         <div class="row mt-2">
                           <div class="col">
                               <select class="form-control" aria-label="Select Category" name="category" id="user-category" style="display: inline;">
@@ -99,6 +109,15 @@
                                 </select>
                           </div>
                         </div>
+                        <% } if (usr.country) { %>
+                          <div class="row mt-2">
+                            <div class="col">
+                                <div class="form-outline">
+                                  <input type="text" id="location" class="form-control" placeholder="Location" name="location" value="<%=usr.country %> - <%=usr.city %>" readonly/>
+                                </div>
+                            </div>
+                          </div>
+                        <% } else { %>
                         <div class="row mt-2">
                           <div class="col-md-6">
                               <!-- Country input -->
@@ -116,6 +135,7 @@
                                 </select>
                           </div>
                       </div>
+                      <% } %>
                       <div class="row mt-3">
                         <div class="col-md-6">
                             <div class="form-outline">

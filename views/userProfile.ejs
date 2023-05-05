@@ -65,7 +65,7 @@
                         </div-->
                         <div class="card-body-u-pro-set tab-content">
                             <div class="tab-pane active" id="profile">
-                                <h6>YOUR PROFILE INFORMATION</h6>
+                                <h6>PROFILE INFORMATION</h6>
                                 <hr>
                                 <form action="/profile" method="post" id="profileInfo">
                                     <div class="form-group">
@@ -89,7 +89,12 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="profilePhone">LinkedIn Profile Link</label>
-                                        <input type="url" class="form-control" id="linkedinProfileLink" name="linkedin_link" placeholder="Enter your LinkedIn profile link" >
+                                        
+                                        <% if(usr.linkedInProfileUrl) { %>
+                                            <input type="url" class="form-control" id="linkedinProfileLink" name="linkedin_link" placeholder="Enter your location" value="<%=usr.linkedInProfileUrl%>" readonly>
+                                        <% } else { %>
+                                            <input type="url" class="form-control" id="linkedinProfileLink" name="linkedin_link" placeholder="Enter your LinkedIn profile link" >
+                                        <% } %>
                                     </div>
                                     <div class="form-group">
                                         <label for="location">Location</label>
@@ -147,9 +152,9 @@
                                     <!--small id="usernameHelp" class="form-text text-muted">After changing your username, your old username becomes available for anyone else to claim.</small>
                                     <button type="button" class="simple-btn mt-2" onClick="" id="updateUsername">Update username</button-->
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group ml-1">
                                         <label for="account-type">Account type</label>
-                                        <div class="row mt-1">
+                                        <div class="row mt-0">
                                             <div class="col-lg-6 col-md6 col-sm-12 col-12">
                                                 <input type="text" class="form-control" id="accountType" name="accountType" aria-describedby="usernameHelp" placeholder="Enter your username" value="<%=usr.accountType%>" readonly>
                                             </div>
