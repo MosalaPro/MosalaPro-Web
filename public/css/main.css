@@ -829,8 +829,8 @@ h4 {
   width: 100%!important;
 }
 .btn-group-lg-ver>.btn, .btn-lg {
-  padding: 0.8rem 1.85rem;
-  font-size: 1.1rem;
+  padding: 0.8rem 1.80rem;
+  font-size: 1.0rem;
   border-radius: 0.3rem;
 }
 .alert {
@@ -1190,12 +1190,13 @@ h4 {
   margin-left: -1rem!important;
 }
 .job-cats{
-  margin-top: -2em;
+  margin-top: -1.5em;
   background-color: #F2FBF6;
-  padding: 3em;
+  padding: 5em 3em;
 }
 .testi-section{
-  padding: 0 6em 6em 6em;
+  
+  padding:6em;
   margin-bottom: 4em;
 }
 @media(max-width:900px){

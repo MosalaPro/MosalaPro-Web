@@ -210,25 +210,28 @@ const UserService = {
           req.login(user, function(err){
               if (err) {
                   console.log("USER:: An error occured (Email Verification): "+err);
+                  return res.status(400).send("An error occured (Email Verification)");
                   // TODO: activate error message on modal
               } else {
                       console.log("USER:: Email verification: User has been successfully logged in");
                       UserModel.updateOne({ _id: user._id}, {$set: {verified: true}} ).exec();
                       TokenModel.findByIdAndRemove(token._id).exec();
-                      res.redirect("/");
+                      //res.redirect("/");
+                      return res.status(200).send({msg:" Code verification successful!", status:200});
               }
           });
-          
+          return;
       }
       else{
           console.log("USER:: Email verification: Code entered does not match the one sent!");
-          res.redirect(req.get('referer'));
+          //res.redirect(req.get('referer'));
+          return res.status(400).send("USER:: Email verification: Code entered does not match the one sent!");
           //res.render("emailVerification", {usr: null, cats: categories, userId: user._id});
       }
       
     } catch (error) {
       console.log("USER:: An error occured (Email verification): "+ error);
-      res.status(400).send("An error occured : "+error);
+      return res.status(400).send("An error occured : "+error);
     }
   },
   find: async(query) => {

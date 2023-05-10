@@ -33,7 +33,7 @@ class JobApplication {
                     causedByUserId: req.user._id,
                     receiverId: user._id,
                     title: "A service provider has applied for your service request.",
-                    content: "Servive provider "+req.user.firstName+" "+req.user.firstName+" has applied for your service request. Open to check service provider's profile and hire.",
+                    content: "Servive provider "+req.user.firstName+" "+req.user.lastName+" has applied for your service request. Open to check service provider's profile and hire.",
                     createdAt: new Date(),
                     lastUpdate: new Date()
                 }).save(async function (err) {
