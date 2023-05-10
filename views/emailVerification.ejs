@@ -20,31 +20,40 @@
       <p>
       Please enter the code in the field below.
       </p>
-      <form action="/verify-email" method="post">
+      <div  class="d-flex flex-column justify-content-center align-items-center"> 
+        <span name="e_message" id="e_message" class="error_message "> </span>
+      </div>
+      <!--form action="/verify-email" method="post"-->
         <div class="row mt-4-ver pt-2">
 
             <div class="col">
-              <input type="text" name="first" class="form-control form-control-ver form-control-lg-ver text-center py-4" maxlength="1" autofocus="" required>
+              <input type="text" name="first" id="first" class="form-control form-control-ver form-control-lg-ver text-center py-4" 
+                oninput="this.className = 'form-control form-control-ver form-control-lg-ver text-center py-4'" maxlength="1" autofocus="" required>
             </div>
             <div class="col">
-              <input type="text" name="second" class="form-control form-control-ver form-control-lg-ver text-center py-4" maxlength="1" required>
+              <input type="text" name="second" id="second" class="form-control form-control-ver form-control-lg-ver text-center py-4" 
+                oninput="this.className = 'form-control form-control-ver form-control-lg-ver text-center py-4'" maxlength="1" required>
             </div>
             <div class="col">
-              <input type="text" name="third" class="form-control form-control-ver form-control-lg-ver text-center py-4 " maxlength="1" required>
+              <input type="text" name="third" id="third" class="form-control form-control-ver form-control-lg-ver text-center py-4 " 
+                oninput="this.className = 'form-control form-control-ver form-control-lg-ver text-center py-4'" maxlength="1" required>
             </div>
             <div class="col">
-              <input type="text" name="fourth" class="form-control form-control-ver form-control-lg-ver text-center py-4 " maxlength="1" required>
+              <input type="text" name="fourth" id="fourth" class="form-control form-control-ver form-control-lg-ver text-center py-4 "
+              oninput="this.className = 'form-control form-control-ver form-control-lg-ver text-center py-4'" maxlength="1" required>
             </div>
             <div class="col">
-              <input type="text" name="fifth" class="form-control form-control-ver form-control-lg-ver text-center py-4 " maxlength="1" required>
+              <input type="text" name="fifth" id="fifth" class="form-control form-control-ver form-control-lg-ver text-center py-4 " 
+              oninput="this.className = 'form-control form-control-ver form-control-lg-ver text-center py-4'" maxlength="1" required>
             </div>
             <div class="col">
-              <input type="text" name="sixth" class="form-control form-control-ver form-control-lg-ver text-center py-4" maxlength="1" required>
+              <input type="text" name="sixth" id="sixth" class="form-control form-control-ver form-control-lg-ver text-center py-4" 
+              oninput="this.className = 'form-control form-control-ver form-control-lg-ver text-center py-4'"maxlength="1" required>
             </div>
           </div>
-          <input name="id" value="<%=userId%>" style="display: none;" type="text"/>
-          <input type="submit" class="btn button-primary btn-lg w-100 hover-lift-light mt-4-ver" value="Verify my account" required>
-      </form>
+          <input name="id" value="<%=userId%>" id="uId" style="display: none;" type="text"/>
+          <input type="submit" class="btn button-primary btn-lg w-100 hover-lift-light mt-4-ver" onClick="verifyCode()" value="Verify my account" required>
+      <!--/form-->
         
      
       </div>
@@ -62,6 +71,7 @@
     </div>
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="js/verifyEmail.js"></script>
  <script>
   var currentBoxNumber = 0;
   
