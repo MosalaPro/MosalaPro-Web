@@ -38,6 +38,11 @@ const onLoginSubmit = async()=> {
             await new Promise(r => setTimeout(r, 700));
             window.location.reload();
         }
+        else if(json.status == 402){
+            message.innerHTML = "Your account is not verified! Check your email for verification code. Redirecting...";
+            await new Promise(r => setTimeout(r, 2000));
+            window.location = "/resendCode/"+json.id;
+        }
         else{
             message.innerHTML = "Wrong username or password! "+json.status;
         }

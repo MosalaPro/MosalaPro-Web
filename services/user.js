@@ -50,7 +50,7 @@ const UserService = {
                       //res.redirect("/");
                       return;
                   }else{
-                      res.status(400).send("Your account has not been verified." );
+                      res.status(402).send({message:"Your account has not been verified.", id:req.user._id, status: 402} );
                       req.logout(function(err){
                           if(err){return next(err);}
                       });
