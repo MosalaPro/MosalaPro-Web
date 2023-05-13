@@ -136,5 +136,76 @@ const handleSearch = async () => {
     }
     professionalsBox.innerHTML = content;
   }
+}
+
+const handleSearchMD = async () => {
+  const params = new URLSearchParams(window.location.search);
+  const country = document.getElementById("country_search");
+  const city = document.getElementById("city_search");
+  const search = document.getElementById("search");
+  const categoryParam = document.getElementById("selected_category");
+  //const categoryParam = !params.get("category") || params.get("category") === "" ? document.getElementById("selected_category").value : params.get("category");
+  
+  const url = new URL(window.location.href);
+
+  console.log(url);
+  url.searchParams.set('selected_category', categoryParam.value);
+  url.searchParams.set('country_search', country.value);
+  url.searchParams.set('city_search', city.value);
+  url.searchParams.set('search', search.value);
+
+  window.history.replaceState(null, null, url); 
+  
+  const res = await fetch(`/find-professionals?category=${categoryParam.value}&country_search=${country.value}&city_search=${city.value}&search=${search.value}`);
+  const professionals = await res.json();
+  const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
+
+  const professionalsBox = document.getElementById("professionals-box");
+  professionalsBox.innerHTML = "";
+  let content = '<div class="row">';
+  if(professionals.length == 0)
+        professionalsBox.innerHTML = '<div class="d-flex justify-content-center align-items-center"><h6 class="text-light text-muted">No service provider found!</h6></div>';
+  else{
+    it = 0;
+    for(const prof of professionals) {
+            const pict = prof.photo === "" ? "default.png" : prof.photo;
+            
+            const item = `
+            <div class="col-lg-3">
+                        <div class="text-center card-box-pro">
+                        <div class="member-card pt-2 pb-2">
+                        <div class="thumb-lg member-thumb mx-auto"><img src="/photo/${pict}" class="rounded-circle img-thumbnail" alt="profile-image"></div>
+                        <div class="">
+                        <h6><a href="/pro-profile/${prof._id}">${prof.firstName} ${prof.lastName }</a></h6>
+                        <span class="text-muted ">${prof.role}</span>
+                        <ul class="rating " data-mdb-toggle="rating" data-mdb-readonly="true" data-mdb-value="3"> 
+                            <li class="d-inline"><b class="fa-star fa-sm rating-star-color fas active"></b></li>
+                            <li class="d-inline"><b class="fa-star fa-sm rating-star-color fas active"></b></li>
+                            <li class="d-inline"><b class="fa-star fa-sm rating-star-color fas active"></b></li>
+                            <li class="d-inline"><b class="far fa-star fa-sm rating-star-color "></b></li>
+                            <li class="d-inline"><b class="far fa-star fa-sm rating-star-color "></b></li><span>(44)</span>
+                        </ul>
+                        </div>
+                        <ul class="social-links list-inline">
+                        <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><b class="fa fa-facebook"></b></a></li>
+                        <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="LinkedIn"><b class="fa fa-linkedin"></b></a></li>
+                        <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Whatsapp"><b class="fa fa-whatsapp"></b></a></li>
+                        </ul>
+                        <a href="/pro-profile/${prof._id}"><button type="button" class="btn button-primary mt-2 ">Message Now</button></a>
+                        <div class="mt-4">
+                        </div>
+                        </div>
+                        </div>
+                        </div>`;
+            content = content + item;
+            it = it + 1;
+
+            if(it % 4  == 0)
+              content = content + '</div><div class="row">';
+            
+        
+    }
+    professionalsBox.innerHTML = content;
+  }
 
 }

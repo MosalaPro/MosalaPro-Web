@@ -41,7 +41,6 @@ const UserService = {
               console.log("USER:: An error occured : ", err);
               res.status(400).send({ error: "Wrong username or password" });
               return;
-              // TODO: activate error message on modal
           } else {
               passport.authenticate("local")(req, res, function(){
                   if(req.user.verified === true){

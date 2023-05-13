@@ -29,6 +29,7 @@ class JobApplication {
                 return;
             }else{
                 console.log("JOBAPPLICATION:: Application has been sent successfully.");
+                PostRequestModel.updateOne({_id: req.body.jobId}, {$set: {providerId: req.user._id}} ).exec();
                 const notification = new NotificationModel({
                     causedByUserId: req.user._id,
                     receiverId: user._id,
@@ -45,6 +46,19 @@ class JobApplication {
             }
         });
         return;
+    }
+
+    async getAppliedJobs(req, res){
+        console.log("Inside life");
+        const appliedJobs = [];
+        const ja = await JobApplicationModel.find({providerId: req.user._id}).exec();
+        for(let i = 0; i < ja.length; i++){
+
+            const sr = await PostRequestModel.findOne({_id:ja[i].jobId}).exec();
+            sr.createdAt = ja[i].createdAt;
+            appliedJobs.push(sr);
+        }
+        return appliedJobs;
     }
 
 }

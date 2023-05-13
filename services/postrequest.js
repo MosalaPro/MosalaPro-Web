@@ -98,7 +98,21 @@ const PostRequestService =  {
       },
 
       getActiveRequests: async(req, res)=>{
-        const result = await PostRequestModel.find({status: "active"}).exec();
+        result = [];
+        const activeServiceRequets = await PostRequestModel.find({status: "active"}).exec();
+        const jobsApplied = await JobApplicationModel.find({providerId: req.user._id}).exec();
+
+        activeServiceRequets.forEach(asr => {
+            applied = false;
+            jobsApplied.forEach(ja=>{
+              if(ja.jobId == asr._id){
+                applied = true;
+              }
+            });
+
+            if(!applied)
+              result.push(asr);
+        });
        
         return result;
 

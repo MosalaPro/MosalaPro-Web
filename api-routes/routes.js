@@ -40,7 +40,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 categories = [];
-const fs = require('fs')
+const fs = require('fs');
+const JobApplicationModel = require("../models/jobApplication");
 
 fs.readFile('./public/data/categories.json', 'utf8', (err, data) => {
   if (err) {
@@ -89,8 +90,11 @@ app.get("/", async function(req, res){
 
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            if(req.user.accountType=="provider")
-                res.render("home", {usr: req.user, notifications: notifs, cats: categories, countries: countries});
+            if(req.user.accountType=="provider"){
+                const pRequests = await PostRequestModel.find({providerId:req.user._id}).exec();
+                const ja = await jobApplicationHander.getAppliedJobs(req, res);
+                res.render("providerDashboard", {usr: req.user, notifications: notifs, cats: categories, ja:ja, countries: countries, postRequests: pRequests});
+            }
             else  {
                 const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
                 requestProviders = await UserService.getProviders();
@@ -281,24 +285,27 @@ app.get("/", async function(req, res){
             res.render("findprofessionals", {usr: null, notifications: null, link:null, cats: categories, countries: countries, professionals: result});
     });
 
-    app.get("/term-of-use", function(req, res){
+    app.get("/term-of-use", async function(req, res){
         if(req.isAuthenticated()){
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("termsAndConditions", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
             res.render("termsAndConditions", {usr: null, notifications: null, link:null, cats: categories, countries: countries});
     });
 
-    app.get("/do-not-sell", function(req, res){
+    app.get("/do-not-sell", async function(req, res){
         if(req.isAuthenticated()){
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("doNotSell", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
             res.render("doNotSell", {usr: null, notifications: null, link:null, cats: categories, countries: countries});
     });
 
-    app.get("/privacy-policy", function(req, res){
+    app.get("/privacy-policy", async function(req, res){
         if(req.isAuthenticated()){
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("privacyPolicy", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else

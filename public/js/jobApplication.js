@@ -16,8 +16,9 @@ function applyForJob(){
             mess.classList.remove('error_message');
             mess.classList.add('success_message');
             mess.innerHTML = "Your application has been sent successfully!";
-            await new Promise(r => setTimeout(r, 700));
+            await new Promise(r => setTimeout(r, 1200));
             $('#jobDetailModal1 .close').click();
+            window.location = "/service-requests"
         }
         else{
             mess.innerHTML = "Error json status: "+json.status;
