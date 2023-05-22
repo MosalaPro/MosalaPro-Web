@@ -825,6 +825,9 @@ h4 {
 .mt-4-ver {
   margin-top: 1.5rem!important;
 }
+.cursor{
+  cursor: pointer;
+}
 .w-100-ver {
   width: 100%!important;
 }

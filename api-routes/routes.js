@@ -16,6 +16,7 @@ const JobApplication = require("../services/jobApplication");
 const jobApplicationHander = new JobApplication();
 const UserService = require("../services/user");
 const PostRequestModel = require("../models/postRequest");
+const BookingModel = require("../models/booking");
 const PostRequestService = require("../services/postrequest");
 const stripe = require('stripe')(process.env.STRIPE_SEC_KEY);
 const multer = require("multer");
@@ -42,6 +43,7 @@ const upload = multer({ storage: storage });
 categories = [];
 const fs = require('fs');
 const JobApplicationModel = require("../models/jobApplication");
+const BookingService = require("../services/booking");
 
 fs.readFile('./public/data/categories.json', 'utf8', (err, data) => {
   if (err) {
@@ -73,14 +75,6 @@ fs.readFile('./public/data/countries.json', 'utf8', (err, data) => {
       })
     }
   });
-// CountryModel.find({"name":{$ne:null}}, function(err, foundCountries){
-//     if(err){console.log(err);}
-//     else{
-//         console.log("Countries found: "+foundCountries.length);
-//         countries = foundCountries;
-//     }
-// });
-
 
 module.exports = function(app){
     require("dotenv").config();
@@ -332,18 +326,64 @@ app.get("/", async function(req, res){
 
     app.get("/myrequests", async function(req, res){
     if(req.isAuthenticated()){
-        const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-        const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
-        if(pRequests){
-            console.log("Requests found: "+pRequests);
-        }else{
-            console.log("No requests found with username: "+req.user.username);
-        }
-        res.render("manageServiceRequests", {usr: req.user, notifications: notifs, postRequests: pRequests, link: null,  cats: categories});
+        try{
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+            let pRequests = [];
+            if(req.params.status == "all")
+                pRequests = await PostRequestModel.find({username:req.user.username}).exec();
+            else
+                pRequests = await PostRequestModel.find({username:req.user.username, status:req.params.status}).exec();
+            if(pRequests){
+                console.log("Requests found: "+pRequests.length);
+            }else{
+                console.log("No requests found with username: "+req.user.username);
+            }
+            //res.send(pRequests);
+            res.render("manageServiceRequests", {usr: req.user, notifications: notifs, postRequests: pRequests, link: null,  cats: categories});
+        }catch(error) {res.redirect("/")};
     }
     else
         res.redirect("/");
     });
+
+    app.get("/getbookings", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                console.log("Pro: "+req.user._id);
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                let pRequests = [];
+                if(req.query?.type == "all")
+                    pRequests = await BookingModel.find({providerId:req.user._id}).exec();
+                else
+                    pRequests = await BookingModel.find({providerId:req.user._id, status:req.query?.type}).exec();
+                if(pRequests){
+                    console.log("GetBookings found: "+pRequests.length);
+                }else{
+                    console.log("No requests found with username: "+req.user.username);
+                }
+                console.log("Bookings: "+pRequests);
+                res.send(pRequests);
+            }catch(error) {res.redirect("/")};
+        }
+        else
+            res.redirect("/");
+        });
+
+    app.get("/mybookings", async function(req, res){
+        if(req.isAuthenticated()){
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+            const bookings = await BookingModel.find({providerId:req.user._id, status: "active"}).exec();
+            if(bookings){
+                console.log("Bookings found: "+bookings.length);
+            }else{
+                console.log("No requests found with username: "+req.user.username);
+            }
+            res.render("manageServiceRequests", {usr: req.user, notifications: notifs, postRequests:bookings, link: null,  cats: categories});
+            
+        }
+        else
+            res.redirect("/");
+        });
 
     app.post('/update-password', function(req, res){
         if(req.isAuthenticated())
@@ -423,16 +463,24 @@ app.get("/", async function(req, res){
 
     app.get('/pro-profile/:id/', async function (req, res) {
         let provider = await UserService.findUser(req, res);
-        // if(!provider){
-        //     provider = await UserService.find({facebook_id: req.body.proId}); 
-        // }
         if( req.isAuthenticated() && provider){
-            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+            try{
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
                 res.render("proProfile", {usr: req.user, notifications: notifs, pro: provider, cats: categories, link:req.link});
+            }catch(error){res.redirect("/");}
             
         }else
         res.render("proProfile", {usr: null, notifications: null, pro: provider, cats: categories, link:req.link});
    });
+   app.get('/service-request-booking/:id/', async function (req, res) {
+    let provider = await UserService.findUser(req, res);
+    if( req.isAuthenticated() && provider){
+        const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+            res.render("bookPro", {usr: req.user, notifications: notifs, pro: provider, cats: categories, link:req.link});
+        
+    }else
+    res.render("bookPro", {usr: null, notifications: null, pro: provider, cats: categories, link:req.link});
+});
     
     app.post('/verify-p-email', function(req, res) {
         //model.verifyProviderEmail(req, res);
@@ -449,9 +497,6 @@ app.get("/", async function(req, res){
         //model.resendCode(req, res);
         UserService.resendCode(req, res);
     });
-    // app.get("/professionals", function(req, res){
-    //     model.showForProPage(req, res);
-    // });
     app.get("/service-request", async function (req, res) {
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
@@ -464,8 +509,12 @@ app.get("/", async function(req, res){
     });
 
     app.post("/postServiceRequest",function(req,res){
-        console.log("/postServiceRequest")
         PostRequestService.postServiceRequest(req,res);
+    });
+
+    app.post("/submitBooking",function(req,res){
+        console.log("Booking routed..");
+        BookingService.postBooking(req,res);
     });
 
     app.get("/find-professionals", async function (req, res) {
@@ -485,14 +534,37 @@ app.get("/", async function(req, res){
 
     app.get("/sr-details/:jobId", async function(req, res){
         if(req.isAuthenticated()){
+            try{
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             const sr = await PostRequestModel.findOne({_id: req.params.jobId}).exec();
-            console.log("Job found: "+sr);
             res.render("jobRequestDetails", {job: sr, notifications: notifs, link:null, usr: req.user, cats: categories});
+            }catch(error){
+                res.redirect("/");
+            }
         }
         else
-            res.render("/");
+            res.redirect("/");
     });
+    app.get("/job-application/:jobId", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                const ja = await JobApplicationModel.findOne({jobId: req.params.jobId}).exec();
+                const sr = await PostRequestModel.findOne({_id: req.params.jobId}).exec();
+                sr.createdAt = ja.createdAt;
+                res.render("jobApplicationDetails", {job: sr, notifications: notifs, link:null, usr: req.user, cats: categories});
+            }catch(error){
+                res.redirect("/");
+            }
+           
+        }
+        else
+            res.redirect("/");
+    });
+    app.get('/files/:filename', function(req, res){
+        const file = `postAttachments/${req.params.filename}`;
+        res.download(file);
+      });
 
     app.get('/:anything/', async function (req, res) {
         if(req.isAuthenticated()){

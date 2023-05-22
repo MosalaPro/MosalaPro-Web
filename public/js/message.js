@@ -1,9 +1,9 @@
-const sendMessage = async()=> {
+const sendMessage = async(pro_id)=> {
 
     const messageTitle = document.getElementById("messageTitle");
     const message = document.getElementById("messageContent");
     const err = document.getElementById("err");
-    const pro_id = document.getElementById("proId");
+    //const pro_id = document.getElementById("proId");
     err.innerHTML = "";
     
     if(messageTitle.value.length < 6){
@@ -22,7 +22,7 @@ const sendMessage = async()=> {
     }
 
     requestData = {
-        proId: pro_id.value,
+        proId: pro_id,
         messageTitle: messageTitle.value,
         content: message.value
     }

@@ -35,7 +35,7 @@ const onLoginSubmit = async()=> {
             message.classList.remove('error_message');
             message.classList.add('success_message');
             message.innerHTML = "Login successful! Redirecting..";
-            await new Promise(r => setTimeout(r, 700));
+            await new Promise(r => setTimeout(r, 500));
             window.location.reload();
         }
         else if(json.status == 402){

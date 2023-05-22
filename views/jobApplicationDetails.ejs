@@ -4,8 +4,7 @@
     <div class="container p-4">
         <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/service-requests">Service requests</a></li>
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                 <li class="breadcrumb-item active" aria-current="page"><%=job.requestTitle%></li>
             </ol>
         </nav>
@@ -46,11 +45,11 @@
                                 </div>
                             </div>
                             
-                            <div class="row border-bottom p-3 mt-1">
+                            <div class="row mt-1">
                                 
                                 <% if (job.files.length == 0){ %>
                                     <div class="col">
-                                        <span class="job-details pl-2"> This service request have no attachments.</span>
+                                        <span class="job-details pl-2"> This service request does not have attachments.</span>
                                     </div>
                                 <% } else { %>
                                     <% let j = 0; job.files.forEach(file=>{ j++; %>
@@ -68,10 +67,16 @@
                                       </div>
 
                                     <% }); } %>
-                                </div>
-                                <p class="post-modern-text mt-1 ">Please read the documents carefully to make sure to meet the requirements of this request.</p>
                             </div>
-                            <div class="p-4 d-flex justify-content-center"><button class="btn-job btn-primary-job" onClick="applyForJob()">Apply for service request</button></div>
+                            <div class="row pb-4 mb-4">
+                                <div class="col">
+                                    <h6 class="border-bottom mb-3">Applied on</h6>
+                                    <span class="job-details pl-2"><%= job.createdAt.getUTCMonth() + 1 %>/<%= job.createdAt.getUTCDate()%>/<%= job.createdAt.getUTCFullYear() %></span>
+                                </div>
+                            </div>
+                                <p class="post-modern-text mt-1 border-top">This application has not been viewed by the request owner, you will be notified when it's viewed.</p>
+                            </div>
+                            <div class="p-4 d-flex justify-content-center"><button class=" btn-danger" onClick="applyForJob()">Cancel my application</button></div>
                 </div>
             </div>
 </section>

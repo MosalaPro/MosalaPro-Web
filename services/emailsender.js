@@ -66,7 +66,7 @@ class EmailSender {
 
         const name = user.firstName;
         const email = user.email;
-        const subject = "Verify Your MosalaPro Email Address";
+        const subject = "Verify Your MosalaPro Account";
         const message = "Hi "+name+",\n\nThank you for signing up with MosalaPro. We appreciate your business."+
             "\nPlease use the code below to verify your MosalaPro Account:\n\n"
             +randomDigit +"\n\nThank you,\nMosalaPro TM";
@@ -97,7 +97,7 @@ class EmailSender {
         const email = provider.email;
             //const link = `${process.env.BASE_URL}/user/verify/${newUser._id}/${token.token}`;
             
-        const subject = "Verify Your MosalaPro Email Address";
+        const subject = "Verify Your MosalaPro Account";
         const message = "Hi "+name+",\n\nThank you for signing up with MosalaPro as a service provider. We appreciate your business."+
             "\nPlease use the code below to verify your MosalaPro Account:\n\n"
             +randomDigit +"\n\nThank you,\nMosalaPro TM";

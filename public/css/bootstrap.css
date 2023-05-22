@@ -4516,7 +4516,7 @@ button.close {
 .bs-tooltip-left .arrow::before, .bs-tooltip-auto[x-placement^="left"] .arrow::before {
 	left: 0;
 	border-width: 3px 0 3px 6px;
-	border-left-color: #516ca9;
+	border-left-color: #5A9E2F;
 }
 
 .tooltip-inner {
@@ -4524,7 +4524,7 @@ button.close {
 	padding: 6px 10px;
 	color: #ffffff;
 	text-align: center;
-	background-color: #516ca9;
+	background-color: #5A9E2F;
 	border-radius: 0.25rem;
 }
 

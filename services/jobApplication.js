@@ -20,6 +20,7 @@ class JobApplication {
             userId: user._id,
             providerId:  req.user._id,
             jobId: req.body.jobId,
+            status: "applied",
             createdAt: new Date(),
             lastUpdate: new Date()
         }).save( async function (err) {

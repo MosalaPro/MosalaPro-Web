@@ -74,11 +74,11 @@
                             <ul class="dropdown-menu ul-none">
                               <% if(usr.accountType=="provider"){ %>
                                 <li><a href="/p-profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
-                                <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Tasks</a></li>
+                                <li><a href="//mybookings"><b class="fa fa-tasks mr-2"></b>  Manage Bookings</a></li>
                                 <li><a href="#"><b class="fa fa-bar-chart mr-1"></b>  Dashboard</a></li>
                               <%}else{%>
                                 <li><a href="/profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
-                                <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>
+                                <li><a href="/myrequests/active"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>
                                 <li><a href="/professionals"><b class="fa fa-id-card-o mr-1"></b>  Become a pro</a></li>
                               <%}%>
                               <% if (unread >  0) { %>
@@ -152,11 +152,12 @@
                           <!--li class="rd-nav-item"><a class="rd-nav-link" href="/about-us">About us</a></li-->
                           <% if(usr.accountType=="provider"){ %>
                             <li class="rd-nav-item"><a class="rd-nav-link" href="/service-requests">Service requests</a></li>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/mybookings">Manage Bookings</a>
                           <% } else { %>
                             <li class="rd-nav-item"><a class="rd-nav-link" href="/professionals">For Professionals</a></li>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/myrequests/active">My Requests</a></li>
                           <% } %>
-                          <li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us">Contact Us</a>
-                          </li>
+                          
                         <% } else { %>
                           <li class="rd-nav-item active"><a class="rd-nav-link" href="/">Home</a>
                           </li>
@@ -190,11 +191,11 @@
                                 
                                     <% if(usr.accountType=="provider"){ %>
                                       <li><a href="/p-profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
-                                      <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My orders</a></li>
+                                      <li><a href="/mybookings"><b class="fa fa-tasks mr-2"></b>  Manage Bookings</a></li>
                                       <li><a href="#"><b class="fa fa-bar-chart mr-1"></b>  Dashboard</a></li>
                                     <%}else{%>
                                       <li><a href="/profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
-                                      <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>
+                                      <li><a href="/myrequests/active"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>
                                       <li><a href="/professionals"><b class="fa fa-id-card-o mr-1"></b>  Become a pro</a></li>
                                     <%}%>
                                     

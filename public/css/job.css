@@ -38,18 +38,17 @@
 
 .post-modern-time {
 	display: inline-block;
+	padding-left: 3em;
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	color: #6689ff;
+	color: #9b9b9b;
 	font-size: 12px;
 	letter-spacing: .025em;
-	text-transform: uppercase;
 	font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .post-modern-time::before {
-	position: absolute;
 	content: '';
 	top: 0;
 	left: 0;

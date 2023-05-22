@@ -31,6 +31,11 @@ function applyForJob(){
 
 }
 
+function downloadFile(filename){
+  //const filename = document.getElementById("").value;
+  location.replace('files/'+filename);
+}
+
 async function _postData(url = '', data = {}) {
     const response = await fetch(url, {
         method: 'POST',
