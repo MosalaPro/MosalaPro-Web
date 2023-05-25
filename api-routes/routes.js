@@ -438,9 +438,12 @@ app.get("/", async function(req, res){
         }else   res.redirect("/");
     });
 
-    app.post("/profile", function(req, res){
-        if(req.isAuthenticated()){
 
+    app.post("/profile", upload.single("photo"), async function(req, res){
+        if(req.isAuthenticated()){
+            if(req.file)
+                req.body.photo = req.file.filename;
+                req.body.accountType = "provider";
             if(UserService.updateUser({_id: req.user._id, ...req.body}))
                 res.redirect("/profile");
             else
@@ -458,6 +461,13 @@ app.get("/", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("userEdit", {usr: req.user, notifications: notifs, link:null,  cats: categories, countries: countries});
+        }else{res.redirect("/");}
+    });
+
+    app.get("/join-as-pro", async function(req, res){
+        if(req.isAuthenticated()){
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+            res.render("joinAsProProfile", {usr: req.user, notifications: notifs, link:null,  cats: categories, countries: countries});
         }else{res.redirect("/");}
     });
 

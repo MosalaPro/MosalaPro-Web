@@ -5,7 +5,11 @@
       <div class="container p-4 mb-0">
         <h2><span  class="text-light" data-caption-animate="fadeInDown" data-caption-delay="100">Connect With Millions of Potential</span> <span class="title" data-caption-animate="fadeInUp" data-caption-delay="200"> Customers Nearby.</span></h2>
             <p class="big">We love helping service providers save their reputations and grow their businesses by providing customers service on their behalf.</p>
-            <a class="button button-secondary-text" href="#proSignModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Join as Provider</a>
+            <% if(usr){ %>
+              <a class="button button-secondary-text" href="/join-as-pro" >Join as Provider</a>
+            <% } else { %>
+              <a class="button button-secondary-text" href="#proSignModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Join as Provider</a>
+              <% } %>
       </div>
     </div>
   </section>
@@ -24,8 +28,12 @@
                 Create a profile that customers can view and book your services through. For a small monthly cost, your profile will be presented to those in need of your services. Access
                 an easier way to manage your clients with online bookings. Keep records, manage dates, and plot
                 out your weekly and monthly services with MosalaPro.</p>
-                <a class="button button-secondary-text d-flex justify-content-center align-items-center mx-4" href="#proSignModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Join as Provider</a>
-          </div>
+                <% if(usr){ %>
+                  <a class="button button-secondary-text d-flex justify-content-center align-items-center mx-4" href="/join-as-pro" >Join as Provider</a>
+                <% } else { %>
+                  <a class="button button-secondary-text d-flex justify-content-center align-items-center mx-4" href="#proSignModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Join as Provider</a>
+                <% } %>
+                </div>
         </div>
       </div>
     </div>

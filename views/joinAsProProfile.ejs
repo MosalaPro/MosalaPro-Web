@@ -29,12 +29,8 @@
                   <div class="col-8">
                   
                       <div class="d-flex justify-content-between w-100">
-                        <h5>Edit profile</h5>
-                        <div class="d-flex align-items-center ">
-
-                          <a href="/user" class="mr-3 simple-btn-inv">Back</a>
-                          <button type="submit" class="profile-btn simple-btn " >Save</button>
-                        </div>
+                        <h5>Join as provider</h5>
+                        
                       </div>
                     
                       <div class="row">
@@ -88,7 +84,7 @@
                                 </div>
                             </div>
                         </div>
-                        <% if(usr.category)  {%>
+                        <% if(usr.category && usr.category != 'Select Category')  {%>
                           <div class="row mt-2">
                             <div class="col">
                                 <div class="form-outline">
@@ -100,8 +96,8 @@
  
                         <div class="row mt-2">
                           <div class="col">
-                              <select class="form-control" aria-label="Select Category" name="category" id="user-category" style="display: inline;">
-                                  <option selected>Select Category</option>
+                              <select class="form-control" aria-label="Select Category" name="category" id="user-category" style="display: inline;" required>
+                                  <option selected value="">Select Category</option>
           
                                   <% if(cats){ cats.forEach(cat=>{ %>
                                     <option value="<%=cat.name %>"><%=cat.name %></option>
@@ -139,12 +135,12 @@
                       <div class="row mt-3">
                         <div class="col-md-6">
                             <div class="form-outline">
-                              <input type="text" id="role" class="form-control has-success" placeholder="Role" value="<%=usr.role %>"  name="role" />
+                              <input type="text" id="role" class="form-control has-success" placeholder="Role" value="<%=usr.role %>"  name="role" required/>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-outline">
-                              <input type="number" id="rate" class="form-control" placeholder="Rate" name="rate" value="<%=usr.rate %>" />
+                              <input type="number" id="rate" class="form-control" placeholder="Rate" name="rate" value="<%=usr.rate %>" required/>
                             </div>
                         </div>
                       </div>
@@ -156,20 +152,16 @@
                         </div>
                       </div>
                       <input type="hidden" id="skillsForm" class="form-control" placeholder="Address" name="skills" value="" required/>
-                      <!-- <div class="row">
-                          <div class="col-md-6">
-                              <div class="form-outline  ">
-                                  <input type="password" id="registerPassword" class="form-control" placeholder="New Password" name="password" />
-                              </div>
-                          </div>
-                          <div class="col-md-6">
-                              <div class="form-outline  ">
-                                  <input type="password" id="registerConfPassword" class="form-control" placeholder="Confirm new Password"  name="cpassword" />
-                              </div>
-                          </div>
-                      </div> -->
                   </div>
-                </div>
+                  </div>
+                  <div class="row">
+                    <div class="col d-flex justify-content-center ">
+
+                        <a href="/" class="mr-3 simple-btn-inv" >Cancel</a>
+                        <button type="submit" class="simple-btn" >Join as provider</button>
+                        
+                    </div>
+                  </div>
               </form>
             </div>
             <div class="container shadow-sm mb-5 bg-white rounded ">
