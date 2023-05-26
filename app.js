@@ -11,6 +11,7 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
+const hpp = require('hpp');
 const ejs = require("ejs");
 const mongoose = require("mongoose");
 const UserModel = require(__dirname+"/models/user");
@@ -52,6 +53,7 @@ mongoose.set('strictQuery', false);
 app.use(express.static("public"));
 app.use(express.json());
 app.use(compression());
+app.use(hpp());
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -77,7 +79,6 @@ app.use(session({
 	  })
 }));
 
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -85,17 +86,6 @@ passport.use(new LocalStrategy(UserModel.authenticate()));
 
 passport.serializeUser(UserModel.serializeUser());
 passport.deserializeUser(UserModel.deserializeUser());
-//passport.use(UserModel.createStrategy()); 
-
-// passport.serializeUser(function(user, done) {
-//   done(null, user.id);
-// });
-
-// passport.deserializeUser(function(id, done) {
-//   UserModel.findById(id, function(err, user) {
-//     done(err, user);
-//   });
-// });
 
 passport.use(new GoogleStrategy ({
 	clientID: process.env.CLIENT_ID,

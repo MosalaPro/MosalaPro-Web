@@ -13,6 +13,7 @@ const CategoryModel = require("../models/category");
 const EmailSender = require("../services/emailsender");
 const _ = require("lodash");
 const mongoose = require("mongoose");
+const sanitizer = require('sanitize')();
 mongoose.set('strictQuery', false);
 const passport = require("passport");
 const CountryModel = require("../models/country");
@@ -29,6 +30,19 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
+
+// exports.sanitizeUser = function(user) {
+//   return {
+//     id: user._id,
+//     username: user.username,
+//     firstName: user.firstName,
+//     lastName: user.lastName,
+//     accountType: user.accountType,
+//     category: user.category,
+//     photo: user.photo,
+//     role: user.role
+//   };
+// };
 
 const UserService = {
   login: async (req, res) => {
@@ -72,12 +86,12 @@ const UserService = {
       newUser = await new UserModel({
         categoryId : category._id,
         category: category.name,
-        firstName: _.capitalize(req.body.pFirstName),
-        lastName: _.capitalize(req.body.pLastName),
-        email: _.toLower(req.body.pEmail),
-        phone: req.body.pPhone,
-        address: req.body.pAddress,
-        username: req.body.pEmail,
+        firstName: _.trim(_.capitalize(req.body.pFirstName)),
+        lastName: _.trim(_.capitalize(req.body.pLastName)),
+        email: _.trim(_.toLower(req.body.pEmail)),
+        phone: _.trim(req.body.pPhone), 
+        address: _.trim(req.body.pAddress),
+        username: _.trim(req.body.pEmail),
         countryCode: countryCode.phone_code,
         country: req.body.country_p,
         city: req.body.city_p,
@@ -248,9 +262,19 @@ const UserService = {
 
     if(query?.category !== "" && query?.category !== "Select Category")
       filters.category = query.category;
-
+    result = [];
     const res = await UserModel.find(filters);
-    return res;
+    res.forEach(pro=>{
+        pro.email = "";
+        pro.phone = "";
+        pro.address = "";
+        pro.createdAt = "";
+        pro.lastUpdate = "";
+        pro.subscriptionPlan = "";
+        pro.username = "";
+        result.push(pro);
+    });
+    return result;
   },
   getProviders : async()=>{
     const providers = await UserModel.find({accountType:"provider"}).limit(8).exec();

@@ -55,6 +55,7 @@ async function getRequests(type){
   else{
     const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
     for(const booking of bookings) {
+      let date = booking.createdAt.split("-");
         const reqt =  `
             <div class="col-lg-4 col-md-6 col-12 mt-1 pt-2">
               <div class="card border-0 bg-light-job rounded-job shadow-job">
@@ -63,13 +64,13 @@ async function getRequests(type){
                   <h5>${ booking.bookingTitle }</h5>
                   <div class="mt-3">
                       <span class="d-block job-details"><b class="fa fa-money mr-2" aria-hidden="true"></b>  Budget: ${ booking.budget }</span>
-                      <span class="d-block job-details"><b class="fa fa-briefcase mr-2" aria-hidden="true"></b> Deadline: ${ booking.deadline }</span>
+                      <span class="d-block job-details"><b class="fa fa-calendar mr-2" aria-hidden="true"></b> Deadline: ${ booking.deadline }</span>
                   </div>
                   <div class="mt-3 border-bottom pb-4 d-flex ">
                       <a class="btn-job btn-primary-job-inv" href="/sr/">Manage booking</a>
                       
                   </div>
-                      <div class=""><span class="float-md-right text-small mt-1">Submitted on ${booking.createdAt }</span></div>
+                      <div class=""><span class="float-md-right text-small mt-1">Submitted on ${date[1]}/${date[2].substr(0,2)}/${date[0]}</span></div>
                   </div>
               
               </div>

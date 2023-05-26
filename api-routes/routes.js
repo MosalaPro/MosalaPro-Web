@@ -96,11 +96,12 @@ app.get("/", async function(req, res){
                 //     provider = await UserModel.find
                 // })
                 console.log(notifs);
-                res.render("userDashboard", {usr: req.user, notifications: notifs, link: null, postRequests: pRequests, providers: requestProviders, cats: categories, countries: countries});
+                res.render("userDashboard", {usr: req.user, notifications: notifs, link: null, postRequests: pRequests, providers: requestProviders, cats: categories, 
+                    countries: countries});
             }
         }
         else
-            res.render("home", {usr: null, cats: categories, countries: countries});
+            res.render("home", {usr: null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
     });
 
     app.get("/payment", async function(req, res) {
@@ -236,7 +237,7 @@ app.get("/", async function(req, res){
     });
 
     app.get("/register-user", function(req, res){
-        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.body.id, form_action: "/verify-u-email"});
+        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.body.id, form_action: "/verify-u-email", place_api_key: process.env.PLACES_API_KEY});
     });
 
     app.get("/service-requests", async function(req, res){
@@ -265,18 +266,17 @@ app.get("/", async function(req, res){
             res.render("forProfessionals", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
-            res.render("forProfessionals", {usr: null, link:null, cats: categories, countries: countries});
+            res.render("forProfessionals", {usr: null, link:null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
     });
 
     app.get("/find-services", async function(req, res){
         const result = await UserService.find(req.query);   
-        console.log(result);
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("findprofessionals", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries, professionals: result});
         }
         else
-            res.render("findprofessionals", {usr: null, notifications: null, link:null, cats: categories, countries: countries, professionals: result});
+            res.render("findprofessionals", {usr: null, notifications: null, link:null, cats: categories, countries: countries,place_api_key: process.env.PLACES_API_KEY, professionals: result});
     });
 
     app.get("/term-of-use", async function(req, res){
@@ -285,7 +285,7 @@ app.get("/", async function(req, res){
             res.render("termsAndConditions", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
-            res.render("termsAndConditions", {usr: null, notifications: null, link:null, cats: categories, countries: countries});
+            res.render("termsAndConditions", {usr: null, notifications: null, link:null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
     });
 
     app.get("/do-not-sell", async function(req, res){
@@ -294,7 +294,7 @@ app.get("/", async function(req, res){
             res.render("doNotSell", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
-            res.render("doNotSell", {usr: null, notifications: null, link:null, cats: categories, countries: countries});
+            res.render("doNotSell", {usr: null, notifications: null, link:null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
     });
 
     app.get("/privacy-policy", async function(req, res){
@@ -303,7 +303,7 @@ app.get("/", async function(req, res){
             res.render("privacyPolicy", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
-            res.render("privacyPolicy", {usr: null, notifications: null, link:null, cats: categories, countries: countries});
+            res.render("privacyPolicy", {usr: null, notifications: null, link:null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
     })
 
     app.get("/about-us", async function(req, res){
@@ -312,7 +312,7 @@ app.get("/", async function(req, res){
             res.render("about_us", {usr: req.user, notifications: notifs, link:null, cats: categories});
         }
         else
-            res.render("about_us", {usr: null, notifications: null, link: null, cats: categories});
+            res.render("about_us", {usr: null, notifications: null, link: null, cats: categories, place_api_key: process.env.PLACES_API_KEY});
     });
 
     app.get("/contact-us", async function(req, res){
@@ -321,25 +321,20 @@ app.get("/", async function(req, res){
             res.render("contact", {usr: req.user, notifications: notifs, link: null, cats: categories});
         }
         else
-            res.render("contact", {usr: null,  notifications:null, link: null,  cats: categories});
+            res.render("contact", {usr: null,  notifications:null, link: null,  cats: categories, place_api_key: process.env.PLACES_API_KEY});
     });
 
     app.get("/myrequests", async function(req, res){
     if(req.isAuthenticated()){
         try{
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            let pRequests = [];
-            if(req.params.status == "all")
-                pRequests = await PostRequestModel.find({username:req.user.username}).exec();
-            else
-                pRequests = await PostRequestModel.find({username:req.user.username, status:req.params.status}).exec();
+            const pRequests = await PostRequestModel.find({username:req.user.username, status:"active"}).exec();
             if(pRequests){
                 console.log("Requests found: "+pRequests.length);
             }else{
                 console.log("No requests found with username: "+req.user.username);
             }
-            //res.send(pRequests);
-            res.render("manageServiceRequests", {usr: req.user, notifications: notifs, postRequests: pRequests, link: null,  cats: categories});
+            res.render("manageUserRequests", {usr: req.user, notifications: notifs, postRequests: pRequests, link: null,  cats: categories});
         }catch(error) {res.redirect("/")};
     }
     else
@@ -355,19 +350,47 @@ app.get("/", async function(req, res){
                 if(req.query?.type == "all")
                     pRequests = await BookingModel.find({providerId:req.user._id}).exec();
                 else
-                    pRequests = await BookingModel.find({providerId:req.user._id, status:req.query?.type}).exec();
+                    pRequests =  await BookingModel.find({providerId:req.user._id, status:req.query?.type}).exec();
+
                 if(pRequests){
                     console.log("GetBookings found: "+pRequests.length);
                 }else{
                     console.log("No requests found with username: "+req.user.username);
                 }
-                console.log("Bookings: "+pRequests);
+                console.log("Bookings: "+pRequests.length);
                 res.send(pRequests);
             }catch(error) {res.redirect("/")};
         }
         else
             res.redirect("/");
-        });
+    });
+
+    app.get("/getrequests", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                console.log("User: "+req.user.username);
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                let pRequests = [];
+                if(req.query?.type == "all")
+                    pRequests = await PostRequestModel.find({username:req.user.username}).exec();
+                else
+                    pRequests = await PostRequestModel.find({username:req.user.username, status:req.query?.type}).exec();
+
+                if(pRequests){
+                    console.log("Requests found: "+pRequests.length);
+                }else{
+                    console.log("No requests found for user: "+req.user.username);
+                }
+                console.log("Requests: "+pRequests.length);
+                res.send(pRequests);
+            }catch(error) {
+                console.log("Error occured: "+error);
+                res.redirect("/")
+            };
+        }
+        else
+            res.redirect("/");
+    });
 
     app.get("/mybookings", async function(req, res){
         if(req.isAuthenticated()){
@@ -489,7 +512,7 @@ app.get("/", async function(req, res){
             res.render("bookPro", {usr: req.user, notifications: notifs, pro: provider, cats: categories, link:req.link});
         
     }else
-    res.render("bookPro", {usr: null, notifications: null, pro: provider, cats: categories, link:req.link});
+    res.render("bookPro", {usr: null, notifications: null, pro: provider, cats: categories, link:req.link, place_api_key: process.env.PLACES_API_KEY});
 });
     
     app.post('/verify-p-email', function(req, res) {
@@ -539,7 +562,7 @@ app.get("/", async function(req, res){
             res.render("findProMd", {link:null, usr: req.user, notifications: notifs, cats: categories});
         }
         else
-            res.render("findProMd", {link:null, notifications: null, usr: null,  cats: categories});
+            res.render("findProMd", {link:null, notifications: null, usr: null,  cats: categories, place_api_key: process.env.PLACES_API_KEY});
     });
 
     app.get("/sr-details/:jobId", async function(req, res){
@@ -581,7 +604,7 @@ app.get("/", async function(req, res){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("page_not_found", {usr: req.user, notifications: notifs, cats: categories, link:req.link});
         }else
-         res.render("page_not_found", {usr: null, notifications: null, cats: categories, link:null});
+         res.render("page_not_found", {usr: null, notifications: null, cats: categories, link:null, place_api_key: process.env.PLACES_API_KEY});
    });
 
     app.get('*', async function (req, res) {
@@ -589,7 +612,7 @@ app.get("/", async function(req, res){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("page_not_found", {usr: req.user, notifications: notifs, cats: categories, link:req.link});
         }else
-         res.render("page_not_found", {usr: null, notifications: null, cats: categories, link:null});
+         res.render("page_not_found", {usr: null, notifications: null, cats: categories, link:null, place_api_key: process.env.PLACES_API_KEY});
     });
     
     app.use(async function(req, res, next) {
@@ -597,7 +620,7 @@ app.get("/", async function(req, res){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("page_not_found", {usr: req.user, notifications: notifs, cats: categories, link:req.link});
         }else
-         res.render("page_not_found", {usr: null, notifications: null,cats: categories, link:null});
+         res.render("page_not_found", {usr: null, notifications: null,cats: categories, link:null, place_api_key: process.env.PLACES_API_KEY});
     });
 
 
