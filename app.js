@@ -169,7 +169,7 @@ app.get("/auth/google",
 	passport.authenticate("google", {scope: ["profile"]}));
 	
 app.get("/auth/google/mosalapro", 
-	passport.authenticate("google", {failureRedirect: "/"}), function(err, res){
+	passport.authenticate("google", {failureRedirect: "/"}), function(req, res){
 		if(!req.user.email)
 			res.redirect('/profile');
 		else res.redirect('/');
