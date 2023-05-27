@@ -63,6 +63,7 @@ const UserService = {
                       //res.redirect("/");
                       return;
                   }else{
+                      console.log("USER AUTH:: User has not been verified.");
                       res.status(402).send({message:"Your account has not been verified.", id:req.user._id, status: 402} );
                       req.logout(function(err){
                           if(err){return next(err);}
@@ -259,6 +260,7 @@ const UserService = {
       filters.role = new RegExp(query.search, "i");
 
     filters.accountType = "provider";
+    //filters.verified = true;
 
     if(query?.category !== "" && query?.category !== "Select Category")
       filters.category = query.category;
@@ -274,7 +276,8 @@ const UserService = {
         pro.username = "";
         result.push(pro);
     });
-    return result;
+    ret = result.slice((query.page-1)*10, (query.page-1)*10+10);
+    return ret;
   },
   getProviders : async()=>{
     const providers = await UserModel.find({accountType:"provider"}).limit(8).exec();

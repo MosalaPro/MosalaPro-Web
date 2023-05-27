@@ -44,6 +44,7 @@ categories = [];
 const fs = require('fs');
 const JobApplicationModel = require("../models/jobApplication");
 const BookingService = require("../services/booking");
+const UserModel = require("../models/user");
 
 fs.readFile('./public/data/categories.json', 'utf8', (err, data) => {
   if (err) {
@@ -101,7 +102,7 @@ app.get("/", async function(req, res){
             }
         }
         else
-            res.render("home", {usr: null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
+            res.render("home", {usr: null, cats: categories, countries: countries });
     });
 
     app.get("/payment", async function(req, res) {
@@ -231,13 +232,21 @@ app.get("/", async function(req, res){
         }
       });
 
+    app.post("/update-sr", async function(req, res){
+        if(req.isAuthenticated()){
+            //if(req.file)
+            PostRequestService.updateServiceRequest(req, res);
+        }
+        else    
+            res.redirect("/");
+    })
     
     app.post("/register-user", async (req, res) => {
         UserService.register(req, res);
     });
 
     app.get("/register-user", function(req, res){
-        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.body.id, form_action: "/verify-u-email", place_api_key: process.env.PLACES_API_KEY});
+        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.body.id, form_action: "/verify-u-email" });
     });
 
     app.get("/service-requests", async function(req, res){
@@ -266,17 +275,21 @@ app.get("/", async function(req, res){
             res.render("forProfessionals", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
-            res.render("forProfessionals", {usr: null, link:null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
+            res.render("forProfessionals", {usr: null, link:null, cats: categories, countries: countries });
     });
 
     app.get("/find-services", async function(req, res){
-        const result = await UserService.find(req.query);   
+        const result = await UserModel.find({accountType:"provider"}).exec();
+        const pages = result.length > 10 ? (Math.floor(result.length / 10))+1 : 1; 
+        console.log("result length: "+result.length+" Pages: "+pages);  
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            res.render("findprofessionals", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries, professionals: result});
+            res.render("findprofessionals", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries, professionals: result, 
+                pages:pages, total: result.length});
         }
         else
-            res.render("findprofessionals", {usr: null, notifications: null, link:null, cats: categories, countries: countries,place_api_key: process.env.PLACES_API_KEY, professionals: result});
+            res.render("findprofessionals", {usr: null, notifications: null, link:null, cats: categories, countries: countries, professionals: result, 
+                pages:pages, total: result.length});
     });
 
     app.get("/term-of-use", async function(req, res){
@@ -285,7 +298,7 @@ app.get("/", async function(req, res){
             res.render("termsAndConditions", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
-            res.render("termsAndConditions", {usr: null, notifications: null, link:null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
+            res.render("termsAndConditions", {usr: null, notifications: null, link:null, cats: categories, countries: countries });
     });
 
     app.get("/do-not-sell", async function(req, res){
@@ -294,7 +307,7 @@ app.get("/", async function(req, res){
             res.render("doNotSell", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
-            res.render("doNotSell", {usr: null, notifications: null, link:null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
+            res.render("doNotSell", {usr: null, notifications: null, link:null, cats: categories, countries: countries });
     });
 
     app.get("/privacy-policy", async function(req, res){
@@ -303,7 +316,7 @@ app.get("/", async function(req, res){
             res.render("privacyPolicy", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
         }
         else
-            res.render("privacyPolicy", {usr: null, notifications: null, link:null, cats: categories, countries: countries, place_api_key: process.env.PLACES_API_KEY});
+            res.render("privacyPolicy", {usr: null, notifications: null, link:null, cats: categories, countries: countries });
     })
 
     app.get("/about-us", async function(req, res){
@@ -312,7 +325,7 @@ app.get("/", async function(req, res){
             res.render("about_us", {usr: req.user, notifications: notifs, link:null, cats: categories});
         }
         else
-            res.render("about_us", {usr: null, notifications: null, link: null, cats: categories, place_api_key: process.env.PLACES_API_KEY});
+            res.render("about_us", {usr: null, notifications: null, link: null, cats: categories });
     });
 
     app.get("/contact-us", async function(req, res){
@@ -321,7 +334,7 @@ app.get("/", async function(req, res){
             res.render("contact", {usr: req.user, notifications: notifs, link: null, cats: categories});
         }
         else
-            res.render("contact", {usr: null,  notifications:null, link: null,  cats: categories, place_api_key: process.env.PLACES_API_KEY});
+            res.render("contact", {usr: null,  notifications:null, link: null,  cats: categories });
     });
 
     app.get("/myrequests", async function(req, res){
@@ -391,6 +404,21 @@ app.get("/", async function(req, res){
         else
             res.redirect("/");
     });
+
+    app.get("/manage-request", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                const req_ = await PostRequestModel.findOne({_id: req.query?.rq}).exec();
+                res.render("manageRequest", {usr: req.user, notifications: notifs, request: req_, link: null,  cats: categories});
+            }catch(error){
+                console.log("Error occured: "+error);
+                res.redirect("/myrequests");
+            }
+        }
+        else
+            res.redirect("/");
+    })
 
     app.get("/mybookings", async function(req, res){
         if(req.isAuthenticated()){
@@ -512,7 +540,7 @@ app.get("/", async function(req, res){
             res.render("bookPro", {usr: req.user, notifications: notifs, pro: provider, cats: categories, link:req.link});
         
     }else
-    res.render("bookPro", {usr: null, notifications: null, pro: provider, cats: categories, link:req.link, place_api_key: process.env.PLACES_API_KEY});
+        res.redirect("/");
 });
     
     app.post('/verify-p-email', function(req, res) {
@@ -555,6 +583,7 @@ app.get("/", async function(req, res){
         res.send(result);
       });
 
+
     app.get("/find-services-md", async function(req, res){
         
         if(req.isAuthenticated()){
@@ -562,7 +591,7 @@ app.get("/", async function(req, res){
             res.render("findProMd", {link:null, usr: req.user, notifications: notifs, cats: categories});
         }
         else
-            res.render("findProMd", {link:null, notifications: null, usr: null,  cats: categories, place_api_key: process.env.PLACES_API_KEY});
+            res.render("findProMd", {link:null, notifications: null, usr: null,  cats: categories });
     });
 
     app.get("/sr-details/:jobId", async function(req, res){
@@ -604,7 +633,7 @@ app.get("/", async function(req, res){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("page_not_found", {usr: req.user, notifications: notifs, cats: categories, link:req.link});
         }else
-         res.render("page_not_found", {usr: null, notifications: null, cats: categories, link:null, place_api_key: process.env.PLACES_API_KEY});
+         res.render("page_not_found", {usr: null, notifications: null, cats: categories, link:null });
    });
 
     app.get('*', async function (req, res) {
@@ -612,7 +641,7 @@ app.get("/", async function(req, res){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("page_not_found", {usr: req.user, notifications: notifs, cats: categories, link:req.link});
         }else
-         res.render("page_not_found", {usr: null, notifications: null, cats: categories, link:null, place_api_key: process.env.PLACES_API_KEY});
+         res.render("page_not_found", {usr: null, notifications: null, cats: categories, link:null });
     });
     
     app.use(async function(req, res, next) {
@@ -620,7 +649,7 @@ app.get("/", async function(req, res){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("page_not_found", {usr: req.user, notifications: notifs, cats: categories, link:req.link});
         }else
-         res.render("page_not_found", {usr: null, notifications: null,cats: categories, link:null, place_api_key: process.env.PLACES_API_KEY});
+         res.render("page_not_found", {usr: null, notifications: null,cats: categories, link:null });
     });
 
 

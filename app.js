@@ -53,7 +53,7 @@ mongoose.set('strictQuery', false);
 app.use(express.static("public"));
 app.use(express.json());
 app.use(compression());
-app.use(hpp());
+//app.use(hpp());
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -104,6 +104,7 @@ passport.use(new GoogleStrategy ({
 					google_id : profile.id,
 					photo : profile.photos[0].value,
 					email : profile.email,
+					verified: true,
 					display_name : profile.displayName,
 					username: profile.email,
 					firstName: profile._json.given_name,
@@ -137,6 +138,7 @@ passport.use(new FacebookStrategy({
 				facebook_id : profile.id,
 				photo : profile.photos[0].value,
 				email : profile.email,
+				verified: true,
 				display_name : profile.displayName,
 				username: profile.email,
 				firstName: profile._json.first_name,
@@ -157,12 +159,17 @@ passport.use(new FacebookStrategy({
 
 app.get("/auth/google",
 	passport.authenticate("google", {scope: ["profile"]}));
-	
+
 app.get("/auth/google/mosalapro", 
-	passport.authenticate("google", {failureRedirect: "/"}), function(err, res){
-		if(!req.user.email)
+	passport.authenticate("google", {failureRedirect: "/"}), function(req, res){
+		if(!req.user.email){
+			console.log("USER GOOGLE AUTH:: First time User has been successfully authenticated");
 			res.redirect('/profile');
-		else res.redirect('/');
+		}
+		else{ 
+			console.log("USER GOOGLE AUTH:: Existing time User has been successfully authenticated");
+			res.redirect('/');
+		}
 	});
 	
 app.get("/auth/facebook",

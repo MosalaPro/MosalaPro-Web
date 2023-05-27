@@ -66,11 +66,12 @@ async function getRequests(type){
                         <span class="d-block job-details"><b class="fa fa-money mr-2" aria-hidden="true"></b>  Budget: ${ request.budget }</span>
                         <span class="d-block job-details"><b class="fa fa-calendar mr-2" aria-hidden="true"></b> Deadline: ${ request.deadline }</span>
                     </div>
-                    <div class="mt-3 border-bottom pb-4 d-flex ">
+                    <div class="mt-3 border-bottom pb-4 d-flex ">` + (request.status != 'cancelled' ? 
 
-                        <a class="btn-job btn-primary-job-inv" href="/sr/${ request._id }">Edit request</a>
+                        `<a class="btn-job btn-primary-job-inv" href="/manage-request?rq=${ request._id }">Manage request</a>` : 
+                        `<a class="btn-job btn-primary-job-inv-blue" href="/sr/${ request._id }">Resubmit request</a>`) +
                         
-                    </div>
+                    `</div>
                         <div class=""><span class="float-md-right text-small mt-1">Submitted on ${date[1]}/${date[2].substr(0,2)}/${date[0]}</span></div>
                     </div>
                 

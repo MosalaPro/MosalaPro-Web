@@ -1,4 +1,5 @@
 
+
 <div class="modal fade" id="regModalCta" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -77,7 +78,7 @@
                       <div class="col mb-2">
                           <div class="form-outline  ">
                               <input type="text" id="registerAddress" class="form-control" oninput="this.className = 'form-control'" placeholder="Address" name="address" required
-                              autocomplete="off">
+                              >
                           </div>
                       </div>
                   </div>
@@ -317,66 +318,4 @@
   </div>
   <form action="/authenticate" method="post" name="theForm"><input name="iddl" value="" id="iddl" class="d-none" /></form>
 
-<script>
-  
-    let autocomplete;
-    let address1Field;
-
-    function initAutocomplete() {
-      address1Field = document.querySelector("#registerAddress");
-      // Create the autocomplete object, restricting the search predictions to
-      // addresses in the US and Canada.
-      autocomplete = new google.maps.places.Autocomplete(address1Field, {
-        componentRestrictions: { country: ["us", "ca"] },
-        fields: ["address_components", "geometry"],
-        types: ["address"],
-      });
-      address1Field.focus();
-      // When the user selects an address from the drop-down, populate the
-      // address fields in the form.
-      autocomplete.addListener("place_changed", fillInAddress);
-    }
-
-    function fillInAddress() {
-      // Get the place details from the autocomplete object.
-      const place = autocomplete.getPlace();
-      let address1 = "";
-      for (const component of place.address_components) {
-        // @ts-ignore remove once typings fixed
-        const componentType = component.types[0];
-
-        switch (componentType) {
-          case "street_number": {
-            address1 = `${component.long_name} ${address1}`;
-            break;
-          }
-
-          case "route": {
-            address1 += component.short_name;
-            break;
-          }
-          case "locality":
-            document.querySelector("#locality").value = component.long_name;
-            break;
-          case "administrative_area_level_1": {
-            document.querySelector("#state").value = component.short_name;
-            break;
-          }
-          case "country":
-            document.querySelector("#country").value = component.long_name;
-            break;
-        }
-      }
-
-      address1Field.value = address1;
-    }
-
-    window.initAutocomplete = initAutocomplete;
-
-</script>
-
-<script async
-src="https://maps.googleapis.com/maps/api/js?key=<%=place_api_key%>&callback=initAutocomplete&libraries=places&v=weekly"
-defer></script>
-
-  
+ 

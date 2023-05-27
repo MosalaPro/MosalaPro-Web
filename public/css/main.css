@@ -787,6 +787,15 @@
   height: 88px;
   width: 88px;
 }
+.thumb-sm {
+  height: 40px;
+  width: 40px;
+}
+.img-profile-thumb {
+  border-radius: .25rem;
+  max-width: 100%;
+  height: auto;
+}
 .img-thumbnail {
   padding: .25rem;
   background-color: #fff;

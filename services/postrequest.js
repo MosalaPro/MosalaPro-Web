@@ -9,6 +9,7 @@ const UserModel = require("../models/user");
 const CategoryModel = require("../models/category");
 const PostRequestModel = require("../models/postRequest");
 const passport = require("passport");
+const _ = require("lodash");
 const JobApplication = require("./jobApplication");
 const JobApplicationModel = require("../models/jobApplication");
 
@@ -70,9 +71,9 @@ const PostRequestService =  {
               //Storing in db
               const newRequest = new PostRequestModel({
                 username: req.body.username,
-                requestTitle: req.body.requestTitle,
+                requestTitle: _.trim(_.capitalize(req.body.requestTitle)),
                 requestDescription: req.body.requestDescription,
-                requestCategory: cat.name,
+                requestCategory: _.trim(_.capitalize(cat.name)),
                 requestCategoryIcon: cat.icon,
                 budget: req.body.requestBudget,
                 deadline: req.body.requestDeadline,
@@ -95,6 +96,26 @@ const PostRequestService =  {
             });
           }
         } 
+      },
+
+      updateServiceRequest: async(req, res)=>{
+        try{
+          const ret = await PostRequestModel.findByIdAndUpdate(req.body._id, {_id: req.body._id, ...req.body});
+          if(!ret){
+            res.status(401).send("An error occured (Service Request)");
+            console.log("REQUEST SERVICE:: Error occured.");
+          }
+          else {
+            res.status(200).send({message: "Ok", status:200});
+            console.log("REQUEST SERVICE:: Request changes have been saved.");
+          }
+        
+          return;
+        }
+        catch(error){
+          console.log("REQUEST SERVICE:: Error occured: "+error);
+          return;
+        }
       },
 
       getActiveRequests: async(req, res)=>{

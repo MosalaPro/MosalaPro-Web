@@ -36,8 +36,11 @@
                     <span class="d-block job-details"><b class="fa fa-calendar mr-2" aria-hidden="true"></b> Deadline: <%= req.deadline %></span>
                 </div>
                 <div class="mt-3 border-bottom pb-4 d-flex ">
-                    <a class="btn-job btn-primary-job-inv" href="/sr/<%=req._id%>">Edit request</a>
-                    
+                    <% if(req.status == 'cancelled') { %>
+                      <a class="btn-job btn-primary-job-inv" href="/sr/<%=req._id%>">Resubmit request</a>
+                    <% } else  { %>
+                    <a class="btn-job btn-primary-job-inv" href="/manage-request?rq=<%=req._id%>">Manage  request</a>
+                    <% } %>
                 </div>
                     <div class=""><span class="float-md-right text-small mt-1">Submitted on <%= req.createdAt.getUTCMonth() + 1 %>/<%= req.createdAt.getUTCDate()%>/<%= req.createdAt.getUTCFullYear() %></span></div>
                 </div>
