@@ -1,45 +1,59 @@
 async function getRequests(type){
 
   const completed = document.getElementById("completed-bookings");
-  const active = document.getElementById("active-bookings");
-  const cancelled = document.getElementById("cancelled-bookings");
-  const missing = document.getElementById("missing-bookings");
-  const all = document.getElementById("all-bookings");
-  if(type=="all"){
-    completed.classList.remove("active");
-    cancelled.classList.remove("active");
-    active.classList.remove("active");
-    missing.classList.remove("active");
-    all.classList.add("active")
-  }
-  else if(type=="active"){
-    completed.classList.remove("active");
-    cancelled.classList.remove("active");
-    active.classList.add("active");
-    missing.classList.remove("active");
-    all.classList.remove("active")
-  }
-  else if(type=="cancelled"){
-    completed.classList.remove("active");
-    cancelled.classList.add("active");
-    active.classList.remove("active");
-    missing.classList.remove("active");
-    all.classList.remove("active")
-  }
-  else if(type=="completed"){
-    completed.classList.add("active");
-    cancelled.classList.remove("active");
-    active.classList.remove("active");
-    missing.classList.remove("active");
-    all.classList.remove("active")
-  }
-  else if(type=="missing-details"){
-    completed.classList.remove("active");
-    cancelled.classList.remove("active");
-    active.classList.remove("active");
-    missing.classList.add("active");
-    all.classList.remove("active")
-  }
+    const inprogress = document.getElementById("inprogress-bookings");
+    const active = document.getElementById("active-bookings");
+    const cancelled = document.getElementById("cancelled-bookings");
+    const missing = document.getElementById("missing-bookings");
+    const all = document.getElementById("all-bookings");
+    if(type=="all"){
+      completed.classList.remove("active");
+      cancelled.classList.remove("active");
+      active.classList.remove("active");
+      missing.classList.remove("active");
+      all.classList.add("active");
+      inprogress.classList.remove("active");
+    }
+    else if(type=="active"){
+      completed.classList.remove("active");
+      cancelled.classList.remove("active");
+      active.classList.add("active");
+      missing.classList.remove("active");
+      all.classList.remove("active");
+      inprogress.classList.remove("active");
+    }
+    else if(type=="in-progress"){
+      inprogress.classList.add("active");
+      completed.classList.remove("active");
+      cancelled.classList.remove("active");
+      active.classList.remove("active");
+      missing.classList.remove("active");
+      all.classList.remove("active");
+    }
+    else if(type=="cancelled"){
+      completed.classList.remove("active");
+      cancelled.classList.add("active");
+      active.classList.remove("active");
+      missing.classList.remove("active");
+      all.classList.remove("active");
+      inprogress.classList.remove("active");
+    }
+    else if(type=="completed"){
+      completed.classList.add("active");
+      cancelled.classList.remove("active");
+      active.classList.remove("active");
+      missing.classList.remove("active");
+      all.classList.remove("active");
+      inprogress.classList.remove("active");
+    }
+    else if(type=="missing-details"){
+      completed.classList.remove("active");
+      cancelled.classList.remove("active");
+      active.classList.remove("active");
+      missing.classList.add("active");
+      all.classList.remove("active");
+      inprogress.classList.remove("active");
+    }
 
   const url = new URL(window.location.href);
   url.searchParams.set('type', type);
@@ -78,7 +92,7 @@ async function getRequests(type){
             `;
         content = content + reqt;
       }
-      
+      bookingsBox.innerHTML = content;
     } 
-    bookingsBox.innerHTML = content;
+    
 }

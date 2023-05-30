@@ -326,6 +326,10 @@
   cursor: pointer;
 }
 
+.notif_header{
+  cursor: pointer;
+}
+
 .choices__button:focus {
   outline: none;
 }
@@ -1409,6 +1413,7 @@ h4 {
     padding: 7px 12px;
     border-radius: 5px;
     background-color: #5A9E2F;
+    border: #5A9E2F 1px solid;
     border:none;
     color: #fff;
     cursor: pointer;
@@ -1426,6 +1431,39 @@ h4 {
       border: #5A9E2F 1px solid;
       font-size: 16px;
       }
+
+      .simple-btn-inv:hover{
+        text-align: center;
+        padding: 7px 12px;
+        border-radius: 5px;
+        color: #fff;
+        border:none;
+        background-color: #5A9E2F;
+        cursor: pointer;
+        border: #5A9E2F 1px solid;
+        font-size: 16px;
+        }
+
+    .simple-btn-inv-dgr{
+      text-align: center;
+      padding: 7px 12px;
+      border-radius: 5px;
+      color: #e7515e;
+      border:none;
+      background-color: #fff;
+      cursor: pointer;
+      border: #e7515e 1px solid;
+      font-size: 16px;
+      
+    }
+    .simple-btn-inv-dgr:hover{
+      border-radius: 5px;
+      color: #fff;
+      border:none;
+      background-color: #e7515e;
+      cursor: pointer;
+      border: #e7515e 1px solid;
+    }
  
     
   .post-request-section{

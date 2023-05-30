@@ -1,6 +1,7 @@
 async function getRequests(type){
 
     const completed = document.getElementById("completed-bookings");
+    const inprogress = document.getElementById("inprogress-bookings");
     const active = document.getElementById("active-bookings");
     const cancelled = document.getElementById("cancelled-bookings");
     const missing = document.getElementById("missing-bookings");
@@ -10,35 +11,48 @@ async function getRequests(type){
       cancelled.classList.remove("active");
       active.classList.remove("active");
       missing.classList.remove("active");
-      all.classList.add("active")
+      all.classList.add("active");
+      inprogress.classList.remove("active");
     }
     else if(type=="active"){
       completed.classList.remove("active");
       cancelled.classList.remove("active");
       active.classList.add("active");
       missing.classList.remove("active");
-      all.classList.remove("active")
+      all.classList.remove("active");
+      inprogress.classList.remove("active");
+    }
+    else if(type=="in-progress"){
+      inprogress.classList.add("active");
+      completed.classList.remove("active");
+      cancelled.classList.remove("active");
+      active.classList.remove("active");
+      missing.classList.remove("active");
+      all.classList.remove("active");
     }
     else if(type=="cancelled"){
       completed.classList.remove("active");
       cancelled.classList.add("active");
       active.classList.remove("active");
       missing.classList.remove("active");
-      all.classList.remove("active")
+      all.classList.remove("active");
+      inprogress.classList.remove("active");
     }
     else if(type=="completed"){
       completed.classList.add("active");
       cancelled.classList.remove("active");
       active.classList.remove("active");
       missing.classList.remove("active");
-      all.classList.remove("active")
+      all.classList.remove("active");
+      inprogress.classList.remove("active");
     }
     else if(type=="missing-details"){
       completed.classList.remove("active");
       cancelled.classList.remove("active");
       active.classList.remove("active");
       missing.classList.add("active");
-      all.classList.remove("active")
+      all.classList.remove("active");
+      inprogress.classList.remove("active");
     }
   
     const url = new URL(window.location.href);
@@ -50,8 +64,8 @@ async function getRequests(type){
     const requestsBox = document.getElementById("requests-container");
     requestsBox.innerHTML = "";
     let content = "";
-    if(requests.length == 0)
-          requestsBox.innerHTML = '<div class="d-flex justify-content-center align-items-center"><h6 class="text-light text-muted">No booking found!</h6></div>';
+    if(requests.length == 0 || res.length == 0)
+          requestsBox.innerHTML = `<div class=" col d-flex justify-content-center align-items-center"><h6 class="text-light text-muted">No request found!</h6></div>`;
     else{
       const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
       for(const request of requests) {
@@ -66,6 +80,7 @@ async function getRequests(type){
                         <span class="d-block job-details"><b class="fa fa-money mr-2" aria-hidden="true"></b>  Budget: ${ request.budget }</span>
                         <span class="d-block job-details"><b class="fa fa-calendar mr-2" aria-hidden="true"></b> Deadline: ${ request.deadline }</span>
                     </div>
+                    
                     <div class="mt-3 border-bottom pb-4 d-flex ">` + (request.status != 'cancelled' ? 
 
                         `<a class="btn-job btn-primary-job-inv" href="/manage-request?rq=${ request._id }">Manage request</a>` : 
@@ -80,7 +95,7 @@ async function getRequests(type){
               `;
           content = content + reqt;
         }
-        
+        requestsBox.innerHTML = content;
       } 
-      requestsBox.innerHTML = content;
+      
   }

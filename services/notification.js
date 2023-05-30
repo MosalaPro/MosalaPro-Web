@@ -14,9 +14,34 @@ class Notification {
     async notify(req, res){
 
     }
+    async readNotification(req, res){
+
+        const notif = await NotificationModel.findByIdAndUpdate(req.body._id, {status: "read"}).exec();
+        if(notif){
+            res.status(200).send({message:"Notification read with success.", status: 200});
+            return true;
+        }
+        else {
+            res.status(401).send({message:"Notification reading failed.", status: 401});
+            return false;
+        }
+    }
+    async deleteNotification(req, res){
+        const notif = await NotificationModel.findByIdAndUpdate(req.body._id, {status: "archived"}).exec();
+        if(notif){
+            res.status(200).send({message:"NOTIFICATION:: Notification removed with success.", status: 200});
+            return true;
+        }
+        else {
+            res.status(401).send({message:"NOTIFICATION:: Notification removing failed.", status: 401});
+            return false;
+        }
+    }
     async getNotificationList(){
 
     }
+
+    
 
 }
 

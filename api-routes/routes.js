@@ -10,6 +10,7 @@
 const CategoryModel = require("../models/category");
 const CountryModel = require("../models/country");
 const NotificationModel = require("../models/notification");
+const Notification = require("../services/notification");
 const Message = require("../services/message");
 const messageHander = new Message();
 const JobApplication = require("../services/jobApplication");
@@ -24,6 +25,8 @@ const path = require("path");
 const crypto = require("crypto");
 const _ = require("lodash");
 const link = null;
+
+const notificationObj = new Notification();
 
 const storage = multer.diskStorage({
   destination: "uploads/",
@@ -160,32 +163,124 @@ app.get("/", async function(req, res){
 
     app.get("/notifications", async function(req, res){
         if (req.isAuthenticated()) {
-            const notifs = await NotificationModel.find({receiverId: req.user._id}).limit(4).exec();
-            res.render("notifications", {
-              usr: req.user,
-              cats: categories,
-              notifications: notifs,
-              countries: countries,
-              link: null
-            });
+            try{
+                const notifs = await NotificationModel.find({receiverId: req.user._id, status:{$ne:"archived"}}).exec();
+                let loadNotifs_ = await NotificationModel.find({receiverId: req.user._id}).limit(4).exec();
+                res.render("notifications", {
+                usr: req.user,
+                cats: categories,
+                notifications: notifs,
+                countries: countries,
+                loadNotifs: loadNotifs_,
+                link: null
+                });
+            }
+            catch(error){
+                console.log("Error occured while loading notifications: "+error);
+            }
           } else {
             res.redirect("/");
           }
     });
     app.post("/notifications", async function(req, res){
-        const limit = req.body.lim;
-        console.log("Limit sent: "+limit);
-        let notifs = await NotificationModel.find({receiverId: req.user._id}).limit(limit).exec();
-        notifis = [];
-        notifs.forEach(not =>{
-            not.age = Math.floor(Math.abs( new Date() - not.createdAt ) / (1000*3600*24));
-            console.log("Age: "+not.age);
-        });
-        console.log("Notifications loaded: "+notifs.length);
-        res.status(200).send({message:"Ok", status:200, notifications:notifs});
-        return;
+        if(req.isAuthenticated()){
+            try{
+                const notifs = await NotificationModel.find({receiverId: req.user._id, status:{$ne:"archived"}}).exec();
+                let loadNotifs_ = await NotificationModel.find({receiverId: req.user._id,  status: req.body.status}).limit(req.body.lim).exec();
+                ages_ = [];
+                loadNotifs_.forEach(not =>{
+                    ages_.push(Math.floor(Math.abs( new Date() - not.createdAt ) / (1000*3600*24)));
+                });
+                console.log("Notifications loaded: "+notifs.length);
+                res.status(200).send({message:"Ok", status:200, notifications:notifs, loadNotifs: loadNotifs_, ages: ages_});
+                return;
+            }catch(error){
+                console.log("Error occured while loading notifications: "+error);
+            }
+        }else{
+            res.redirect("/");
+        }
 
     });
+
+    app.get("/notification", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                const postReqCompleted = await PostRequestModel.find({providerId: req.query?.p}).exec();
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                const notifi = await NotificationModel.findOne({_id: req.query?.n});
+                const provider = await UserModel.findOne({_id: req.query?.p}).exec();
+                const job_ = await PostRequestModel.findOne({_id: notifi.causedByItem}).exec();
+                const checkBooking_ = await BookingModel.findOne({jobId: notifi.causedByItem});
+                console.log("checkbooking: "+checkBooking_);
+                res.render("notificationDetails", {pro: provider, notifi: notifi, 
+                    postRequestsCompleted: postReqCompleted.length,
+                    job: job_, 
+                    usr: req.user, notifications: notifs, 
+                    link: null, cats: categories, 
+                    checkBooking: checkBooking_, 
+                    countries: countries} );
+
+            }catch(error){
+                console.log("Error occured while fetching notification: "+error);
+            }
+        }
+        else{
+            res.redirect("/");
+        }
+    });
+
+    app.post("/read-notif", async function(req, res){
+
+        if(req.isAuthenticated()){
+            try{
+                if(notificationObj.readNotification(req, res))
+                    console.log("Notification read with success!");
+                else    
+                    console.log("Error occured while reading notification.");
+            }catch(error){
+                console.log("Error occured while loading notifications: "+error);
+            }
+        }else{
+            res.redirect("/");
+        }
+
+    });
+
+    app.post("/delete-notif", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                if(notificationObj.deleteNotification(req, res))
+                    console.log("Notification deleted with success!");
+                else    
+                    console.log("Error occured while deleting notification.");
+            }catch(error){
+                console.log("Error occured while loading notifications: "+error);
+            }
+        }
+    });
+    app.post("/hire-pro", async function(req, res) {
+        if(req.isAuthenticated()){
+            try{
+                UserService.hireProvider(req, res);
+            }
+            catch(error){
+                console.log("Error occured hire-pro: "+error);
+            }
+        }else
+            res.redirect("/");
+    });
+    app.post("/reject-pro", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                UserService.rejectApplication(req, res);
+            }
+            catch(error){
+                console.log("Error occured reject-pro: "+error);
+            }
+        }
+    });
+
     app.get("/user", async function(req, res){
         console.log(req.isAuthenticated());
         if (req.isAuthenticated()) {

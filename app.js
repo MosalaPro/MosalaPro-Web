@@ -22,6 +22,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const MongoStore = require('connect-mongo');
 
+
 // const emailValidator = required("email-validator");
 
 //------------------DATABASE CONNECTION ------------------------------//
@@ -43,7 +44,7 @@ const connectDB = async(DBURI) => {
 //------------------GENERAL CONFIGURATION ------------------------------//
 
 
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const FacebookStrategy = require("passport-facebook");
 
 const app = express();
@@ -103,16 +104,18 @@ passport.use(new GoogleStrategy ({
 				var newUser = new UserModel({
 					google_id : profile.id,
 					photo : profile.photos[0].value,
-					email : profile.email,
+					email : profile.emails[0].value,
+					username: profile.emails[0].value,
 					verified: true,
 					display_name : profile.displayName,
-					username: profile.email,
 					firstName: profile._json.given_name,
 					lastName: profile._json.family_name,
 					createdAt: new Date(),
 					lastUpdate: new Date()
 				}).save(function(err,newUser){
-					if(err) throw err;
+					if(err) {
+						console.log("GOOGLE AUTH:: Error occured: "+ err);
+					};
 					return cb(err, newUser);
 				});
 			}
@@ -125,8 +128,7 @@ passport.use(new GoogleStrategy ({
 passport.use(new FacebookStrategy({
     clientID: process.env.APP_ID,
     clientSecret: process.env.APP_SECRET,
-    callbackURL: process.env.FB_CALLBACK_URL,
-	profileFields: ['id', 'displayName', 'link', 'name', 'photos', 'email']
+    callbackURL: process.env.FB_CALLBACK_URL
   },
   function(accessToken, refreshToken, profile, cb) {
 	  console.log(profile);
@@ -147,7 +149,10 @@ passport.use(new FacebookStrategy({
 				createdAt: new Date(),
 				lastUpdate: new Date()
 			}).save(function(err,newUser){
-				if(err) throw err;
+				
+				if(err) {
+					console.log("FB AUTH:: Error occured: "+ err);
+				};
 				return cb(err, newUser);
 			});
 		}
@@ -158,31 +163,23 @@ passport.use(new FacebookStrategy({
 
 
 app.get("/auth/google",
-	passport.authenticate("google", {scope: ["profile"]}));
+	passport.authenticate("google", {scope: [ 'email', 'profile' ]}));
 
 app.get("/auth/google/mosalapro", 
-	passport.authenticate("google", {failureRedirect: "/"}), function(req, res){
-		if(!req.user.email){
-			console.log("USER GOOGLE AUTH:: First time User has been successfully authenticated");
-			res.redirect('/profile');
-		}
-		else{ 
-			console.log("USER GOOGLE AUTH:: Existing time User has been successfully authenticated");
-			res.redirect('/');
-		}
-	});
+	passport.authenticate("google", {
+		successRedirect: '/profile',
+		failureRedirect: "/"}));
+		
 	
 app.get("/auth/facebook",
-  passport.authenticate("facebook"));
+  passport.authenticate("facebook", {scope: ['email', 'public_profile']}));
 
 app.get('/auth/facebook/mosalapro',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
     // Successful authentication, redirect home.
 	console.log("successful FB");
-	if(!req.user.email)
-    	res.redirect('/profile');
-	else res.redirect('/');
+    res.redirect('/profile');
 });
 
 require('./api-routes/routes')(app);

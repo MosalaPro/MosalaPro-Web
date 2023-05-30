@@ -11,6 +11,7 @@ const BookingModel = require("../models/booking");
 const passport = require("passport");
 const JobApplication = require("./jobApplication");
 const JobApplicationModel = require("../models/jobApplication");
+const PostRequestModel = require("../models/postRequest");
 
 const BookingService =  {
   
@@ -65,7 +66,26 @@ const BookingService =  {
       
               // Everything went fine
               console.log("In the bookings.");
+              const pro = await UserModel.findOne({_id:req.body.providerId}).then(success=>{
+                console.log("BOOKING:: Provider found: "+pro.firstname +" "+pro.lastName);
+              }).catch(err=>{console.log("BOOKING:: Error occured while retrieving provider: "+err);});
+
               console.log(req.files); 
+              const newRequest = new PostRequestModel({
+                username: req.body.username,
+                requestTitle:  req.body.bookingTitle,
+                requestDescription: req.body.bookingDescription,
+                budget: req.body.bookingBudget,
+                deadline: req.body.bookingDeadline,
+                status: "booked",
+                requestCategory: pro.category,
+                files: req.files.map((file) => file.filename),
+                createdAt: new Date(),
+                lastUpdate: new Date(),
+              }).save().then(success =>{
+                console.log("BOOKING:: Job request saved successfully!");
+            }).catch(err => {console.log("BOOKING:: Error occured while saving jr into the db: "+err);});
+
               const newBooking = new BookingModel({
                 username: req.body.username,
                 providerId: req.body.providerId,
@@ -73,6 +93,7 @@ const BookingService =  {
                 bookingDescription: req.body.bookingDescription,
                 budget: req.body.bookingBudget,
                 deadline: req.body.bookingDeadline,
+                jobId: newRequest._id,
                 status: "active",
                 createdAt: new Date(),
                 lastUpdate: new Date(),
@@ -80,7 +101,6 @@ const BookingService =  {
               }).save().then(success =>{
                   console.log("Posted successfully!");
       
-                  res.redirect("/")
               }).catch(err => {console.log("Error occured while saving into the db: "+err);});
              
             });

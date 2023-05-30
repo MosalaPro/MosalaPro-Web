@@ -25,7 +25,7 @@ const onLoginSubmit = async()=> {
       return;
     }
     requestData = {
-        username: username_,
+        username: username_.trim().toLowerCase(),
         password: password_
     }
 

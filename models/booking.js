@@ -12,6 +12,7 @@ const bookingSchema = new mongoose.Schema({
         required: true
     },
     providerId : String,
+    jobId: String,
     budget: Number,
     deadline: String,
     status:{
