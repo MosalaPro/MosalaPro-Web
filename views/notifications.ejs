@@ -37,13 +37,11 @@
             </div>
             <div class="box-body p-0" id="unreadNotifs">
                 <% if(unreads.length > 0){ 
-                    let true_ = "true";
                     for(let j = 0; j < lim; j++) { %>
-                        <!--a href="/notification?n=<%=unreads[j]._id%>&p=<%=unreads[j].causedByUserId%>"-->
-                        <div class="unread border-top" id="notif-container">
-                                <div class="notif_header" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=j%>" aria-expanded="<%=true_%>" aria-controls="collapseOne<%=j%>">
+                        <div class="unread border-top" id="notif-container<%=j%>">
+                                <div class="notif_header" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=j%>" aria-expanded="true" aria-controls="collapseOne<%=j%>">
 
-                                    <div onClick="readNotification('<%=unreads[j]._id%>')"  class="px-3 d-flex align-items-center osahan-post-header">
+                                    <div onClick="readNotification('<%=unreads[j]._id%>', '<%=j%>')"  class="px-3 d-flex align-items-center osahan-post-header">
                                         <div class="dropdown-list-image mr-3">
                                             <% if (unreads[j].title == "You have a new message.") { %>
                                                 <b class="fa fa-envelope fa-2x rounded-circle file-icon"></b>
@@ -78,9 +76,8 @@
                                     </div>
                             </div>
                         </div>
-                <!--/a-->
                 
-            <% true_ = "false"; } } %>
+            <% } } %>
                 <input id="limit" class="d-none" value="6" >
             </div>
             <% if( lim != unreads.length  ){ %>
@@ -178,7 +175,7 @@ function loadMoreUnread(){
                 let html = `
                         <div class="notif_header" data-bs-toggle="collapse" data-bs-target="#collapseOne${i}" aria-expanded="true" aria-controls="collapseOne${i}">
 
-                            <div onClick="readNotification(${noti._id})" class="px-3 d-flex align-items-center unread border-bottom osahan-post-header">
+                            <div onClick="readNotification(${noti._id}, ${i})" class="px-3 d-flex align-items-center unread border-bottom osahan-post-header">
                                 <div class="dropdown-list-image mr-3">` +partHtml1+
                         `</div>
                                 <div class="font-weight-bold mr-2">
@@ -299,8 +296,8 @@ async function _postData(url = '/read-notif', data = {}) {
     }else{ return response;}
 }
 
-async function readNotification(notifId){
-    const notiContainer = document.getElementById("notif-container");
+async function readNotification(notifId, id){
+    const notiContainer = document.getElementById("notif-container"+id);
     requestData = {
         _id: notifId,
     };

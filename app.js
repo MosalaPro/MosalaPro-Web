@@ -15,7 +15,6 @@ const hpp = require('hpp');
 const ejs = require("ejs");
 const mongoose = require("mongoose");
 const UserModel = require(__dirname+"/models/user");
-
 const compression = require("compression");
 const session = require("express-session");
 const passport = require("passport");

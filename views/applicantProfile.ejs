@@ -11,11 +11,10 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                     <li class="breadcrumb-item"><a href="javascript:void(0)">User</a></li>
-                    <li class="breadcrumb-item active" ><a href="/notifications">Notifications</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><%=notifi.title%></li>
+                    <li class="breadcrumb-item active" ><a href="/myrequests">My requests</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Applicant</li>
                 </ol>
             </nav>
-            <% if(notifi.title == "A service provider has applied for your service request.") { %>
                 <h5>Application for job request</h5>
                 <span id="notif-msg"></span>
                 <div class="row">
@@ -62,7 +61,7 @@
               
                                   <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                       <div class="mr-2">
-                                          <p class="text-primary"><span class="n-a"><%=postRequestsCompleted%></span> Jobs Completed</p>
+                                          <p class="text-primary"><span class="n-a "><%=postRequestsCompleted%></span> Jobs Completed</p>
                                       </div>
                               </div>
               
@@ -195,11 +194,6 @@
                       </div>
                     </div>
                   </div>
-
-
-            <% }  else { %>
-
-            <% } %>
 
 
         </div>

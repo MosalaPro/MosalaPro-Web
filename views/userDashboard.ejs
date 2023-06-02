@@ -94,7 +94,7 @@
     <div class="container p-4">
         <div class="card-box card-u-pro-set">
             <div class="row">
-                <div class="col-md-6 col-lg-6 "><h4 class="header-title  ml-3">My Requests</h4></div>
+                <div class="col-md-6 col-lg-6 "><h5 class="header-title  ml-3">My Requests</h5></div>
                 <div class="col-md-6 col-lg-6 d-flex justify-content-end"><a href="/service-request"><button type="button" class="simple-btn" >Submit a service request</button></a>
             </div>
             
@@ -119,7 +119,7 @@
                         <td><%=request.createdAt.getUTCMonth() + 1 %>/<%= request.createdAt.getUTCDate()%>/<%= request.createdAt.getUTCFullYear() %></td>
                         <td><%=request.deadline %></td>
                         <td><span class="label label-info"><%=request.status%></span></td>
-                        <td> </td>
+                        <td> <%= bookedPros[i-1] %></td>
                         </tr>
 
 

@@ -45,8 +45,11 @@
                   data-show-faces="true">
                 </div>
                 <div class="mt-3 border-bottom pb-4 d-flex ">
-                    <a class="btn-job btn-primary-job-inv" href="/sr/<%=booking._id%>">Manage booking</a>
-                    
+                  <% if(booking.status != "in-progress") { %>
+                    <a class="btn-job btn-primary-job-inv" href="/booking?b=<%=booking._id%>">Manage booking</a>
+                  <% } else { %>
+                    <a class="btn-job btn-primary-job-inv" href="/booking?b=<%=booking._id%>">View details</a>
+                  <% } %>
                 </div>
                     <div class=""><span class="float-md-right text-small mt-1">Submitted on <%= booking.createdAt.getUTCMonth() + 1 %>/<%= booking.createdAt.getUTCDate()%>/<%= booking.createdAt.getUTCFullYear() %></span></div>
                 </div>

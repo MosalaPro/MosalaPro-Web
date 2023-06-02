@@ -70,6 +70,13 @@ async function getRequests(type){
       const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
       for(const request of requests) {
          let date = request.createdAt.split("-");
+         let button = "";
+         if( request.status == 'active')
+            button = `<a class="btn-job btn-primary-job-inv" href="/manage-request?rq=${ request._id }">Edit request</a>`;
+          else if(request.status == 'cancelled')
+            button = `<a class="btn-job btn-primary-job-inv-blue" href="/manage-request?rq=${ request._id }">Resubmit request</a>`;
+            else if(request.status == 'in-progress' || request.status == 'completed')
+            button = `<a class="btn-job btn-primary-job-inv-blue" href="/manage-request?rq=${ request._id }">View details</a>`;
           const reqt =  `
               <div class="col-lg-4 col-md-6 col-12 mt-1 pt-2">
                 <div class="card border-0 bg-light-job rounded-job shadow-job">
@@ -81,10 +88,7 @@ async function getRequests(type){
                         <span class="d-block job-details"><b class="fa fa-calendar mr-2" aria-hidden="true"></b> Deadline: ${ request.deadline }</span>
                     </div>
                     
-                    <div class="mt-3 border-bottom pb-4 d-flex ">` + (request.status != 'cancelled' ? 
-
-                        `<a class="btn-job btn-primary-job-inv" href="/manage-request?rq=${ request._id }">Manage request</a>` : 
-                        `<a class="btn-job btn-primary-job-inv-blue" href="/sr/${ request._id }">Resubmit request</a>`) +
+                    <div class="mt-3 border-bottom pb-4 d-flex ">` + button +
                         
                     `</div>
                         <div class=""><span class="float-md-right text-small mt-1">Submitted on ${date[1]}/${date[2].substr(0,2)}/${date[0]}</span></div>

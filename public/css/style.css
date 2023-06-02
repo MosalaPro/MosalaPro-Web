@@ -170,8 +170,10 @@ body {
 h1, h2, h3, h4, h5, h6, [class^='heading-'] {
 	margin-top: 0;
 	margin-bottom: 0;
-	font-weight: 700;
-	color: #31404a;
+	font-weight: 400;
+	color: #53575a;
+
+
 }
 
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, [class^='heading-'] a {
@@ -4828,7 +4830,7 @@ blockquote cite {
 }
 
 .text-primary {
-	color: #516ca9 !important;
+	color: darkslategrey !important;
 }
 
 .pro-sample-section{

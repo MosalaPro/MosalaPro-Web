@@ -52,7 +52,7 @@ class JobApplication {
 
     async getAppliedJobs(req, res){
         console.log("Inside life");
-        const appliedJobs = [];
+        let appliedJobs = [];
         const ja = await JobApplicationModel.find({providerId: req.user._id}).exec();
         for(let i = 0; i < ja.length; i++){
 
@@ -61,6 +61,20 @@ class JobApplication {
             appliedJobs.push(sr);
         }
         return appliedJobs;
+    }
+
+    async getApplicants(jobId_){
+        const applications = await JobApplicationModel.find({jobId: jobId_}).exec();
+
+        let inPros = [];
+        //for(let i = 0; i < applications.length; i++){
+            const pro = await UserModel.findById(applications[0].providerId).exec();
+            inPros.push(pro);
+            const pro1 = await UserModel.findById(applications[1].providerId).exec();
+            inPros.push(pro1);
+        //}
+        
+        return inPros;
     }
 
 }

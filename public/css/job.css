@@ -137,3 +137,10 @@
 .custom-container{
 	padding: 2em 5em;
 }
+.applicant{
+    cursor: pointer;
+}
+
+.applicant:hover{
+    background-color: honeydew;
+}

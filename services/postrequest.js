@@ -12,6 +12,7 @@ const passport = require("passport");
 const _ = require("lodash");
 const JobApplication = require("./jobApplication");
 const JobApplicationModel = require("../models/jobApplication");
+const BookingModel = require("../models/booking");
 
 const PostRequestService =  {
   
@@ -137,7 +138,28 @@ const PostRequestService =  {
        
         return result;
 
+      },
+
+      getBookedPros: async (req, res)=>{
+        const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
+        let pros = [];
+        for(let i = 0; i < pRequests.length; i++){
+          if(pRequests[i].status == 'in-progress' || pRequests[i].status=='completed'){
+            const booking = await BookingModel.findOne({jobId: pRequests[i]._id}).exec();
+            if(booking){
+              const pro = await UserModel.findById(booking.providerId).exec();
+              pros.push(pro.firstName +" "+pro.lastName);
+            }else
+              pros.push(" ");
+            
+          }
+          else
+            pros.push(" ");
+        }
+
+        return pros.reverse();
       }
+
 
 
 }
