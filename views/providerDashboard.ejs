@@ -87,42 +87,11 @@
 
 <!--%- include('partials/providerRecentApp') %-->
 
-<section class="bg-light">
-    <div class="container px-4">
-        <h5 class="ml-4 mb-3">Recent job applications</h5>
-        <div class="row p-3">
-            <% const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
-
-                for(let i = ja.length-1; i > ja.length-6; i--){ %>
-                
-                <div class="col-lg-4 col-md-6 col-12 mt-1 pt-2">
-                    <div class="card border-0 bg-light-job rounded-job shadow-job">
-                        <div class="card-body p-4">
-                            
-
-                        <span class="btn btn-sm <%=classes[Math.floor(Math.random() * 5)]%> cat-job float-md-right mb-3 mb-sm-0"><%=ja[i].requestCategory %></span>
-                        <h5><%=ja[i].requestTitle%></h5>
-                        <div class="mt-3">
-                            <span class="d-block job-details"><b class="fa fa-money mr-2" aria-hidden="true"></b>  Budget: <%=ja[i].budget%></span>
-                            <span class="d-block job-details"><b class="fa fa-briefcase mr-2" aria-hidden="true"></b> Deadline: <%=ja[i].deadline%></span>
-                        </div>
-                        <div class="mt-3 border-bottom pb-4 d-flex ">
-                            <a class="btn-job btn-primary-job-inv" href="/job-application/<%=ja[i]._id%>">View application details</a>
-                            
-                        </div>
-                            <div class=""><span class="float-md-right text-small mt-1">Applied on <%= ja[i].createdAt.getUTCMonth() + 1 %>/<%= ja[i].createdAt.getUTCDate()%>/<%= ja[i].createdAt.getUTCFullYear() %></span></div>
-                        </div>
-                    
-                    </div>
-                </div>
-
-            <% } %>
-            </div>
-
-        </div>
-</section>
-
-
+<% if(ja.length > 0) { %>
+<%- include('partials/recentJobApplications') %>
+<% }else{ %>
+    <%- include('partials/proSample') %>
+<% } %>
 
 <section class="bg-light" >
     <div class="container p-4">

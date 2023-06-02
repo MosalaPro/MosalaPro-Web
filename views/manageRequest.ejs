@@ -93,7 +93,7 @@
                     <div class="container shadow-sm mb-5 pb-2 bg-white rounded ">
                       <div class="row">
                         <div class="w-100 d-flex justify-content-center align-items-center border-bottom border-dark p-3">
-                        <% if(request.status != "in-progress" && request.status != "cancelled") {%>
+                        <% if(request.status == "active" ) {%>
                           <h6>Applicants</h6>
                         <% } else { %>
                           <h6>Service provider</h6>
@@ -110,11 +110,11 @@
                         <div class="d-flex justify-content-center mt-2 p-4"><span>No application found.</span></div>
                       <% } %>
 
-                      <% if(request.status == "in-progress") { %> 
+                      <% if(request.status == "in-progress" || request.status == "booked") { %> 
                         <div class="d-flex justify-content-center"><a href="/invoice?sr=<%=request._id%>&p=<%=interestedPros[0]._id%>">
                             <button type="reset" class="btn-job btn-primary-job-inv-blue ml-3">View Invoice</button></a>
                         </div>
-                      <% } else { %>
+                      <% } else if(request.status == "active" && interestedPros.length > 2) { %>
                         <div class="d-flex justify-content-center"><a href="/applicants">
                             <button type="reset" class="btn-job btn-primary-job-inv-blue ml-3 my-4">View All applicants</button></a>
                         </div>

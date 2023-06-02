@@ -1,10 +1,11 @@
-async function getRequests(type){
+async function getRequests(type, lim){
 
     const completed = document.getElementById("completed-bookings");
     const inprogress = document.getElementById("inprogress-bookings");
     const active = document.getElementById("active-bookings");
     const cancelled = document.getElementById("cancelled-bookings");
     const missing = document.getElementById("missing-bookings");
+    const booked = document.getElementById("booked-bookings");
     const all = document.getElementById("all-bookings");
     if(type=="all"){
       completed.classList.remove("active");
@@ -13,6 +14,7 @@ async function getRequests(type){
       missing.classList.remove("active");
       all.classList.add("active");
       inprogress.classList.remove("active");
+      booked.classList.remove("active");
     }
     else if(type=="active"){
       completed.classList.remove("active");
@@ -21,6 +23,7 @@ async function getRequests(type){
       missing.classList.remove("active");
       all.classList.remove("active");
       inprogress.classList.remove("active");
+      booked.classList.remove("active");
     }
     else if(type=="in-progress"){
       inprogress.classList.add("active");
@@ -29,6 +32,7 @@ async function getRequests(type){
       active.classList.remove("active");
       missing.classList.remove("active");
       all.classList.remove("active");
+      booked.classList.remove("active");
     }
     else if(type=="cancelled"){
       completed.classList.remove("active");
@@ -37,6 +41,7 @@ async function getRequests(type){
       missing.classList.remove("active");
       all.classList.remove("active");
       inprogress.classList.remove("active");
+      booked.classList.remove("active");
     }
     else if(type=="completed"){
       completed.classList.add("active");
@@ -45,6 +50,7 @@ async function getRequests(type){
       missing.classList.remove("active");
       all.classList.remove("active");
       inprogress.classList.remove("active");
+      booked.classList.remove("active");
     }
     else if(type=="missing-details"){
       completed.classList.remove("active");
@@ -53,12 +59,22 @@ async function getRequests(type){
       missing.classList.add("active");
       all.classList.remove("active");
       inprogress.classList.remove("active");
+      booked.classList.remove("active");
+    }
+    else if(type=="booked"){
+      completed.classList.remove("active");
+      cancelled.classList.remove("active");
+      active.classList.remove("active");
+      booked.classList.add("active");
+      all.classList.remove("active");
+      missing.classList.remove("active");
+      inprogress.classList.remove("active");
     }
   
     const url = new URL(window.location.href);
     url.searchParams.set('type', type);
     window.history.replaceState(null, null, url); 
-    const res = await fetch(`/getrequests?type=${type}`);
+    const res = await fetch(`/getrequests?type=${type}&lim=${lim}`);
     const requests = await res.json();
   
     const requestsBox = document.getElementById("requests-container");
@@ -67,6 +83,7 @@ async function getRequests(type){
     if(requests.length == 0 || res.length == 0)
           requestsBox.innerHTML = `<div class=" col d-flex justify-content-center align-items-center"><h6 class="text-light text-muted">No request found!</h6></div>`;
     else{
+      let loadMore = "";
       const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
       for(const request of requests) {
          let date = request.createdAt.split("-");
@@ -75,7 +92,7 @@ async function getRequests(type){
             button = `<a class="btn-job btn-primary-job-inv" href="/manage-request?rq=${ request._id }">Edit request</a>`;
           else if(request.status == 'cancelled')
             button = `<a class="btn-job btn-primary-job-inv-blue" href="/manage-request?rq=${ request._id }">Resubmit request</a>`;
-            else if(request.status == 'in-progress' || request.status == 'completed')
+          else
             button = `<a class="btn-job btn-primary-job-inv-blue" href="/manage-request?rq=${ request._id }">View details</a>`;
           const reqt =  `
               <div class="col-lg-4 col-md-6 col-12 mt-1 pt-2">
@@ -99,7 +116,15 @@ async function getRequests(type){
               `;
           content = content + reqt;
         }
-        requestsBox.innerHTML = content;
+        if(requests.length <= 6)
+          lim = requests.length;
+        
+        if(lim != requests.length){
+        loadMore = `<div class="text-center text-md-end d-md-block">
+          <a href="#" class="text-primary">Load more requests <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right fea icon-sm"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+          </div>`;
+        }
+        requestsBox.innerHTML = content+loadMore;
       } 
       
   }

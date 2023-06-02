@@ -65,13 +65,13 @@ async function getRequests(type){
   bookingsBox.innerHTML = "";
   let content = "";
   if(bookings.length == 0)
-        bookingsBox.innerHTML = '<div class="d-flex justify-content-center align-items-center"><h6 class="text-light text-muted">No booking found!</h6></div>';
+        bookingsBox.innerHTML = '<div class="d-flex justify-content-center"><h6 class="text-light text-muted align-items-center">No booking found!</h6></div>';
   else{
     const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
     for(const booking of bookings) {
       let date = booking.createdAt.split("-");
       let partHtml = "";
-      if(booking.status != "in-progress" && booking.status != "completed")
+      if(booking.status == "active")
         partHtml = `<a class="btn-job btn-primary-job-inv" href="/booking?b=${booking._id}">Manage booking</a>`;
       else
         partHtml = `<a class="btn-job btn-primary-job-inv-blue" href="/booking?b=${booking._id}">View details</a>`

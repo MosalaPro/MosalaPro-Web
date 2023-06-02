@@ -1,33 +1,40 @@
 <%- include('partials/header') %>
+<% let lim = 12; %>
 <section class="bg-light mt-4 pt-4">
     <div class="container p-4">
       <div class="page-content container container-profile p-4 note-has-grid">
         <ul class="nav nav-pills p-3 bg-white mb-3 rounded-pill align-items-center">
-        <li class="nav-item" onClick="getRequests('active')">
+        <li class="nav-item" onClick="getRequests('active', '<%=lim%>')">
           <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2 active" id="active-bookings">
             <i class="icon-layers mr-1"></i><span class="d-none d-md-block">Active</span>
           </a>
         </li>
-        <li class="nav-item" onClick="getRequests('in-progress')">
-          <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="inprogress-bookings"> <i class="icon-briefcase mr-1"></i><span class="d-none d-md-block">In Progress</span></a>
+        <li class="nav-item" onClick="getRequests('in-progress', '<%=lim%>')">
+          <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="inprogress-bookings"> <i class="icon-briefcase mr-1"></i><span class="d-none d-md-block">In progress</span></a>
           </li>
-        <li class="nav-item" onClick="getRequests('completed')">
+        <li class="nav-item" onClick="getRequests('completed', '<%=lim%>')">
         <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="completed-bookings"> <i class="icon-briefcase mr-1"></i><span class="d-none d-md-block">Completed</span></a>
         </li>
-        <li class="nav-item" onClick="getRequests('cancelled')">
+        <li class="nav-item" onClick="getRequests('cancelled', '<%=lim%>')">
         <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="cancelled-bookings"> <i class="icon-share-alt mr-1"></i><span class="d-none d-md-block">Cancelled</span></a>
         </li>
-        <li class="nav-item" onClick="getRequests('missing-details')">
+        <li class="nav-item" onClick="getRequests('missing-details', '<%=lim%>')">
           <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="missing-bookings"> <i class="icon-share-alt mr-1"></i><span class="d-none d-md-block">Missing details</span></a>
           </li>
-        <li class="nav-item" onClick="getRequests('all')">
+          <li class="nav-item" onClick="getRequests('booked', '<%=lim%>')">
+            <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="booked-bookings"> <i class="icon-tag mr-1"></i><span class="d-none d-md-block">Booked</span></a>
+            </li>
+        <li class="nav-item" onClick="getRequests('all', '<%=lim%>')">
         <a href="javascript:void(0)" class="nav-link rounded-pill note-link d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2" id="all-bookings"> <i class="icon-tag mr-1"></i><span class="d-none d-md-block">All</span></a>
         </li>
         
         </ul>
         <div class="tab-content bg-transparent px-4">
         <div id="requests-container" class="row p-3">
-          <% if (postRequests.length > 0) { postRequests.forEach(req=>{ %>
+          <% if (postRequests.length > 0) {
+            if(postRequests.length <= 6)
+              lim = postRequests.length;
+            postRequests.forEach(req=>{ %>
           <div class="col-lg-4 col-md-6 col-12 mt-1 pt-2">
             <div class="card border-0 bg-light-job rounded-job shadow-job">
                 <div class="card-body p-4">
@@ -62,7 +69,14 @@
             <div class=" col d-flex justify-content-center align-items-center"><h6 class="text-light text-muted">No request found!</h6></div>
           <% } %>
           </div>
+          <% if (lim != postRequests.length){ %>
+            <div class="text-center text-md-end d-md-block">
+              <a href="#" class="text-primary">Load more requests <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right fea icon-sm"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+          </div>
+          <% } %>
       </div>
+    </div>
+      
       </div>
 
     </div>

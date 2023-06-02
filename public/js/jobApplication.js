@@ -54,3 +54,30 @@ async function _postData(url = '', data = {}) {
       return response.json();
     }else{ return response;}
 }
+
+async function cancelApplication(jobId_){
+
+    const mess = document.getElementById("mess");
+    mess.innerHTML="";
+    requestData = {
+        jobId: jobId_
+    }
+    
+    _postData('/cancel-application', requestData )
+      .then(async json => {
+        if(json.status == 200){
+            mess.classList.remove('error_message');
+            mess.classList.add('success_message');
+            mess.innerHTML = "You successfully cancelled your application for this service request.";
+            await new Promise(r => setTimeout(r, 1200));
+            //window.location = "/service-requests"
+        }
+        else{
+            mess.innerHTML = "Error json status: "+json.status;
+        }
+        
+      }).catch(err => {
+        console.log(err) // Handle errors
+        mess.innerHTML = "Error: "+err;
+      });
+}

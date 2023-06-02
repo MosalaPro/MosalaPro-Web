@@ -91,6 +91,7 @@ app.get("/", async function(req, res){
             if(req.user.accountType=="provider"){
                 const pRequests = await PostRequestModel.find({providerId:req.user._id}).exec();
                 const ja = await jobApplicationHander.getAppliedJobs(req, res);
+                console.log("JA: "+ja.length);
                 res.render("providerDashboard", {usr: req.user, notifications: notifs, cats: categories, ja:ja, countries: countries, postRequests: pRequests.reverse()});
             }
             else  {
@@ -171,7 +172,7 @@ app.get("/", async function(req, res){
                 cats: categories,
                 notifications: notifs,
                 countries: countries,
-                loadNotifs: loadNotifs_,
+                loadNotifs: loadNotifs_.reverse(),
                 link: null
                 });
             }
@@ -188,7 +189,7 @@ app.get("/", async function(req, res){
                 const notifs = await NotificationModel.find({receiverId: req.user._id, status:{$ne:"archived"}}).exec();
                 let loadNotifs_ = await NotificationModel.find({receiverId: req.user._id,  status: req.body.status}).limit(req.body.lim).exec();
                 ages_ = [];
-                loadNotifs_.forEach(not =>{
+                loadNotifs_.reverse().forEach(not =>{
                     ages_.push(Math.floor(Math.abs( new Date() - not.createdAt ) / (1000*3600*24)));
                 });
                 console.log("Notifications loaded: "+notifs.length);
@@ -206,20 +207,25 @@ app.get("/", async function(req, res){
     app.get("/notification", async function(req, res){
         if(req.isAuthenticated()){
             try{
-                const postReqCompleted = await PostRequestModel.find({providerId: req.query?.p}).exec();
-                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-                const notifi = await NotificationModel.findOne({_id: req.query?.n});
-                const provider = await UserModel.findOne({_id: req.query?.p}).exec();
-                const job_ = await PostRequestModel.findOne({_id: notifi.causedByItem}).exec();
-                const checkBooking_ = await BookingModel.findOne({jobId: notifi.causedByItem}).exec();
-                console.log("checkbooking: "+checkBooking_);
-                res.render("notificationDetails", {pro: provider, notifi: notifi, 
-                    postRequestsCompleted: postReqCompleted.length,
-                    job: job_, 
-                    usr: req.user, notifications: notifs, 
-                    link: null, cats: categories, 
-                    checkBooking: checkBooking_, 
-                    countries: countries} );
+                if(req.user.accountType == "user") {
+                    const postReqCompleted = await PostRequestModel.find({providerId: req.query?.p}).exec();
+                    const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                    const notifi = await NotificationModel.findOne({_id: req.query?.n});
+                    const provider = await UserModel.findOne({_id: req.query?.p}).exec();
+                    const job_ = await PostRequestModel.findOne({_id: notifi.causedByItem}).exec();
+                    const checkBooking_ = await BookingModel.findOne({jobId: notifi.causedByItem}).exec();
+                    console.log("checkbooking: "+checkBooking_);
+                    res.render("notificationDetails", {pro: provider, notifi: notifi, 
+                        postRequestsCompleted: postReqCompleted.length,
+                        job: job_, 
+                        usr: req.user, notifications: notifs, 
+                        link: null, cats: categories, 
+                        checkBooking: checkBooking_, 
+                        countries: countries} );
+                }
+                else{
+
+                }
 
             }catch(error){
                 console.log("Error occured while fetching notification: "+error);
@@ -268,6 +274,51 @@ app.get("/", async function(req, res){
         }else{
             res.redirect("/");
         }
+    });
+
+    app.get("/applications", async function(req, res){
+        if(req.isAuthenticated() && req.user.accountType == "provider"){
+            try{
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                const allApplications = await jobApplicationHander.getAppliedJobs(req, res);
+                let ja = [];
+                allApplications.forEach(app=>{
+                    if(app.appStatus == "applied");
+                    ja.push(app);
+                });
+                
+                res.render("manageJobApplications", {usr: req.user, notifications: notifs, allApp: allApplications, ja: ja, link: null,  cats: categories});
+                }catch(error){
+                    console.log("Error occured: "+error);
+                    res.redirect("/");
+                }
+        }else{
+            res.redirect("/")
+        }
+    });
+
+    app.get("/get-applications", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                const allApplications = await jobApplicationHander.getAppliedJobs(req, res);
+                let ja = [];
+                if(req.query?.type == "all")
+                    ja = allApplications
+                else{
+                    allApplications.forEach(app=>{
+                        if(app.appStatus == req.query?.type)
+                            ja.push(app);
+                    });
+                }
+                res.send(ja);
+            }catch(error) {
+                console.log("Error occured: "+error);
+                res.redirect("/")
+            };
+        }else
+            res.redirect("/");
+
     });
 
     app.post("/delete-notif", async function(req, res){
@@ -383,10 +434,6 @@ app.get("/", async function(req, res){
         UserService.login(req, res);
     });
 
-    // app.post("/login-p", function(req, res){
-    //     ProviderService.login(req, res);
-    // });
-
     app.get("/professionals", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
@@ -459,13 +506,14 @@ app.get("/", async function(req, res){
     if(req.isAuthenticated()){
         try{
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            const pRequests = await PostRequestModel.find({username:req.user.username, status:"active"}).exec();
+            const allRequests = await PostRequestModel.find({username:req.user.username, status:"active"}).exec();
+            const pRequests = await PostRequestModel.find({username:req.user.username, status:"active"}).limit(6).exec();
             if(pRequests){
                 console.log("Requests found: "+pRequests.length);
             }else{
                 console.log("No requests found with username: "+req.user.username);
             }
-            res.render("manageUserRequests", {usr: req.user, notifications: notifs, postRequests: pRequests, link: null,  cats: categories});
+            res.render("manageUserRequests", {usr: req.user, notifications: notifs, postRequests: pRequests, allRequests: allRequests, link: null,  cats: categories});
         }catch(error) {res.redirect("/")};
     }
     else
@@ -502,10 +550,15 @@ app.get("/", async function(req, res){
                 console.log("User: "+req.user.username);
                 const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
                 let pRequests = [];
-                if(req.query?.type == "all")
-                    pRequests = await PostRequestModel.find({username:req.user.username}).exec();
-                else
-                    pRequests = await PostRequestModel.find({username:req.user.username, status:req.query?.type}).exec();
+                let allRequests = [];
+                if(req.query?.type == "all"){
+                    pRequests = await PostRequestModel.find({username:req.user.username}).limit(req.query?.lim).exec();
+                    allRequests = await PostRequestModel.find({username:req.user.username}).exec();
+                }
+                else{
+                    pRequests = await PostRequestModel.find({username:req.user.username, status:req.query?.type}).limit(req.query?.lim).exec();
+                    allRequests = await PostRequestModel.find({username:req.user.username, status:req.query?.type}).exec();
+                }
 
                 if(pRequests){
                     console.log("Requests found: "+pRequests.length);
@@ -514,6 +567,7 @@ app.get("/", async function(req, res){
                 }
                 console.log("Requests: "+pRequests.length);
                 res.send(pRequests);
+                
             }catch(error) {
                 console.log("Error occured: "+error);
                 res.redirect("/")
@@ -528,8 +582,12 @@ app.get("/", async function(req, res){
             try{
                 const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
                 const req_ = await PostRequestModel.findById(req.query?.rq).exec();
-                const inPros = await jobApplicationHander.getApplicants(req_.id);
-                console.log("Inpros router: "+inPros);
+                let inPros = [];
+                if(req_.status == "in-progress" || req_.status == "booked"){
+                    const booking = await BookingModel.findOne({jobId: req_._id}).exec();
+                    const pro = await UserModel.findById(booking.providerId).exec();
+                    inPros.push(pro);
+                }
                 res.render("manageRequest", {usr: req.user, notifications: notifs.reverse(), interestedPros: inPros, request: req_, link: null,  cats: categories});
             }catch(error){
                 console.log("Error occured: "+error);
@@ -629,11 +687,11 @@ app.get("/", async function(req, res){
     });
 
     app.get("/booking", async function(req, res){
-        if(req.isAuthenticated() && req.user.accountType == "provider"){
+        if(req.isAuthenticated() && req.user.accountType == "provider" && req.query?.b != null ){
             try{
                 const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
                 const booking = await BookingModel.findOne({_id: req.query?.b}).exec();
-                const job_ = await PostRequestModel.findOne({_id: booking.jobId}).exec();
+                //const job_ = await PostRequestModel.findOne({_id: booking.jobId}).exec();
                 const cust = await UserModel.findOne({username: booking.username}).exec();
 
                 if(booking){
@@ -661,6 +719,8 @@ app.get("/", async function(req, res){
                 console.log("An error occured: "+error);
             }
         }
+        else
+            res.redirect("/");
     });
     
     app.post("/cancel-booking", async function(req, res){
@@ -739,7 +799,6 @@ app.get("/", async function(req, res){
     });
 
     app.post("/submitBooking",function(req,res){
-        console.log("Booking routed..");
         BookingService.postBooking(req,res);
     });
 
@@ -779,8 +838,10 @@ app.get("/", async function(req, res){
                 const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
                 const ja = await JobApplicationModel.findOne({jobId: req.params.jobId}).exec();
                 const sr = await PostRequestModel.findOne({_id: req.params.jobId}).exec();
+                const postedBy = await UserModel.findOne({username: sr.username}).exec();
                 sr.createdAt = ja.createdAt;
-                res.render("jobApplicationDetails", {job: sr, notifications: notifs.reverse(), link:null, usr: req.user, cats: categories});
+                sr.appStatus = ja.status;
+                res.render("jobApplicationDetails", {job: sr, notifications: notifs.reverse(), link:null, postedBy:postedBy, usr: req.user, cats: categories});
             }catch(error){
                 res.redirect("/");
             }
@@ -788,6 +849,20 @@ app.get("/", async function(req, res){
         }
         else
             res.redirect("/");
+    });
+
+    app.post("/cancel-application", async function(req, res) {
+        if(req.isAuthenticated()){
+            try{
+                jobApplicationHander.cancelApplication(req, res);
+            }catch(error){
+                console.log("An error occured: "+error);
+            }
+        }
+        else{
+            res.redirect("/");
+        }
+
     });
 
     app.get("/invoice", async function(req, res){
@@ -834,8 +909,6 @@ app.get("/", async function(req, res){
         }else
          res.render("page_not_found", {usr: null, notifications: null,cats: categories, link:null });
     });
-
-
 }
 
 

@@ -50,16 +50,28 @@ class JobApplication {
         return;
     }
 
+    async cancelApplication(req, res){
+        const jobApplication = await JobApplicationModel.findOneAndUpdate({jobId: req.body.jobId}, {status: "cancelled"}).then(success=>{
+            res.status(200).send({status: 200, message: "Application cancelled successfully."});
+            return;
+        }).catch(err=>{
+            console.log("JOB APPLICATION:: Error occured while cancelling application");
+            res.status(401).send({status: 401, message: "Error occured"});
+            return;
+        });
+       
+    }
+
     async getAppliedJobs(req, res){
-        console.log("Inside life");
         let appliedJobs = [];
         const ja = await JobApplicationModel.find({providerId: req.user._id}).exec();
-        for(let i = 0; i < ja.length; i++){
-
-            const sr = await PostRequestModel.findOne({_id:ja[i].jobId}).exec();
-            sr.createdAt = ja[i].createdAt;
-            appliedJobs.push(sr);
-        }
+            for(let i = 0; i < ja.length; i++){
+                const sr = await PostRequestModel.findOne({_id:ja[i].jobId}).exec();
+                sr.createdAt = ja[i].createdAt;
+                sr.appStatus = ja[i].status;
+                appliedJobs.push(sr);
+            }
+        
         return appliedJobs;
     }
 
@@ -73,7 +85,7 @@ class JobApplication {
             const pro1 = await UserModel.findById(applications[1].providerId).exec();
             inPros.push(pro1);
         //}
-        
+        console.log(inPros);
         return inPros;
     }
 
