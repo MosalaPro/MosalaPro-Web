@@ -73,6 +73,9 @@ const userSchema = new mongoose.Schema({
   skills: {
     type: Array
   },
+  favoriteProviders: {
+    type: Array
+  },
   accountType: {
     type: String,
     default: "user"

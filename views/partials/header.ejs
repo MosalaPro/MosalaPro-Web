@@ -17,9 +17,16 @@
     <link rel="stylesheet" href="css/toggle.css">
     <link rel="stylesheet" href="css/job.css">
     <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="css/invoice.css">
     <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="js/home.js"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script src="jspdf.js"></script>
+    <script src="jspdf.plugin.from_html.js"></script>
+    <script src="jspdf.plugin.split_text_to_size.js"></script>
+    <script src="jspdf.plugin.standard_fonts_metrics.js"></script>
   </head>
   <body>
     <!--div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div-->
@@ -74,8 +81,8 @@
                             <ul class="dropdown-menu ul-none">
                               <% if(usr.accountType=="provider"){ %>
                                 <li><a href="/p-profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
-                                <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Tasks</a></li>
-                                <li><a href="#"><b class="fa fa-bar-chart mr-1"></b>  Dashboard</a></li>
+                                <li><a href="/mybookings"><b class="fa fa-tasks mr-2"></b>  Manage Bookings</a></li>
+                                <li><a href="/applications"><b class="fa fa-bar-chart mr-1"></b>  My applications</a></li>
                               <%}else{%>
                                 <li><a href="/profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
                                 <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>
@@ -152,11 +159,12 @@
                           <!--li class="rd-nav-item"><a class="rd-nav-link" href="/about-us">About us</a></li-->
                           <% if(usr.accountType=="provider"){ %>
                             <li class="rd-nav-item"><a class="rd-nav-link" href="/service-requests">Service requests</a></li>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/mybookings">Manage Bookings</a>
                           <% } else { %>
                             <li class="rd-nav-item"><a class="rd-nav-link" href="/professionals">For Professionals</a></li>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/myrequests">My Requests</a></li>
                           <% } %>
-                          <li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us">Contact Us</a>
-                          </li>
+                          
                         <% } else { %>
                           <li class="rd-nav-item active"><a class="rd-nav-link" href="/">Home</a>
                           </li>
@@ -175,6 +183,7 @@
                                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                                     <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
                                   </svg>
+                                  <!--div class="thumb-sm member-thumb mx-auto"><img src="/photo/<%=usr.photo%>" class="rounded-circle img-profile-thumb" alt="profile-image"></div-->
                                   <% let unread = 0;
                                     if(notifications) 
                                       notifications.forEach(notif=>{
@@ -190,8 +199,8 @@
                                 
                                     <% if(usr.accountType=="provider"){ %>
                                       <li><a href="/p-profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
-                                      <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My orders</a></li>
-                                      <li><a href="#"><b class="fa fa-bar-chart mr-1"></b>  Dashboard</a></li>
+                                      <li><a href="/mybookings"><b class="fa fa-tasks mr-2"></b>  Manage Bookings</a></li>
+                                      <li><a href="/applications"><b class="fa fa-bar-chart mr-1"></b>  My applications</a></li>
                                     <%}else{%>
                                       <li><a href="/profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
                                       <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>

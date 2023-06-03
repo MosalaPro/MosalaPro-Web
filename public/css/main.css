@@ -326,6 +326,10 @@
   cursor: pointer;
 }
 
+.notif_header{
+  cursor: pointer;
+}
+
 .choices__button:focus {
   outline: none;
 }
@@ -787,6 +791,15 @@
   height: 88px;
   width: 88px;
 }
+.thumb-sm {
+  height: 40px;
+  width: 40px;
+}
+.img-profile-thumb {
+  border-radius: .25rem;
+  max-width: 100%;
+  height: auto;
+}
 .img-thumbnail {
   padding: .25rem;
   background-color: #fff;
@@ -824,6 +837,9 @@ h4 {
 }
 .mt-4-ver {
   margin-top: 1.5rem!important;
+}
+.cursor{
+  cursor: pointer;
 }
 .w-100-ver {
   width: 100%!important;
@@ -1397,10 +1413,56 @@ h4 {
     padding: 7px 12px;
     border-radius: 5px;
     background-color: #5A9E2F;
+    border: #5A9E2F 1px solid;
     border:none;
     color: #fff;
     cursor: pointer;
     font-size: 16px;
+    }
+
+    .simple-btn-inv{
+      text-align: center;
+      padding: 7px 12px;
+      border-radius: 5px;
+      color: #5A9E2F;
+      border:none;
+      background-color: #fff;
+      cursor: pointer;
+      border: #5A9E2F 1px solid;
+      font-size: 16px;
+      }
+
+      .simple-btn-inv:hover{
+        text-align: center;
+        padding: 7px 12px;
+        border-radius: 5px;
+        color: #fff;
+        border:none;
+        background-color: #5A9E2F;
+        cursor: pointer;
+        border: #5A9E2F 1px solid;
+        font-size: 16px;
+        }
+
+    .simple-btn-inv-dgr{
+      text-align: center;
+      padding: 7px 12px;
+      border-radius: 5px;
+      color: #e7515e;
+      border:none;
+      background-color: #fff;
+      cursor: pointer;
+      border: #e7515e 1px solid;
+      font-size: 16px;
+      
+    }
+    .simple-btn-inv-dgr:hover{
+      border-radius: 5px;
+      color: #fff;
+      border:none;
+      background-color: #e7515e;
+      cursor: pointer;
+      border: #e7515e 1px solid;
     }
  
     

@@ -12,9 +12,6 @@
                   <span class="d-none" name="error" id="err"></span>
                   <div class="row mt-1">
                   <div class="col-lg-12 col-md-12 col-12">
-                  <% if(usr) { %>
-                    <input class="d-none" name="proId" value="<%=pro._id %>" id="proId">
-                  <% } %>
                   <div class="form-group">
                   <label class="required-field" for="firstName">Full Name</label>
                   <% if(usr) {%>
@@ -36,7 +33,7 @@
                   </div>
                   </div>
                   <div class="col mb-2">
-                  <input type="submit" onClick="sendMessage()" name="submit" class="btn button-primary btn-lg w-100 hover-lift-light mt-4-ver" value="Send">
+                  <input type="submit" onClick="sendMessage('<%=pro._id %>')" name="submit" class="btn button-primary btn-lg w-100 hover-lift-light mt-4-ver" value="Send">
                   </div>
                   </div>
               <!--/form-->

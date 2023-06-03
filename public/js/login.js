@@ -25,7 +25,7 @@ const onLoginSubmit = async()=> {
       return;
     }
     requestData = {
-        username: username_,
+        username: username_.trim().toLowerCase(),
         password: password_
     }
 
@@ -35,8 +35,13 @@ const onLoginSubmit = async()=> {
             message.classList.remove('error_message');
             message.classList.add('success_message');
             message.innerHTML = "Login successful! Redirecting..";
-            await new Promise(r => setTimeout(r, 700));
+            await new Promise(r => setTimeout(r, 500));
             window.location.reload();
+        }
+        else if(json.status == 402){
+            message.innerHTML = "Your account is not verified! Check your email for verification code. Redirecting...";
+            await new Promise(r => setTimeout(r, 2000));
+            window.location = "/resendCode/"+json.id;
         }
         else{
             message.innerHTML = "Wrong username or password! "+json.status;

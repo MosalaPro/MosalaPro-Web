@@ -38,18 +38,17 @@
 
 .post-modern-time {
 	display: inline-block;
+	padding-left: 3em;
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	color: #6689ff;
+	color: #9b9b9b;
 	font-size: 12px;
 	letter-spacing: .025em;
-	text-transform: uppercase;
 	font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .post-modern-time::before {
-	position: absolute;
 	content: '';
 	top: 0;
 	left: 0;
@@ -105,4 +104,43 @@
     border: 1px solid #5A9E2F !important;
     background-color: #fff !important;
     /*box-shadow: 0 3px 7px rgb(109 199 122 / 50%);*/
+}
+.btn-primary-job-inv:hover {
+    color: #fff !important;
+    border: 1px solid #5A9E2F !important;
+    background-color: #5A9E2F !important;
+    /*box-shadow: 0 3px 7px rgb(109 199 122 / 50%);*/
+}
+
+.btn-primary-job-inv-blue {
+    color: #5197e7 !important;
+    border: 1px solid #5197e7 !important;
+    background-color: #fff !important;
+}
+
+.btn-primary-job-inv-blue:hover {
+    color: #fff !important;
+    border: 1px solid #5197e7 !important;
+    background-color: #5197e7 !important;
+}
+
+.btn-primary-job-inv-dgr {
+    color: #e7515e !important;
+    border: 1px solid #e7515e !important;
+    background-color: #fff !important;
+}
+.btn-primary-job-inv-dgr:hover {
+    color: #fff !important;
+    border: 1px solid #e7515e !important;
+    background-color: #e7515e !important;
+}
+.custom-container{
+	padding: 2em 5em;
+}
+.applicant{
+    cursor: pointer;
+}
+
+.applicant:hover{
+    background-color: honeydew;
 }

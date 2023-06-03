@@ -9,8 +9,10 @@ const UserModel = require("../models/user");
 const CategoryModel = require("../models/category");
 const PostRequestModel = require("../models/postRequest");
 const passport = require("passport");
+const _ = require("lodash");
 const JobApplication = require("./jobApplication");
 const JobApplicationModel = require("../models/jobApplication");
+const BookingModel = require("../models/booking");
 
 const PostRequestService =  {
   
@@ -70,9 +72,9 @@ const PostRequestService =  {
               //Storing in db
               const newRequest = new PostRequestModel({
                 username: req.body.username,
-                requestTitle: req.body.requestTitle,
+                requestTitle: _.trim(_.capitalize(req.body.requestTitle)),
                 requestDescription: req.body.requestDescription,
-                requestCategory: cat.name,
+                requestCategory: _.trim(_.capitalize(cat.name)),
                 requestCategoryIcon: cat.icon,
                 budget: req.body.requestBudget,
                 deadline: req.body.requestDeadline,
@@ -97,13 +99,92 @@ const PostRequestService =  {
         } 
       },
 
+      updateServiceRequest: async(req, res)=>{
+        try{
+          const ret = await PostRequestModel.findByIdAndUpdate(req.body._id, {_id: req.body._id, lastUpdate:new Date(), ...req.body});
+          if(!ret){
+            res.status(401).send("An error occured (Service Request)");
+            console.log("REQUEST SERVICE:: Error occured.");
+          }
+          else {
+            res.status(200).send({message: "Ok", status:200});
+            console.log("REQUEST SERVICE:: Request changes have been saved.");
+          }
+        
+          return;
+        }
+        catch(error){
+          console.log("REQUEST SERVICE:: Error occured: "+error);
+          return;
+        }
+      },
+
       getActiveRequests: async(req, res)=>{
-        const result = await PostRequestModel.find({status: "active"}).exec();
+        result = [];
+        const activeServiceRequets = await PostRequestModel.find({status: "active"}).exec();
+        const jobsApplied = await JobApplicationModel.find({providerId: req.user._id}).exec();
+
+        activeServiceRequets.forEach(asr => {
+            applied = false;
+            jobsApplied.forEach(ja=>{
+              if(ja.jobId == asr._id){
+                applied = true;
+              }
+            });
+
+            if(!applied)
+              result.push(asr);
+        });
        
         return result;
 
-      }
+      },
 
+      getBookedPros: async (req, res)=>{
+        const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
+        let pros = [];
+        for(let i = 0; i < pRequests.length; i++){
+          if(pRequests[i].status == 'in-progress' || pRequests[i].status=='completed'){
+            const booking = await BookingModel.findOne({jobId: pRequests[i]._id}).exec();
+            if(booking){
+              const pro = await UserModel.findById(booking.providerId).exec();
+              pros.push(pro.firstName +" "+pro.lastName);
+            }else
+              pros.push(" ");
+            
+          }
+          else
+            pros.push(" ");
+        }
+
+        return pros.reverse();
+      },
+
+      resubmitRequest: async (req, res)=>{
+        const pRequest = await PostRequestModel.findByIdAndUpdate(req.body.jobId, {status: "active", lastUpdate: new Date()}).then(success=>{
+          console.log("POST REQUEST:: request has been resubmitted successfully.");
+          res.status(200).send({message: "Ok", status: 200});
+          return;
+        }).catch(err=>{
+          console.log("POST REQUEST:: An error occured while resubmitting request: "+err);
+          res.status(401).send({message: "Error", status: 401});
+          return;
+        });
+        return;
+      },
+
+      cancelRequest: async (req, res)=>{
+        const pRequest = await PostRequestModel.findByIdAndUpdate(req.body.jobId, {status: "cancelled", lastUpdate: new Date()}).then(success=>{
+          console.log("POST REQUEST:: request has been cancelled successfully.");
+          res.status(200).send({message: "Ok", status: 200});
+          return;
+        }).catch(err=>{
+          console.log("POST REQUEST:: An error occured while cancelling request: "+err);
+          res.status(401).send({message: "Error", status: 401});
+          return;
+        });
+        return;
+      }
 
 }
 

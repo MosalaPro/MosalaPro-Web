@@ -5,7 +5,7 @@ const jobApplicationSchema = new mongoose.Schema({
     userId: { type: String, required:true },
     providerId: { type: String, required:true },
     jobId:{type: String, required: true},
-    status: String,
+    status: {type: String, default: "active"},
     createdAt:{
         type: Date,
         required: true

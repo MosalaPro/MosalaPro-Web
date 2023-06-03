@@ -9,13 +9,18 @@
 const UserModel = require("../models/user");
 const TokenModel = require("../models/token");
 const CategoryModel = require("../models/category");
-
+const NotificationModel = require("../models/notification");
 const EmailSender = require("../services/emailsender");
 const _ = require("lodash");
 const mongoose = require("mongoose");
+const sanitizer = require('sanitize')();
 mongoose.set('strictQuery', false);
 const passport = require("passport");
 const CountryModel = require("../models/country");
+const PostRequestModel = require("../models/postRequest");
+const BookingModel = require("../models/booking");
+const JobApplication = require("./jobApplication");
+const JobApplicationModel = require("../models/jobApplication");
 const userEmailSender = new EmailSender();
 
 passport.use(UserModel.createStrategy());
@@ -30,6 +35,19 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+// exports.sanitizeUser = function(user) {
+//   return {
+//     id: user._id,
+//     username: user.username,
+//     firstName: user.firstName,
+//     lastName: user.lastName,
+//     accountType: user.accountType,
+//     category: user.category,
+//     photo: user.photo,
+//     role: user.role
+//   };
+// };
+
 const UserService = {
   login: async (req, res) => {
     const user = new UserModel({
@@ -41,7 +59,6 @@ const UserService = {
               console.log("USER:: An error occured : ", err);
               res.status(400).send({ error: "Wrong username or password" });
               return;
-              // TODO: activate error message on modal
           } else {
               passport.authenticate("local")(req, res, function(){
                   if(req.user.verified === true){
@@ -50,7 +67,8 @@ const UserService = {
                       //res.redirect("/");
                       return;
                   }else{
-                      res.status(400).send("Your account has not been verified." );
+                      console.log("USER AUTH:: User has not been verified.");
+                      res.status(402).send({message:"Your account has not been verified.", id:req.user._id, status: 402} );
                       req.logout(function(err){
                           if(err){return next(err);}
                       });
@@ -73,12 +91,12 @@ const UserService = {
       newUser = await new UserModel({
         categoryId : category._id,
         category: category.name,
-        firstName: _.capitalize(req.body.pFirstName),
-        lastName: _.capitalize(req.body.pLastName),
-        email: _.toLower(req.body.pEmail),
-        phone: req.body.pPhone,
-        address: req.body.pAddress,
-        username: req.body.pEmail,
+        firstName: _.trim(_.capitalize(req.body.pFirstName)),
+        lastName: _.trim(_.capitalize(req.body.pLastName)),
+        email: _.trim(_.toLower(req.body.pEmail)),
+        phone: _.trim(req.body.pPhone), 
+        address: _.trim(req.body.pAddress),
+        username: _.trim(req.body.pEmail),
         countryCode: countryCode.phone_code,
         country: req.body.country_p,
         city: req.body.city_p,
@@ -246,18 +264,31 @@ const UserService = {
       filters.role = new RegExp(query.search, "i");
 
     filters.accountType = "provider";
+    //filters.verified = true;
 
     if(query?.category !== "" && query?.category !== "Select Category")
       filters.category = query.category;
-
+    result = [];
     const res = await UserModel.find(filters);
-    return res;
+    res.forEach(pro=>{
+        pro.email = "";
+        pro.phone = "";
+        pro.address = "";
+        pro.createdAt = "";
+        pro.lastUpdate = "";
+        pro.subscriptionPlan = "";
+        pro.username = "";
+        result.push(pro);
+    });
+    ret = result.slice((query.page-1)*10, (query.page-1)*10+10);
+    return ret;
   },
   getProviders : async()=>{
     const providers = await UserModel.find({accountType:"provider"}).limit(8).exec();
     return providers;
   },
   update: async (data) => {
+    data.lastUpdate = new Date();
     data.skills = data.skills.toString().split(",").filter(skill => skill !== '');
     const res = await UserModel.findByIdAndUpdate(data._id, data);
     if(!res)
@@ -278,11 +309,13 @@ const UserService = {
     const subscription = {
       expire: expire.valueOf(),
       plan: type,
+      lastUpdate: new Date()
     }
     const res = await UserModel.findByIdAndUpdate(_id, { subscription });
   },
 
   updateUser: async (userData) => {
+    userData.lastUpdate = new Date();
     const result = await UserModel.findByIdAndUpdate(userData._id, userData);
     if(result)
       console.log("USER:: User updated");
@@ -296,8 +329,9 @@ const UserService = {
           res.status(400).send('The given password is incorrect!!');
           return;
          } else if(model) {
-          console.log(`USER:: Correct password ${model}`)
+
           req.user.setPassword(req.body.newPassword, function(){
+            req.user.lastUpdate = new Date();
             req.user.save();
             res.status(200).send('Password has been updated successfully!');
             return;
@@ -312,7 +346,7 @@ const UserService = {
   },
 
   findUser: async(req, res)=>{
-    let user = await UserModel.findOne({_id: req.params.id}).exec();
+    let user = await UserModel.findById(req.params.id).exec();
     if(user)
       return user;
     else{
@@ -323,6 +357,110 @@ const UserService = {
         return user;
     }
     return;
+  },
+
+  hireProvider: async(req, res)=>{
+    const job = await PostRequestModel.findOne({_id: req.body.jobId}).exec();
+
+    newBooking = new BookingModel({
+      username: req.user.username,
+      bookingTitle: job.requestTitle,
+      bookingDescription: job.requestDescription,
+      providerId:  req.body.providerId,
+      jobId: job._id,
+      budget: job.budget,
+      deadline: job.deadline,
+      createdAt: new Date(),
+      lastUpdate: new Date(),
+      status: "active"
+    }).save().then(success => {
+      const notification = new NotificationModel({
+        causedByUserId: req.user._id,
+        causeByItem: req.body.jobId,
+        receiverId: req.body.providerId,
+        title: "Congratulations! You have been hired.",
+        content: req.user.firstName+" "+req.user.lastName+" has accepted your job application for the job '"+job.requestTitle+"'. Open to check to check job's details",
+        createdAt: new Date(),
+        lastUpdate: new Date()
+      }).save().then(async scss=>{
+
+          const j = await PostRequestModel.findByIdAndUpdate( req.body.jobId, {status:"in-progress", lastUpdate: new Date()}).exec();
+          if(j) console.log("Job request status updated!"); else console.log("Job request status update failed");
+
+          const jobApplication = await JobApplicationModel.findOneAndUpdate({jobId: req.body.jobId}, {status:"hired", lastUpdate: new Date()}).exec();
+          if(jobApplication)
+            console.log("Job application status updated!");
+          else  
+            console.log("Job application status update failed");
+
+          res.status(200).send({message: "Provider has been hired and notification has been sent successfully", status: 200});
+          console.log("USER:: Provider has been hired and notification has been sent successfully.");
+          return;
+      }).catch(err=>{
+          res.status(401).send({message: "New notification failed. Error", status: 401});
+          console.log("USER:: New notification failed. Error: "+err);
+          return;
+      }); 
+    
+    }).catch(error=>{
+      res.status(401).send({message: "New booking creation failed.", status: 401});
+      console.log("USER:: New booking creation failed. Error: "+error);
+      return;
+    });
+    return;
+  },
+
+  rejectApplication: async(req, res)=>{
+
+    const jobApplication = await JobApplicationModel.findOneAndUpdate({jobId: req.body.jobId}, {status:"rejected", lastUpdate: new Date()}).exec();
+    if(jobApplication){
+      const notification = new NotificationModel({
+        causedByUserId: req.user._id,
+        causeByItem: req.body.jobId,
+        receiverId: req.body.providerId,
+        title: "Your job application has been rejected.",
+        content: " Unfortunately, "+req.user.firstName+" "+req.user.lastName+" has decided to hire another provider for the job: '"+jobApplication.requestTitle+"'.",
+        createdAt: new Date(),
+        lastUpdate: new Date()
+      }).save().then(async scss=>{
+          res.status(200).send({message: "Provider application has been rejected and notification has been sent successfully", status: 200});
+          console.log("USER:: Provider application has been rejected and notification has been sent successfully.");
+          return;
+      }).catch(err=>{
+          res.status(401).send({message: "New notification failed. Error", status: 401});
+          console.log("USER:: New notification failed. Error: "+err);
+          return;
+      }); 
+      console.log("Job application status updated!");
+    }
+    else {
+      res.status(401).send({message: "Job application status update failed.", status: 401});
+      console.log("Job application status update failed");
+      return;
+    }
+
+    return;
+  },
+
+  addFavPro: async(req, res)=>{
+    const currentFavPros = await req.user.favoriteProviders;
+    const pro = await UserModel.findById(req.body.proId).exec();
+    if(pro){
+
+      currentFavPros.push(req.body.proId);
+      req.user.favoriteProviders = currentFavPros.reverse();
+      req.user.lastUpdate = new Date();
+      req.user.save().then(success=>{
+        console.log("USER:: pro has been added as favorite.");
+        res.status(200).send({message: "Ok", status:200});
+        return;
+      }).catch(err=>{
+        console.log("USER:: An error occured while adding pro as favorite: "+err);
+        res.status(401).send({message:"Internal Server Error", status:401});
+        return;
+      })
+    }
+
   }
 }
 module.exports = UserService;

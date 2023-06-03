@@ -20,6 +20,7 @@ class JobApplication {
             userId: user._id,
             providerId:  req.user._id,
             jobId: req.body.jobId,
+            status: "applied",
             createdAt: new Date(),
             lastUpdate: new Date()
         }).save( async function (err) {
@@ -29,11 +30,13 @@ class JobApplication {
                 return;
             }else{
                 console.log("JOBAPPLICATION:: Application has been sent successfully.");
+                PostRequestModel.updateOne({_id: req.body.jobId}, {$set: {providerId: req.user._id}} ).exec();
                 const notification = new NotificationModel({
                     causedByUserId: req.user._id,
+                    causedByItem: req.body.jobId,
                     receiverId: user._id,
                     title: "A service provider has applied for your service request.",
-                    content: "Servive provider "+req.user.firstName+" "+req.user.lastName+" has applied for your service request. Open to check service provider's profile and hire.",
+                    content: "Servive provider "+req.user.firstName+" "+req.user.lastName+" has applied for your service request. Check service provider's profile and hire.",
                     createdAt: new Date(),
                     lastUpdate: new Date()
                 }).save(async function (err) {
@@ -45,6 +48,45 @@ class JobApplication {
             }
         });
         return;
+    }
+
+    async cancelApplication(req, res){
+        const jobApplication = await JobApplicationModel.findOneAndUpdate({jobId: req.body.jobId}, {status: "cancelled"}).then(success=>{
+            res.status(200).send({status: 200, message: "Application cancelled successfully."});
+            return;
+        }).catch(err=>{
+            console.log("JOB APPLICATION:: Error occured while cancelling application");
+            res.status(401).send({status: 401, message: "Error occured"});
+            return;
+        });
+       
+    }
+
+    async getAppliedJobs(req, res){
+        let appliedJobs = [];
+        const ja = await JobApplicationModel.find({providerId: req.user._id}).exec();
+            for(let i = 0; i < ja.length; i++){
+                const sr = await PostRequestModel.findOne({_id:ja[i].jobId}).exec();
+                sr.createdAt = ja[i].createdAt;
+                sr.appStatus = ja[i].status;
+                appliedJobs.push(sr);
+            }
+        
+        return appliedJobs;
+    }
+
+    async getApplicants(jobId_){
+        const applications = await JobApplicationModel.find({jobId: jobId_}).exec();
+
+        let inPros = [];
+        //for(let i = 0; i < applications.length; i++){
+            const pro = await UserModel.findById(applications[0].providerId).exec();
+            inPros.push(pro);
+            const pro1 = await UserModel.findById(applications[1].providerId).exec();
+            inPros.push(pro1);
+        //}
+        console.log(inPros);
+        return inPros;
     }
 
 }

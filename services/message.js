@@ -31,6 +31,7 @@ class Message {
                 const notification = new NotificationModel({
                     causedByUserId: req.user._id,
                     receiverId: req.body.proId,
+                    icon: "fa-envelope",
                     title: "You have a new message.",
                     content: "Message from "+req.user.firstName+ " "+req.user.lastName+": <br>"+
                                             req.body.messageTitle+ " <br>"+  req.body.content,

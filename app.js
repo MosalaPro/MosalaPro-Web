@@ -11,15 +11,16 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
+const hpp = require('hpp');
 const ejs = require("ejs");
 const mongoose = require("mongoose");
 const UserModel = require(__dirname+"/models/user");
-
 const compression = require("compression");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const MongoStore = require('connect-mongo');
+
 
 // const emailValidator = required("email-validator");
 
@@ -42,7 +43,7 @@ const connectDB = async(DBURI) => {
 //------------------GENERAL CONFIGURATION ------------------------------//
 
 
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const FacebookStrategy = require("passport-facebook");
 
 const app = express();
@@ -52,6 +53,7 @@ mongoose.set('strictQuery', false);
 app.use(express.static("public"));
 app.use(express.json());
 app.use(compression());
+//app.use(hpp());
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -77,7 +79,6 @@ app.use(session({
 	  })
 }));
 
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -85,17 +86,6 @@ passport.use(new LocalStrategy(UserModel.authenticate()));
 
 passport.serializeUser(UserModel.serializeUser());
 passport.deserializeUser(UserModel.deserializeUser());
-//passport.use(UserModel.createStrategy()); 
-
-// passport.serializeUser(function(user, done) {
-//   done(null, user.id);
-// });
-
-// passport.deserializeUser(function(id, done) {
-//   UserModel.findById(id, function(err, user) {
-//     done(err, user);
-//   });
-// });
 
 passport.use(new GoogleStrategy ({
 	clientID: process.env.CLIENT_ID,
@@ -113,15 +103,18 @@ passport.use(new GoogleStrategy ({
 				var newUser = new UserModel({
 					google_id : profile.id,
 					photo : profile.photos[0].value,
-					email : profile.email,
+					email : profile.emails[0].value,
+					username: profile.emails[0].value,
+					verified: true,
 					display_name : profile.displayName,
-					username: profile.email,
 					firstName: profile._json.given_name,
 					lastName: profile._json.family_name,
 					createdAt: new Date(),
 					lastUpdate: new Date()
 				}).save(function(err,newUser){
-					if(err) throw err;
+					if(err) {
+						console.log("GOOGLE AUTH:: Error occured: "+ err);
+					};
 					return cb(err, newUser);
 				});
 			}
@@ -134,8 +127,7 @@ passport.use(new GoogleStrategy ({
 passport.use(new FacebookStrategy({
     clientID: process.env.APP_ID,
     clientSecret: process.env.APP_SECRET,
-    callbackURL: process.env.FB_CALLBACK_URL,
-	profileFields: ['id', 'displayName', 'link', 'name', 'photos', 'email']
+    callbackURL: process.env.FB_CALLBACK_URL
   },
   function(accessToken, refreshToken, profile, cb) {
 	  console.log(profile);
@@ -147,6 +139,7 @@ passport.use(new FacebookStrategy({
 				facebook_id : profile.id,
 				photo : profile.photos[0].value,
 				email : profile.email,
+				verified: true,
 				display_name : profile.displayName,
 				username: profile.email,
 				firstName: profile._json.first_name,
@@ -155,7 +148,10 @@ passport.use(new FacebookStrategy({
 				createdAt: new Date(),
 				lastUpdate: new Date()
 			}).save(function(err,newUser){
-				if(err) throw err;
+				
+				if(err) {
+					console.log("FB AUTH:: Error occured: "+ err);
+				};
 				return cb(err, newUser);
 			});
 		}
@@ -166,26 +162,23 @@ passport.use(new FacebookStrategy({
 
 
 app.get("/auth/google",
-	passport.authenticate("google", {scope: ["profile"]}));
-	
+	passport.authenticate("google", {scope: [ 'email', 'profile' ]}));
+
 app.get("/auth/google/mosalapro", 
-	passport.authenticate("google", {failureRedirect: "/"}), function(req, res){
-		if(!req.user.email)
-			res.redirect('/profile');
-		else res.redirect('/');
-	});
+	passport.authenticate("google", {
+		successRedirect: '/profile',
+		failureRedirect: "/"}));
+		
 	
 app.get("/auth/facebook",
-  passport.authenticate("facebook"));
+  passport.authenticate("facebook", {scope: ['email', 'public_profile']}));
 
 app.get('/auth/facebook/mosalapro',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
     // Successful authentication, redirect home.
 	console.log("successful FB");
-	if(!req.user.email)
-    	res.redirect('/profile');
-	else res.redirect('/');
+    res.redirect('/profile');
 });
 
 require('./api-routes/routes')(app);

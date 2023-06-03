@@ -9,8 +9,10 @@
 }
 .btn-light {
     color: #5A9E2F;
-    background-color: #e5f7f0;
+    background-color: #fff;
     border-color: #d8f7eb;
+    border-radius: 2px;
+    font-size: large;
 }
 .btn-outline-success{
     color: #5A9E2F;
@@ -19,6 +21,20 @@
     background-color: #e5f7f0;
     color: darkslategrey;
 }
+.noti-lnk{
+    color:#5A9E2F;
+    cursor: pointer;
+    text-transform: none;
+}
+.delete-noti{
+    color: #e7515e;
+    cursor: pointer;
+}
+.read {
+    background-color: #fff;
+    color: darkslategrey;
+}
+
 .unread .btn-outline-success {
     color: #5A9E2F;
     background-color: #fff;
