@@ -2422,6 +2422,7 @@ input[type="button"].btn-block {
 	color: #212529;
 	text-align: inherit;
 	white-space: nowrap;
+	cursor: pointer;
 	background-color: transparent;
 	border: 0;
 }
@@ -2435,7 +2436,7 @@ input[type="button"].btn-block {
 .dropdown-item.active, .dropdown-item:active {
 	color: #fff;
 	text-decoration: none;
-	background-color: #007bff;
+	background-color: #5A9E2F;
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {

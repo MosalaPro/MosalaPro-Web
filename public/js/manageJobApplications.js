@@ -39,7 +39,7 @@ async function getApplications(type){
     applicationsBox.innerHTML = "";
     let content = "";
     if(applications.length == 0)
-          applicationsBox.innerHTML = '<div class="d-flex justify-content-center"><h6 class="text-light text-muted align-items-center">No booking found!</h6></div>';
+          applicationsBox.innerHTML = '<div class="d-flex justify-content-center"><h6 class="text-light text-muted align-items-center">No job application found!</h6></div>';
     else{
       const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
       for(const job of applications) {

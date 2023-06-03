@@ -56,8 +56,6 @@
                                       <p class="mt-1 mb-1 ml-1 text-primary">Local time: 11:12 PM </span>
                                       <p class="mt-1 mb-1 ml-1 text-primary">Joined <%= new Date(pro.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></p>
                                      
-              
-                                      
                                   </div>
               
                                   <div class="col-lg-6 col-md-6 col-sm-12 col-12">
@@ -76,7 +74,7 @@
                             <div class="row mt-2">
                               <div class="col d-inline justify-content-between">
                                 <% if(checkBooking){ %>
-                                    <span> You have already hired this provider for the job</span>
+                                    <span class="mb-3"> You have already hired this provider for the job</span><br>
                                <% } else { %>
                                       <a href="#hireConfModalCta" data-toggle="modal" data-caption-animate="fadeInUp" class="simple-btn mr-3">
                                           <b class="fa fa-envelope-o mr-1 mb-1" aria-hidden="true"></b>Hire <%=pro.firstName %>
@@ -92,67 +90,9 @@
                           
                         </div>
                       </div>
-                      <div class="container shadow-sm mb-5 bg-white rounded ">
-                        <div class="row">
-                          <div class="col p-4">
-                            
-                            <div class="row border-bottom mt-1">
-                              <div class="col">
-                                <h5>Job request details</h5> 
-                              </div>
-                            </div>
-                            <div class="row mt-3">
-                              <div class="col">
-                                <span > Request title: <b> <%=job.requestTitle%> </b>
-                              </div>
-                            </div>
-                              
-                              <div class="row mt-1">
-                                <div class="col">
-                                <span > Category: <b> <%=job.requestCategory %></b></span> 
-                                </div>
-                              </div>
-                                <div class="row mt-1">
-                                  <div class="col">
-                                    <span > Budget: <b> <%=job.budget %></b></span>
-                                  </div>
-                                </div>
-                                <div class="row mt-1">
-                                  <div class="col">
-                                  <span > Deadline: <b> <%=job.deadline %></b></span>
-                                  </div>
-                                </div>
-                                <div class="row mt-1">
-                                  <div class="col p-2">
-                                    <span > Deascription: <b> <%=job.description %></b></span>
-                                  </div>
-                                </div>
-                                <div class="row p-3 mt-1">
-                                  <% if (job.files.length == 0){ %>
-                                                      <div class="col">
-                                                          <span class="text-muted text-small"> This service request have no attachments.</span>
-                                                      </div>
-                                                  <% } else { %>
-                                                      <% let j = 0; job.files.forEach(file=>{ j++; %>
-                  
-                                                      <!--span class="d-none" id="file-"><%= file%></a></p-->
-                                                      <div title="Download file <%=j%>" data-toggle="tooltip" data-placement="bottom"  class=" col-sm-4 col-lg-2 tooltips cursor mb-4" >
-                                                      <!--span class="job-details"><%=job.files.length%></span-->
-                                                          <!-- Post Modern-->
-                                                          <div class="d-flex justify-content-center px-4 px-auto" onClick="downloadFile('<%= file%>')" >
-                                                              <b class="fa fa-file-text-o fa-5x mb-1 file-icon" aria-hidden="true"></b>
-                                                              <span class="post-modern-time">  <%=job.requestTitle%>'s file <%=j%></span>
-                                                              
-                                                          </div>
-                                                          
-                                                        </div>
-                  
-                                                      <% }); } %>
-                                    </div>
-                                  
-                              </div>
-                         </div>
-                      </div>
+                      <% if (job) { %>
+                        <%- include('partials/requestDetails') %>
+                      <% } %>
                     </div>
                     <div class="col">
                       <div class="container shadow-sm mb-5 pb-1 bg-white rounded ">
@@ -172,7 +112,7 @@
                             <span class="text-primary">Verified</span>
                           </div>
                           <div class="d-flex justify-content-between align-items-center my-3">
-                            <span>LinkedIn Profile</span>
+                            <span>Account information</span>
                             <span class="text-primary">Verified</span>
                           </div>
               
@@ -206,8 +146,9 @@
    </div>
 </div>
 </section>
-
-<%- include('partials/HireConfirmationModal') %>
-<%- include('partials/RejectConfirmationModal') %>
+<% if (job && pro) { %>
+  <%- include('partials/HireConfirmationModal') %>
+  <%- include('partials/RejectConfirmationModal') %>
+<% } %>
 <script src="js/notificationDetailHandler.js"></script>
 <%- include('partials/footer') %>

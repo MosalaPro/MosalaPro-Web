@@ -15,7 +15,7 @@
                     <div class="card-u-pro-set p-4">
                         <div class="card-body-u-pro-set tab-content px-4">
                             <div class="tab-pane active" id="request">
-                                <h5>Editing request: <%=request.requestTitle %></h5>
+                                <h5><%=request.requestTitle %></h5>
                                 <span id="reqMessage" class=""></span>
                                 <div class="form-group mt-4">
                                     <label for="fullName">Request title</label>
@@ -74,14 +74,14 @@
                                 </div>
                                 <% if(request.status != "in-progress" && request.status != "cancelled") {%>
                                     <div class="d-flex justify-content-center mt-2">
-                                        <button onClick=" " type="reset" class="btn-job btn-primary-job-inv-dgr mr-3">Cancel request</button>
+                                        <button type="submit" class="btn-job btn-primary-job-inv-dgr mr-3" href="#cancelRequestConfModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Cancel request</button>
                                         <button onClick ="onRequestSubmit('<%=request._id%>')" class="btn-job btn-primary-job-inv">Save changes</button>
                                         <button onClick="reset('<%=request._id%>')" type="reset" class="btn-job btn-primary-job-inv-blue ml-3">Reset Changes</button>
                                         
                                     </div>
                                 <% } else if(request.status == "cancelled") { %>
                                     <div class="d-flex justify-content-center mt-2">
-                                        <button onClick=" " type="reset" class="btn-job btn-primary-job-inv-dgr mr-3">Resubmit</button>
+                                        <button onClick="resubmit('<%=request._id%>')" type="submit" class="btn-job btn-primary-job-inv-dgr mr-3">Resubmit</button>
                                     </div>
                                 <% } %>
                             </div>
@@ -125,6 +125,8 @@
         </div>
 </div>
 </section>
+
+<%- include('partials/cancelRequestConfModal') %>
 <script src="js/manageRequest.js"></script>
 <%- include('partials/footer') %>
                                     

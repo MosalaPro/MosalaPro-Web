@@ -45,17 +45,17 @@ const onRequestSubmit = async(id)=> {
             window.location = "/myrequests";
         }
         else if(json.status == 402){
-            message.innerHTML = "Your account is not verified! Check your email for verification code. Redirecting...";
-            await new Promise(r => setTimeout(r, 2000));
+            message.innerHTML = "An error occured while saving your changes. Please try again. Redirecting...";
+            await new Promise(r => setTimeout(r, 1500));
             window.location = "/myrequests";
         }
         else{
-            message.innerHTML = "Wrong username or password! "+json.status;
+            message.innerHTML = "An error occured while saving your changes. Please try again. ";
         }
         
       }).catch(err => {
         console.log(err) // Handle errors
-        message.innerHTML = "Wrong username or password!";
+        message.innerHTML = "An error occured while saving your changes. Please try again.";
       });
   }
 
@@ -80,4 +80,69 @@ async function _postData(url = '', data = {}) {
 
 function reset(id){
   $( "#request" ).load( `/manage-request?rq=${id} #request` );
+}
+
+async function resubmit(requestId){
+    const message = document.getElementById("reqMessage");
+    message.innerHTML = "";
+    requestData = {
+      jobId: requestId
+    }
+
+  _postData('/resubmit-request', requestData )
+    .then(async json => {
+      if(json.status == 200){
+          message.classList.remove('error_message');
+          message.classList.add('success_message');
+          message.innerHTML = "Your request has been resubmitted successfully. Redirecting...";
+          await new Promise(r => setTimeout(r, 700));
+          window.location = "/myrequests";
+      }
+      else if(json.status == 402){
+          message.innerHTML = "An error occured while resubmitting your changes. Please try again. Redirecting...";
+          await new Promise(r => setTimeout(r, 1500));
+          window.location = "/myrequests";
+      }
+      else{
+          message.innerHTML = "An error occured while resubmitting your changes. Please try again.";
+      }
+      
+    }).catch(err => {
+      console.log(err) // Handle errors
+      message.innerHTML = "An error occured while resubmitting your changes. Please try again.";
+    });
+}
+
+async function cancelRequest(requestId){
+
+    const message = document.getElementById("reqMessage");
+    message.innerHTML = "";
+
+    requestData = {
+      jobId: requestId
+    }
+
+  _postData('/cancel-request', requestData )
+    .then(async json => {
+      if(json.status == 200){
+          message.classList.remove('error_message');
+          message.classList.add('success_message');
+          message.innerHTML = "Your request has been cancelled successfully. Redirecting...";
+          await new Promise(r => setTimeout(r, 700));
+          window.location = "/myrequests";
+      }
+      else if(json.status == 402){
+          message.innerHTML = "An error occured while cancelling your changes. Please try again. Redirecting...";
+          await new Promise(r => setTimeout(r, 1500));
+          window.location = "/myrequests";
+      }
+      else{
+          message.innerHTML = "An error occured while cancelling your changes. Please try again.";
+      }
+      
+    }).catch(err => {
+      console.log(err) // Handle errors
+      message.innerHTML = "An error occured while cancelling your changes. Please try again.";
+    });
+
 }

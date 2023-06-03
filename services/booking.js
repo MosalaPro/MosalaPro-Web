@@ -133,10 +133,10 @@ const BookingService =  {
       },
 
       confirmBooking: async (req, res)=>{
-          const booking = await BookingModel.findByIdAndUpdate(req.body.bookingId, {status:"in-progress"}).exec();
+          const booking = await BookingModel.findByIdAndUpdate(req.body.bookingId, {status:"in-progress", lastUpdate: new Date()}).exec();
 
           if(booking){
-          const job = await PostRequestModel.findByIdAndUpdate(booking.jobId, {status: "in-progress"}).exec();
+          const job = await PostRequestModel.findByIdAndUpdate(booking.jobId, {status: "in-progress", lastUpdate: new Date()}).exec();
           console.log("BOOKING:: booking has been successfully confirmed");
           const customer = await UserModel.findOne({username: booking.username}).exec();
           const notification = await new NotificationModel({
@@ -164,9 +164,9 @@ const BookingService =  {
       },
 
       cancelBooking: async (req, res)=>{
-        const booking = await BookingModel.findByIdAndUpdate(req.body.bookingId, {status:"cancelled"}).exec();
+        const booking = await BookingModel.findByIdAndUpdate(req.body.bookingId, {status:"cancelled", lastUpdate: new Date()}).exec();
         if(booking){
-          const job = await PostRequestModel.findByIdAndUpdate(booking.jobId, {status: "active"}).exec();
+          const job = await PostRequestModel.findByIdAndUpdate(booking.jobId, {status: "active", lastUpdate: new Date()}).exec();
           console.log("BOOKING:: booking has been successfully cancelled");
           const customer = await UserModel.findOne({username: booking.username}).exec();
           const notification = await new NotificationModel({

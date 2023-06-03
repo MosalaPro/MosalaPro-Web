@@ -116,7 +116,7 @@
                                             <% if (reads[j].title == "You have a new message.") { %>
                                                 <a href="/message?m=mesageId&p=causedByUserId"> <button class="dropdown-item" type="button" ><i class="mdi mdi-message"></i>Read and reply message </button></a>
                                                 
-                                            <% } else { else if(usr.accountType == "user") { %>
+                                            <% } else { if(usr.accountType == "user") { %>
                                                 <a href="/notification?n=<%=reads[j]._id%>&p=<%=reads[j].causedByUserId%>" class="noti-lnk"><button class="dropdown-item" type="button" ><i class="mdi mdi-check"></i> Check provider profile </a>
                                             <% } else if(usr.accountType == "provider") { %>
                                                 <a href="/notification?n=<%=reads[j]._id%>&p=<%=reads[j].causedByUserId%>" class="noti-lnk"><button class="dropdown-item" type="button" ><i class="mdi mdi-check"></i> View service request </a>

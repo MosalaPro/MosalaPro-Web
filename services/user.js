@@ -288,6 +288,7 @@ const UserService = {
     return providers;
   },
   update: async (data) => {
+    data.lastUpdate = new Date();
     data.skills = data.skills.toString().split(",").filter(skill => skill !== '');
     const res = await UserModel.findByIdAndUpdate(data._id, data);
     if(!res)
@@ -308,11 +309,13 @@ const UserService = {
     const subscription = {
       expire: expire.valueOf(),
       plan: type,
+      lastUpdate: new Date()
     }
     const res = await UserModel.findByIdAndUpdate(_id, { subscription });
   },
 
   updateUser: async (userData) => {
+    userData.lastUpdate = new Date();
     const result = await UserModel.findByIdAndUpdate(userData._id, userData);
     if(result)
       console.log("USER:: User updated");
@@ -326,8 +329,9 @@ const UserService = {
           res.status(400).send('The given password is incorrect!!');
           return;
          } else if(model) {
-          console.log(`USER:: Correct password ${model}`)
+
           req.user.setPassword(req.body.newPassword, function(){
+            req.user.lastUpdate = new Date();
             req.user.save();
             res.status(200).send('Password has been updated successfully!');
             return;
@@ -342,7 +346,7 @@ const UserService = {
   },
 
   findUser: async(req, res)=>{
-    let user = await UserModel.findOne({_id: req.params.id}).exec();
+    let user = await UserModel.findById(req.params.id).exec();
     if(user)
       return user;
     else{
@@ -380,10 +384,10 @@ const UserService = {
         lastUpdate: new Date()
       }).save().then(async scss=>{
 
-          const j = await PostRequestModel.findByIdAndUpdate( req.body.jobId, {status:"in-progress"}).exec();
+          const j = await PostRequestModel.findByIdAndUpdate( req.body.jobId, {status:"in-progress", lastUpdate: new Date()}).exec();
           if(j) console.log("Job request status updated!"); else console.log("Job request status update failed");
 
-          const jobApplication = await JobApplicationModel.findOneAndUpdate({jobId: req.body.jobId}, {status:"hired"}).exec();
+          const jobApplication = await JobApplicationModel.findOneAndUpdate({jobId: req.body.jobId}, {status:"hired", lastUpdate: new Date()}).exec();
           if(jobApplication)
             console.log("Job application status updated!");
           else  
@@ -408,7 +412,7 @@ const UserService = {
 
   rejectApplication: async(req, res)=>{
 
-    const jobApplication = await JobApplicationModel.findOneAndUpdate({jobId: req.body.jobId}, {status:"rejected"}).exec();
+    const jobApplication = await JobApplicationModel.findOneAndUpdate({jobId: req.body.jobId}, {status:"rejected", lastUpdate: new Date()}).exec();
     if(jobApplication){
       const notification = new NotificationModel({
         causedByUserId: req.user._id,
@@ -436,6 +440,27 @@ const UserService = {
     }
 
     return;
+  },
+
+  addFavPro: async(req, res)=>{
+    const currentFavPros = await req.user.favoriteProviders;
+    const pro = await UserModel.findById(req.body.proId).exec();
+    if(pro){
+
+      currentFavPros.push(req.body.proId);
+      req.user.favoriteProviders = currentFavPros.reverse();
+      req.user.lastUpdate = new Date();
+      req.user.save().then(success=>{
+        console.log("USER:: pro has been added as favorite.");
+        res.status(200).send({message: "Ok", status:200});
+        return;
+      }).catch(err=>{
+        console.log("USER:: An error occured while adding pro as favorite: "+err);
+        res.status(401).send({message:"Internal Server Error", status:401});
+        return;
+      })
+    }
+
   }
 }
 module.exports = UserService;

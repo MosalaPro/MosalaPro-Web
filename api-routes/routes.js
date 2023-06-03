@@ -91,17 +91,25 @@ app.get("/", async function(req, res){
             if(req.user.accountType=="provider"){
                 const pRequests = await PostRequestModel.find({providerId:req.user._id}).exec();
                 const ja = await jobApplicationHander.getAppliedJobs(req, res);
-                console.log("JA: "+ja.length);
                 res.render("providerDashboard", {usr: req.user, notifications: notifs, cats: categories, ja:ja, countries: countries, postRequests: pRequests.reverse()});
             }
             else  {
                 const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
                 const bookedPros = await PostRequestService.getBookedPros(req, res);
                 requestProviders = await UserService.getProviders();
-                // pRequests.forEach(request =>{
-                //     provider = await UserModel.find
-                // })
-                res.render("userDashboard", {usr: req.user, notifications: notifs, bookedPros: bookedPros, link: null, postRequests: pRequests.reverse(), providers: requestProviders, cats: categories, 
+                const favPros = req.user.favoriteProviders;
+                let favProviders = []
+                if(favPros.length > 0)
+                    for(let i = 0; i < favPros.length; i++){
+                        const pro = await UserModel.findById(favPros[i]).exec();
+                        favProviders.push(pro);
+                    }
+                
+                res.render("userDashboard", {usr: req.user, notifications: notifs, 
+                     favProviders: favProviders,
+                     bookedPros: bookedPros, 
+                     link: null, postRequests: pRequests.reverse(), 
+                     providers: requestProviders, cats: categories, 
                     countries: countries});
             }
         }
@@ -596,7 +604,29 @@ app.get("/", async function(req, res){
         }
         else
             res.redirect("/");
-    })
+    });
+
+    app.post("/resubmit-request", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                PostRequestService.resubmitRequest(req, res);
+            }catch(error){  
+                console.log("An error occured (/resubmit-request): "+error);
+            }
+        }else
+            res.redirect("/");
+    });
+
+    app.post("/cancel-request", async function(req, res){
+        if(req.isAuthenticated()){
+            try{
+                PostRequestService.cancelRequest(req, res);
+            }catch(error){  
+                console.log("An error occured (/cancel-request): "+error);
+            }
+        }else
+            res.redirect("/");
+    });
 
     app.get("/mybookings", async function(req, res){
         if(req.isAuthenticated() &&  req.user.accountType == "provider"){
@@ -752,12 +782,34 @@ app.get("/", async function(req, res){
         if( req.isAuthenticated() && provider){
             try{
                 const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-                res.render("proProfile", {usr: req.user, notifications: notifs.reverse(), pro: provider, cats: categories, link:req.link});
+                const favPros = req.user.favoriteProviders;
+                let isFav = false;
+                if(favPros != null && favPros.length > 0){
+                    favPros.forEach(proId=>{
+                        if(proId == provider._id)
+                            isFav = true;
+                    });
+                }
+                res.render("proProfile", {usr: req.user, notifications: notifs.reverse(), isFavorite: isFav, pro: provider, cats: categories, link:req.link});
             }catch(error){res.redirect("/");}
             
         }else
         res.render("proProfile", {usr: null, notifications: null, pro: provider, cats: categories, link:req.link});
    });
+
+   app.post("/addfavpro", async function(req, res) {
+        if( req.isAuthenticated()){
+            try{
+                await UserService.addFavPro(req, res);
+            }
+            catch(error){
+                console.log("An error occured(addfavpro): "+error);
+            }
+        }else   
+            res.render("proProfile", {usr: null, notifications: null, pro: provider, cats: categories, link:req.link});
+
+   });
+
    app.get('/service-request-booking/:id/', async function (req, res) {
     let provider = await UserService.findUser(req, res);
     if( req.isAuthenticated() && provider){

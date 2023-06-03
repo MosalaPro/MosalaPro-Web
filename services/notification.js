@@ -16,7 +16,7 @@ class Notification {
     }
     async readNotification(req, res){
 
-        const notif = await NotificationModel.findByIdAndUpdate(req.body._id, {status: "read"}).exec();
+        const notif = await NotificationModel.findByIdAndUpdate(req.body._id, {status: "read", lastUpdate: new Date()}).exec();
         if(notif){
             res.status(200).send({message:"Notification read with success.", status: 200});
             return true;
@@ -27,7 +27,7 @@ class Notification {
         }
     }
     async deleteNotification(req, res){
-        const notif = await NotificationModel.findByIdAndUpdate(req.body._id, {status: "archived"}).exec();
+        const notif = await NotificationModel.findByIdAndUpdate(req.body._id, {status: "archived", lastUpdate: new Date()}).exec();
         if(notif){
             res.status(200).send({message:"NOTIFICATION:: Notification removed with success.", status: 200});
             return true;

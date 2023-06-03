@@ -86,8 +86,11 @@
 </div>
 
 </section>
-
-<%- include('partials/userFavPros') %>
+<% if(usr.favoriteProviders.length > 0) { %> 
+    <%- include('partials/actualUserFavProviders') %>
+<% } else { %>
+    <%- include('partials/userFavPros') %>
+<% } %>
 
 
 <section class="bg-light" >

@@ -101,7 +101,7 @@ const PostRequestService =  {
 
       updateServiceRequest: async(req, res)=>{
         try{
-          const ret = await PostRequestModel.findByIdAndUpdate(req.body._id, {_id: req.body._id, ...req.body});
+          const ret = await PostRequestModel.findByIdAndUpdate(req.body._id, {_id: req.body._id, lastUpdate:new Date(), ...req.body});
           if(!ret){
             res.status(401).send("An error occured (Service Request)");
             console.log("REQUEST SERVICE:: Error occured.");
@@ -158,9 +158,33 @@ const PostRequestService =  {
         }
 
         return pros.reverse();
+      },
+
+      resubmitRequest: async (req, res)=>{
+        const pRequest = await PostRequestModel.findByIdAndUpdate(req.body.jobId, {status: "active", lastUpdate: new Date()}).then(success=>{
+          console.log("POST REQUEST:: request has been resubmitted successfully.");
+          res.status(200).send({message: "Ok", status: 200});
+          return;
+        }).catch(err=>{
+          console.log("POST REQUEST:: An error occured while resubmitting request: "+err);
+          res.status(401).send({message: "Error", status: 401});
+          return;
+        });
+        return;
+      },
+
+      cancelRequest: async (req, res)=>{
+        const pRequest = await PostRequestModel.findByIdAndUpdate(req.body.jobId, {status: "cancelled", lastUpdate: new Date()}).then(success=>{
+          console.log("POST REQUEST:: request has been cancelled successfully.");
+          res.status(200).send({message: "Ok", status: 200});
+          return;
+        }).catch(err=>{
+          console.log("POST REQUEST:: An error occured while cancelling request: "+err);
+          res.status(401).send({message: "Error", status: 401});
+          return;
+        });
+        return;
       }
-
-
 
 }
 

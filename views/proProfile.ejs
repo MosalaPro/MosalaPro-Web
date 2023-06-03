@@ -26,8 +26,25 @@
               
             </div>
             <div class="col-lg-8 col-md-12 col-sm-12 col-12">
-              <div class="d-flex justify-content-between w-100 mt-2">
-                <h5><%=pro.firstName %> <%=pro.lastName %></h5>
+              <span id="mess__"></span>
+              <div class="d-flex justify-content-between w-100 mt-2" id="topInfo">
+                <h5><%=pro.firstName %> <%=pro.lastName %>
+                  <% if (isFavorite) { %>
+                    <b class="fa-star fa-sm rating-star-color fas ml-2" title="One of your favorite service providers."  ></b>
+                  <% } %>
+                </h5> 
+                
+                <div class="btn-group">
+                  <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <b class="mdi mdi-dots-vertical"></b>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <button class="dropdown-item" type="button" onClick="requestQuotation('<%=pro._id%>')"><i class="mdi mdi-fax mr-2"></i>Request quotation</button>
+                    <% if(!isFavorite) { %>
+                    <button class="dropdown-item" type="button" onClick="addToFavorite('<%=pro._id%>')"><i class="mdi mdi-bookmark mr-2"></i>Pin as favorite</button>
+                    <% } %>
+                  </div>
+                </div>
               </div>
               <p><%=pro.role %></p>
               <ul class="rating " data-mdb-toggle="rating" data-mdb-readonly="true" data-mdb-value="3"> 
@@ -162,4 +179,6 @@
     </div>
   </section>
   <%- include('partials/messageModal') %>
+
+  <script src="js/manageProProfile.js"> </script>
   <%- include('partials/footer') %>

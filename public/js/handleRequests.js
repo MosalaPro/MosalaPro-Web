@@ -86,7 +86,7 @@ async function getRequests(type, lim){
       let loadMore = "";
       const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
       for(const request of requests) {
-         let date = request.createdAt.split("-");
+         let date = request.lastUpdate.split("-");
          let button = "";
          if( request.status == 'active')
             button = `<a class="btn-job btn-primary-job-inv" href="/manage-request?rq=${ request._id }">Edit request</a>`;
