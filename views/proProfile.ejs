@@ -33,7 +33,7 @@
                     <b class="fa-star fa-sm rating-star-color fas ml-2" title="One of your favorite service providers."  ></b>
                   <% } %>
                 </h5> 
-                
+                <% if(usr) { %>
                 <div class="btn-group">
                   <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <b class="mdi mdi-dots-vertical"></b>
@@ -45,6 +45,7 @@
                     <% } %>
                   </div>
                 </div>
+              <% } %>
               </div>
               <p><%=pro.role %></p>
               <ul class="rating " data-mdb-toggle="rating" data-mdb-readonly="true" data-mdb-value="3"> 

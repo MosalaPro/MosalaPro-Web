@@ -794,7 +794,7 @@ app.get("/", async function(req, res){
             }catch(error){res.redirect("/");}
             
         }else
-        res.render("proProfile", {usr: null, notifications: null, pro: provider, cats: categories, link:req.link});
+        res.render("proProfile", {usr: null, notifications: null, pro: provider, cats: categories, isFavorite: null, link:req.link});
    });
 
    app.post("/addfavpro", async function(req, res) {
