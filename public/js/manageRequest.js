@@ -146,3 +146,28 @@ async function cancelRequest(requestId){
     });
 
 }
+
+async function cancelBooking(bookingId){
+  const message = document.getElementById("reqMessage");
+    requestData = {
+        bookingId: bookingId
+    }
+  
+    _postData('/cancel-booking', requestData )
+      .then(async json => {
+        if(json.status == 200){
+            message.classList.remove('error_message');
+            message.classList.add('success_message');
+            message.innerHTML = "This booking has been cancelled. The request is available to other providers.";
+            await new Promise(r => setTimeout(r, 1100));
+            window.location = "/mybookings";
+        }
+        else{
+            message.innerHTML = "Oops. An error occured: "+json.status;
+        }
+        
+      }).catch(err => {
+        console.log(err) // Handle errors
+        message.innerHTML = "Oops. An error occured. Please try again.";
+      });
+  }

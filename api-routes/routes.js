@@ -47,6 +47,9 @@ categories = [];
 const fs = require('fs');
 const JobApplicationModel = require("../models/jobApplication");
 const BookingService = require("../services/booking");
+const QuotationService = require("../services/quotation");
+const QuotationServiceObj = new QuotationService();
+const NotificationObj = new Notification();
 const UserModel = require("../models/user");
 
 fs.readFile('./public/data/categories.json', 'utf8', (err, data) => {
@@ -94,22 +97,21 @@ app.get("/", async function(req, res){
                 res.render("providerDashboard", {usr: req.user, notifications: notifs, cats: categories, ja:ja, countries: countries, postRequests: pRequests.reverse()});
             }
             else  {
-                const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
-                const bookedPros = await PostRequestService.getBookedPros(req, res);
-                requestProviders = await UserService.getProviders();
+                const pRequests = await UserService.getUserRequests(req, res);
                 const favPros = req.user.favoriteProviders;
-                let favProviders = []
-                if(favPros.length > 0)
+                const requestProviders = await UserService.getProviders();
+                let favProviders = [];
+                if(favPros.length > 0){
                     for(let i = 0; i < favPros.length; i++){
                         const pro = await UserModel.findById(favPros[i]).exec();
                         favProviders.push(pro);
                     }
-                
-                res.render("userDashboard", {usr: req.user, notifications: notifs, 
+                }
+                res.render("userDashboard", {usr: req.user, notifications: notifs.reverse(), 
                      favProviders: favProviders,
-                     bookedPros: bookedPros, 
+                     providers: requestProviders,
                      link: null, postRequests: pRequests.reverse(), 
-                     providers: requestProviders, cats: categories, 
+                     cats: categories, 
                     countries: countries});
             }
         }
@@ -119,7 +121,8 @@ app.get("/", async function(req, res){
 
     app.get("/payment", async function(req, res) {
         res.render("payment");
-    })
+    });
+    
 
     app.get("/charge", async function(req, res) {
         res.send("charge");
@@ -178,7 +181,7 @@ app.get("/", async function(req, res){
                 res.render("notifications", {
                 usr: req.user,
                 cats: categories,
-                notifications: notifs,
+                notifications: notifs.reverse(),
                 countries: countries,
                 loadNotifs: loadNotifs_.reverse(),
                 link: null
@@ -201,7 +204,7 @@ app.get("/", async function(req, res){
                     ages_.push(Math.floor(Math.abs( new Date() - not.createdAt ) / (1000*3600*24)));
                 });
                 console.log("Notifications loaded: "+notifs.length);
-                res.status(200).send({message:"Ok", status:200, notifications:notifs, loadNotifs: loadNotifs_, ages: ages_});
+                res.status(200).send({message:"Ok", status:200, notifications:notifs.reverse(), loadNotifs: loadNotifs_, ages: ages_});
                 return;
             }catch(error){
                 console.log("Error occured while loading notifications: "+error);
@@ -226,7 +229,7 @@ app.get("/", async function(req, res){
                     res.render("notificationDetails", {pro: provider, notifi: notifi, 
                         postRequestsCompleted: postReqCompleted.length,
                         job: job_, 
-                        usr: req.user, notifications: notifs, 
+                        usr: req.user, notifications: notifs.reverse(), 
                         link: null, cats: categories, 
                         checkBooking: checkBooking_, 
                         countries: countries} );
@@ -271,7 +274,7 @@ app.get("/", async function(req, res){
                 const checkBooking_ = await BookingModel.findOne({jobId: req.query?.j}).exec();
                 res.render("applicantProfile", {pro: provider, 
                     job: job_, 
-                    usr: req.user, notifications: notifs,
+                    usr: req.user, notifications: notifs.reverse(),
                     postRequestsCompleted: postReqCompleted.length,
                     checkBooking: checkBooking_,
                     link: null, cats: categories, 
@@ -295,7 +298,7 @@ app.get("/", async function(req, res){
                     ja.push(app);
                 });
                 
-                res.render("manageJobApplications", {usr: req.user, notifications: notifs, allApp: allApplications, ja: ja, link: null,  cats: categories});
+                res.render("manageJobApplications", {usr: req.user, notifications: notifs.reverse(), allApp: allApplications, ja: ja, link: null,  cats: categories});
                 }catch(error){
                     console.log("Error occured: "+error);
                     res.redirect("/");
@@ -327,6 +330,17 @@ app.get("/", async function(req, res){
         }else
             res.redirect("/");
 
+    });
+
+    app.post("/quotation", async function(req, res) {
+        if(req.isAuthenticated()){
+            try{
+                await QuotationServiceObj.send(req, res);
+            }
+            catch(err){
+                console.log("Error occured: "+err);
+            }
+        }
     });
 
     app.post("/delete-notif", async function(req, res){
@@ -370,7 +384,7 @@ app.get("/", async function(req, res){
             res.render("user", {
               usr: req.user,
               cats: categories,
-              notifications: notifs,
+              notifications: notifs.reverse(),
               countries: countries,
               link: null
             });
@@ -386,7 +400,7 @@ app.get("/", async function(req, res){
               usr: req.user,
               cats: categories,
               countries: countries,
-              notifications: notifs,
+              notifications: notifs.reverse(),
               link:null
             });
           } else {
@@ -402,7 +416,7 @@ app.get("/", async function(req, res){
           if (UserService.update({ _id: req.user._id, ...req.body })) {
             res.redirect("/user");
           } else {
-            res.redirect("/user-edit", { notifications: notifs, link: null, cats: categories });
+            res.redirect("/user-edit", { notifications: notifs.reverse(), link: null, cats: categories });
           }
         } else {
           res.redirect("/");
@@ -431,7 +445,7 @@ app.get("/", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             const jobRequests = await PostRequestService.getActiveRequests(req, res);
-            res.render("jobRequests", {notifications: notifs, usr: req.user, jobs: jobRequests, link:null, cats: categories});
+            res.render("jobRequests", {notifications: notifs.reverse(), usr: req.user, jobs: jobRequests, link:null, cats: categories});
         }
         else{
             res.redirect("/");
@@ -445,7 +459,7 @@ app.get("/", async function(req, res){
     app.get("/professionals", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            res.render("forProfessionals", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
+            res.render("forProfessionals", {usr: req.user, notifications: notifs.reverse(), link: req.link, cats: categories, countries: countries});
         }
         else
             res.render("forProfessionals", {usr: null, link:null, cats: categories, countries: countries });
@@ -457,7 +471,7 @@ app.get("/", async function(req, res){
         console.log("result length: "+result.length+" Pages: "+pages);  
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            res.render("findprofessionals", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries, professionals: result, 
+            res.render("findprofessionals", {usr: req.user, notifications: notifs.reverse(), link: req.link, cats: categories, countries: countries, professionals: result, 
                 pages:pages, total: result.length});
         }
         else
@@ -468,7 +482,7 @@ app.get("/", async function(req, res){
     app.get("/term-of-use", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            res.render("termsAndConditions", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
+            res.render("termsAndConditions", {usr: req.user, notifications: notifs.reverse(), link: req.link, cats: categories, countries: countries});
         }
         else
             res.render("termsAndConditions", {usr: null, notifications: null, link:null, cats: categories, countries: countries });
@@ -477,7 +491,7 @@ app.get("/", async function(req, res){
     app.get("/do-not-sell", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            res.render("doNotSell", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
+            res.render("doNotSell", {usr: req.user, notifications: notifs.reverse(), link: req.link, cats: categories, countries: countries});
         }
         else
             res.render("doNotSell", {usr: null, notifications: null, link:null, cats: categories, countries: countries });
@@ -486,7 +500,7 @@ app.get("/", async function(req, res){
     app.get("/privacy-policy", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            res.render("privacyPolicy", {usr: req.user, notifications: notifs, link: req.link, cats: categories, countries: countries});
+            res.render("privacyPolicy", {usr: req.user, notifications: notifs.reverse(), link: req.link, cats: categories, countries: countries});
         }
         else
             res.render("privacyPolicy", {usr: null, notifications: null, link:null, cats: categories, countries: countries });
@@ -495,7 +509,7 @@ app.get("/", async function(req, res){
     app.get("/about-us", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            res.render("about_us", {usr: req.user, notifications: notifs, link:null, cats: categories});
+            res.render("about_us", {usr: req.user, notifications: notifs.reverse(), link:null, cats: categories});
         }
         else
             res.render("about_us", {usr: null, notifications: null, link: null, cats: categories });
@@ -504,7 +518,7 @@ app.get("/", async function(req, res){
     app.get("/contact-us", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            res.render("contact", {usr: req.user, notifications: notifs, link: null, cats: categories});
+            res.render("contact", {usr: req.user, notifications: notifs.reverse(), link: null, cats: categories});
         }
         else
             res.render("contact", {usr: null,  notifications:null, link: null,  cats: categories });
@@ -521,7 +535,7 @@ app.get("/", async function(req, res){
             }else{
                 console.log("No requests found with username: "+req.user.username);
             }
-            res.render("manageUserRequests", {usr: req.user, notifications: notifs, postRequests: pRequests, allRequests: allRequests, link: null,  cats: categories});
+            res.render("manageUserRequests", {usr: req.user, notifications: notifs.reverse(), postRequests: pRequests, allRequests: allRequests, link: null,  cats: categories});
         }catch(error) {res.redirect("/")};
     }
     else
@@ -651,9 +665,15 @@ app.get("/", async function(req, res){
             res.redirect("/");
     });
     
-    app.post("/authenticate", function(req, res){
-        console.log("User Id: "+req.body.iddl);
-        res.render("emailVerification", {usr: null, notifications: null, cats: categories, userId: req.body.iddl, link: null});
+    app.post("/authenticate", async function(req, res){
+        const unverifiedUser = await UserModel.findById(req.body.iddl).exec();
+        let email = unverifiedUser.email.charAt(0);
+        const atIndex = unverifiedUser.email.indexOf('@');
+        for(let i = 0; i < atIndex; i++){
+            email = email + "*";
+        }
+        email = email + unverifiedUser.email.substr(atIndex, unverifiedUser.email.length-1);
+        res.render("emailVerification", {usr: null, email: email, notifications: null, cats: categories, userId: req.body.iddl, link: null});
     });
     app.get("/userdash", async function(req, res){
         
@@ -756,7 +776,10 @@ app.get("/", async function(req, res){
     app.post("/cancel-booking", async function(req, res){
         if(req.isAuthenticated() && req.user.accountType == "provider"){
             try{
-                BookingService.cancelBooking(req, res);
+                if(req.user.accountType == "provider")
+                    BookingService.cancelBookingByPro(req, res);
+                else
+                    BookingService.cancelBookingByUser(req, res);
             }catch(error){
                 console.log("An error occured: "+error);
             }

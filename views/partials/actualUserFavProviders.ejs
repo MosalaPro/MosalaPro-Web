@@ -1,13 +1,14 @@
 <section class="bg-light">
     <div class="container px-4">
-        <h5 class="ml-4 mb-3">Favorite service providers</h5>
+        <h5 class="ml-4 mb-3">Your favorite service providers</h5>
         <div class="row p-3">
             <%
                 let limit_ = 8;
                 if(favProviders.length <= 8) 
                     limit_ = favProviders.length;
                 
-                for(let j = 0; j < limit_; j++){ %>
+                for(let j = 0; j < limit_; j++){ 
+                    if(favProviders[j]) { %>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-12 custom-px">
                     <div class="text-center card-box-pro">
                         <div class="member-card pt-2 pb-2">
@@ -32,7 +33,7 @@
                         </div>
                     </div>
                 </div>
-            <% } %>
+            <% } } %>
             </div>
 
         </div>

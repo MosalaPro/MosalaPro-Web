@@ -109,7 +109,7 @@ const BookingService =  {
                   causedByItem: newRequest._id,
                   receiverId: req.body.providerId,
                   title: "Your have been booked for a service.",
-                  content: req.user.firstName+" "+req.user.lastName+" has has booked you for the following service: <a href='/booking?b="+newBooking._id+"'>"+req.body.bookingTitle+"</a>",
+                  content: req.user.firstName+" "+req.user.lastName+" has booked you for the following service: "+req.body.bookingTitle+". Confirm the booking to start working on it.",
                   createdAt: new Date(),
                   lastUpdate: new Date()
                     }).save().then(success=>{
@@ -163,7 +163,7 @@ const BookingService =  {
         return;
       },
 
-      cancelBooking: async (req, res)=>{
+      cancelBookingByPro: async (req, res)=>{
         const booking = await BookingModel.findByIdAndUpdate(req.body.bookingId, {status:"cancelled", lastUpdate: new Date()}).exec();
         if(booking){
           const job = await PostRequestModel.findByIdAndUpdate(booking.jobId, {status: "active", lastUpdate: new Date()}).exec();
@@ -175,6 +175,36 @@ const BookingService =  {
               receiverId: customer._id,
               title: "Your booking has been cancelled.",
               content: "Servive provider "+req.user.firstName+" "+req.user.lastName+" has cancelled your service booking. Your request has been listed for other providers to apply.",
+              createdAt: new Date(),
+              lastUpdate: new Date()
+                }).save().then(success=>{
+                  console.log("BOOKING:: cancel booking notification- Notification sent to user.");
+              }).catch(err=>{
+                console.log("BOOKING:: cancel booking notification - Error occured: "+err);
+              });
+
+          res.status(200).send({status: 200, message: "Ok"});
+          return;
+        }else {
+          console.log("BOOKING:: Error occured. Could not find booking.");
+          res.status(401).send({status: 401, message: "Error"});
+          return;
+        };
+
+        return;
+      },
+
+      cancelBookingByUser: async (req, res)=>{
+        const booking = await BookingModel.findByIdAndUpdate(req.body.bookingId, {status:"cancelled", lastUpdate: new Date()}).exec();
+        if(booking){
+          const job = await PostRequestModel.findByIdAndUpdate(booking.jobId, {status: "active", lastUpdate: new Date()}).exec();
+          console.log("BOOKING:: booking has been successfully cancelled");
+          const notification = await new NotificationModel({
+              causedByUserId: req.user._id,
+              causedByItem: job._id,
+              receiverId: booking.providerId,
+              title: "Your booking has been cancelled.",
+              content: req.user.firstName+" "+req.user.lastName+" has cancelled your service booking. The service has been removed from your tasks list.",
               createdAt: new Date(),
               lastUpdate: new Date()
                 }).save().then(success=>{

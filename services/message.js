@@ -33,8 +33,8 @@ class Message {
                     receiverId: req.body.proId,
                     icon: "fa-envelope",
                     title: "You have a new message.",
-                    content: "Message from "+req.user.firstName+ " "+req.user.lastName+": <br>"+
-                                            req.body.messageTitle+ " <br>"+  req.body.content,
+                    content: "A message from "+req.user.firstName+ " "+req.user.lastName+": "+
+                                            req.body.messageTitle+ " "+  req.body.content,
                     createdAt: new Date(),
                     lastUpdate: new Date()
                 }).save(async function (err) {

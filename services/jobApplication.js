@@ -50,6 +50,47 @@ class JobApplication {
         return;
     }
 
+    async applyWithQuotation(req, res){
+        console.log("Req info:  "+req.body.jobId);
+        const job = await PostRequestModel.findById(req.body.jobId).exec();
+        const endUser = await UserModel.findOne({username:job.username}).exec();
+        if(user && job){
+            const newJobApplication = await new JobApplicationModel({
+                userId: endUser._id,
+                providerId:  req.user._id,
+                jobId: req.body.jobId,
+                status: "applied",
+                createdAt: new Date(),
+                lastUpdate: new Date()
+            }).save( async function (err) {
+                if (err) {
+                    console.log("JOBAPPLICATION:: Error occured while saving application: "+err);
+                    return;
+                }else{
+                    console.log("JOBAPPLICATION:: Application with quotation has been sent successfully.");
+                    PostRequestModel.updateOne({_id: req.body.jobId}, {$set: {providerId: req.user._id}} ).exec();
+                    const notification = new NotificationModel({
+                        causedByUserId: req.user._id,
+                        causedByItem: req.body.jobId,
+                        receiverId: endUser._id,
+                        title: "A service provider submitted a quotation for your service request.",
+                        content: "Servive provider "+req.user.firstName+" "+req.user.lastName+" has applied for your service request with a quotation. Check service provider's profile and hire.",
+                        createdAt: new Date(),
+                        lastUpdate: new Date()
+                    }).save(async function (err) {
+                        if (err) {console.log("JOBAPPLICATION:: Error occured while creating notification.");}
+                        else console.log("JOBAPPLICATION:: Notification has been successfuly saved"); });
+                    return;
+                }
+            });
+        }else{
+            console.log("JOBAPPLICATION:: User and job not found.");
+            return;
+        }
+        
+        return;
+    }
+
     async cancelApplication(req, res){
         const jobApplication = await JobApplicationModel.findOneAndUpdate({jobId: req.body.jobId}, {status: "cancelled"}).then(success=>{
             res.status(200).send({status: 200, message: "Application cancelled successfully."});

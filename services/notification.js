@@ -6,13 +6,35 @@
 *
 **********************************************************************************************************/
 
+const BookingModel = require("../models/booking");
 const NotificationModel = require("../models/notification");
+const PostRequestModel = require("../models/postRequest");
+const UserModel = require("../models/user");
 
 
 class Notification {
 
-    async notify(req, res){
+    async notifyBookingQuotation(req, res){
 
+        const job = await BookingModel.findById(req.body.jobId).exec();
+        
+        if(job){
+            const endUser = await UserModel.findOne({username: job.username}).exec();
+            const notification = await new NotificationModel({
+                causedByUserId: req.user._id,
+                causedByItem: job.jobId,
+                receiverId: endUser._id,
+                title: "Service Provider has provided a quotation for your booking.",
+                content: "Servive provider "+req.user.firstName+" "+req.user.lastName+" has sent you a  quotation for your booking. Check service provider's required budget.",
+                createdAt: new Date(),
+                lastUpdate: new Date()
+            }).save().then(success=> {
+                    console.log("NOTIFICATION:: Notification has been successfuly saved"); 
+                
+                }).catch(err=> {console.log("NOTIFICATION:: Error occured while creating notification.")});
+            return;
+        }
+        
     }
     async readNotification(req, res){
 

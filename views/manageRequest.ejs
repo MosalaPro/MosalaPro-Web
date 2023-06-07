@@ -6,8 +6,8 @@
             <nav aria-label="breadcrumb" class="main-breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item"><a href="/myrequests">My Requests</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Edit Request</li>
+                    <li class="breadcrumb-item"><a href="/myrequests">My service requests</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><%=request.requestTitle %></li>
                 </ol>
             </nav>
             <div class="row mt-1">
@@ -72,7 +72,7 @@
                                     </label>
                                     <input id="file-input" name="file" type="file" style="display: none;" >        
                                 </div>
-                                <% if(request.status != "in-progress" && request.status != "cancelled") {%>
+                                <% if(request.status == "active") {%>
                                     <div class="d-flex justify-content-center mt-2">
                                         <button type="submit" class="btn-job btn-primary-job-inv-dgr mr-3" href="#cancelRequestConfModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Cancel request</button>
                                         <button onClick ="onRequestSubmit('<%=request._id%>')" class="btn-job btn-primary-job-inv">Save changes</button>
@@ -82,6 +82,13 @@
                                 <% } else if(request.status == "cancelled") { %>
                                     <div class="d-flex justify-content-center mt-2">
                                         <button onClick="resubmit('<%=request._id%>')" type="submit" class="btn-job btn-primary-job-inv-dgr mr-3">Resubmit</button>
+                                    </div>
+                                <% } else if(request.status == "booked") { %>
+                                    <div class="d-flex justify-content-center mt-2">
+                                        <button type="submit" class="btn-job btn-primary-job-inv-dgr mr-3" href="#cancelUserBookingConfModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Cancel booking</button>
+                                        <button onClick ="onRequestSubmit('<%=request._id%>')" class="btn-job btn-primary-job-inv">Save changes</button>
+                                        <button onClick="reset('<%=request._id%>')" type="reset" class="btn-job btn-primary-job-inv-blue ml-3">Reset Changes</button>
+                                        
                                     </div>
                                 <% } %>
                             </div>
@@ -125,7 +132,7 @@
         </div>
 </div>
 </section>
-
+<%- include('partials/cancelUserBookingConfModal') %>
 <%- include('partials/cancelRequestConfModal') %>
 <script src="js/manageRequest.js"></script>
 <%- include('partials/footer') %>

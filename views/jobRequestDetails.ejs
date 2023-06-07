@@ -84,9 +84,9 @@
                       </div>
                         <div class="d-flex justify-content-center mt-3">
                             <button class="btn-job btn-primary-job" onClick="applyForJob()">Apply for service request</button>
-                            <button class="btn-job btn-primary-job-inv-blue tooltips ml-3" title="If you are not satisfied with the budget, you can provide your quote for this request." 
+                            <a href="#quotationModalCta" data-toggle="modal" data-caption-animate="fadeInUp"><button class="btn-job btn-primary-job-inv-blue tooltips ml-3" title="If you are not satisfied with the budget, you can provide your quote for this request." 
                             data-toggle="tooltip" data-placement="top" 
-                             >Provide a quote</button>
+                             >Provide a quote</button></a>
                              <a href="/service-requests"><button class="btn-job btn-primary-job-inv ml-3" >Back</button></a>
                         </div>
                     </div>
@@ -112,6 +112,8 @@
     </div>
     </div>
 </section>
+
+<%- include('partials/quotationModalCta') %>
 
 <script src="js/jobApplication.js"></script>
 

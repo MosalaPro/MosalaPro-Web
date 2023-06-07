@@ -441,6 +441,25 @@ const UserService = {
 
     return;
   },
+  getUserRequests: async(req, res)=>{
+    const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
+    let requests = [];
+    if(pRequests){
+      for(let i = 0; i < pRequests.length; i++){
+        const booking = await BookingModel.findOne({jobId: pRequests[i]._id}).exec();
+        if(booking){
+          const prov = await UserModel.findById(booking.providerId);
+          pRequests[i].pro = prov.firstName+" "+prov.lastName;
+        }
+        else
+          pRequests[i].pro = " ";
+
+        requests.push(pRequests[i]);
+      }
+
+    }
+    return requests;
+  },
 
   addFavPro: async(req, res)=>{
     const currentFavPros = await req.user.favoriteProviders;
