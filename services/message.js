@@ -10,6 +10,7 @@ const MessageModel = require("../models/message");
 const NotificationModel = require("../models/notification");
 const _ = require("lodash");
 const mongoose = require("mongoose");
+const UserModel = require("../models/user");
 mongoose.set('strictQuery', false);
 
 
@@ -47,6 +48,87 @@ class Message {
             }
         });
         return;
+    }
+
+    async getMessages(req, res){
+
+        const messages = await MessageModel.find().or([{senderId: req.user._id}, { recipientId: req.user._id }])
+                    .sort({ createdAt: 'desc'})
+                    .then(success => {
+                        console.log("MESSAGE:: Message successfully retrieved!");
+                    }).catch(err=>{
+                        console.log("MESSAGE:: Error occured while retrieving messages: "+err);
+                    });
+        let firstCorrespondantId = ""; 
+        let firstConvo = [];
+        if(messages){
+            firstCorrespondantId = messages[0].senderId == req.user._id ? messages[0].recipientId : messages[0].senderId;
+
+            firstConvo = MessageModel.find().and({ $or: [{senderId: req.user._id}, { recipientId: req.user._id }] } ,
+                    {$or: [{senderId: firstCorrespondantId}, { recipientId: firstCorrespondantId }] })
+                    .sort({ createdAt: 'desc'})
+                    .then(success => {
+                        console.log("MESSAGE:: First convo successfully retrieved!");
+                    }).catch(err=>{
+                        console.log("MESSAGE:: Error occured while retrieving first convo: "+err);
+                    });
+        }
+        return firstConvo;
+
+    }
+
+    async getMessageWithUser(req, userId){
+
+        const otherUser = await UserModel.findById(userId).exec();
+        if(otherUser){
+            console.log("Getting messages with user: "+otherUser.username);
+            otherUser.username = " ";
+            otherUser.address = " ";
+            otherUser.role = " ";
+            otherUser.email = " ";
+            otherUser.phone = " ";
+        
+            const messages_ = await MessageModel.find().and({ $or: [{senderId: req.user._id}, { recipientId: req.user._id }] } ,
+                        {$or: [{senderId: userId}, { recipientId: userId }] }).exec();
+                        // .then(success => {
+                        //     console.log("MESSAGE:: Convo successfully retrieved!");
+                        // }).catch(err=>{
+                        //     console.log("MESSAGE:: Error occured while retrieving convo: "+err);
+                        // });
+            return messages_;
+        }else
+            return [];
+
+    }
+
+    async getCorrespondants(req, res){
+
+        let correspondants = [];
+        let unikIds = [];
+
+        const messages = await MessageModel.find().or([{senderId: req.user._id}, { recipientId: req.user._id }]);
+
+        if(messages){
+            //console.log("MESSAGE:: retrieving correspondants for messages: "+messages);
+            for(let i = 0; i < messages.length; i++){
+                const correspondantId = messages[i].senderId == req.user._id ? messages[i].recipientId : messages[i].senderId;
+                const correspondant = await UserModel.findById(correspondantId).exec();
+                if(correspondant){
+                    correspondant.accountType = " ";
+                    correspondant.address = " ";
+                    correspondant.role = " ";
+                    correspondant.email = " ";
+                    correspondant.phone = " ";
+                    if(!unikIds.includes(correspondantId)){
+                        correspondants.push(correspondant);
+                        unikIds.push(correspondantId);
+                    }
+                }
+            }
+        }
+
+        return correspondants;
+
     }
 
 }

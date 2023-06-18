@@ -47,7 +47,8 @@
                 <div class="mt-3 border-bottom pb-4 d-flex ">
                   <% if(booking.status == "active") { %>
                     <a class="btn-job btn-primary-job-inv" href="/booking?b=<%=booking._id%>">Manage booking</a>
-                  <% } else { %>
+                  <% } 
+                  else { %>
                     <a class="btn-job btn-primary-job-inv" href="/booking?b=<%=booking._id%>">View details</a>
                   <% } %>
                 </div>

@@ -9,6 +9,7 @@
 const BookingModel = require("../models/booking");
 const NotificationModel = require("../models/notification");
 const PostRequestModel = require("../models/postRequest");
+const PostRequestService = require("../services/postrequest");
 const UserModel = require("../models/user");
 
 
@@ -61,6 +62,43 @@ class Notification {
     }
     async getNotificationList(){
 
+    }
+
+    async sendBookingsDeadlineReminders(){
+        const bookingsWithCloseDeadlines = await  PostRequestService.checkBookingsDeadline();
+        
+        if(bookingsWithCloseDeadlines){
+            for(let i = 0; i < bookingsWithCloseDeadlines.length; i++){
+                const endUser = await UserModel.findOne({username: bookingsWithCloseDeadlines[i].username}).exec();
+                const pro = await UserModel.findById(bookingsWithCloseDeadlines[i].providerId).exec();
+                let notifContent = "";
+                if(bookingsWithCloseDeadlines[i].status == "active"){
+                    notifContent= "The deadline for booking request \'"+bookingsWithCloseDeadlines[i].bookingTitle+"\' is on "+
+                                    bookingsWithCloseDeadlines[i].deadline+". Please confirm "+endUser.firstName+
+                                    "\'s booking to complete it on time.";
+                }else{
+
+                    notifContent= "The deadline for booking request \'"+bookingsWithCloseDeadlines[i].bookingTitle+"\' is on "+
+                                bookingsWithCloseDeadlines[i].deadline+". Please complete the job and submit it on time.";
+                }
+                const notification = await new NotificationModel({
+                    causedByUserId: endUser._id,
+                    causedByItem: bookingsWithCloseDeadlines[i].jobId,
+                    receiverId: pro._id,
+                    title: "The deadline for your booking is coming up.",
+                    content: notifContent,
+                    icon: "fa-clock-o",
+                    createdAt: new Date(),
+                    lastUpdate: new Date()
+                }).save().then(success=> {
+                        console.log("NOTIFICATION:: Notification has been successfuly saved"); 
+                    
+                    }).catch(err=> {console.log("NOTIFICATION:: Error occured while creating notification.")});
+            }
+        }
+        else{
+            console.log("NOTIFICATION:: No booking with close deadlines were returned.")
+        }
     }
 
     

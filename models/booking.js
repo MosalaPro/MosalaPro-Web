@@ -31,6 +31,10 @@ const bookingSchema = new mongoose.Schema({
 
     files: [{
         type: String
+    }],
+    providerComments: String,
+    providerFiles:[{
+        type: String
     }]
 });
 bookingSchema.plugin(require("mongoose-findorcreate"));

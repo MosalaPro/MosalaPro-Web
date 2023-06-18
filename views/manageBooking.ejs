@@ -67,6 +67,15 @@
                              >Provide a quote</button></a>
                              
                         </div>
+                        <% } else if (booking.status == "in-progress") { %>
+                          <div class="d-flex justify-content-center mt-3 mb-4">
+                            <a href="#confBookingCompleteModalCta" data-toggle="modal" data-caption-animate="fadeInUp" ><button class="btn-job btn-primary-job" >Complete Job and Submit</button></a>
+                            <a href="#requestExtensionModalCta" data-toggle="modal" data-caption-animate="fadeInUp"> <button class="btn-job btn-primary-job-inv-blue tooltips ml-3" title="If you can't meet the deadline, you can request an extension." 
+                              data-toggle="tooltip" data-placement="top" 
+                               >Request deadline extension</button></a>
+                               
+                          </div>
+
                         <% } %>
                       </div>
                 </div>
@@ -95,6 +104,7 @@
   <%- include('partials/cancelBookingConfModal') %>
   <%- include('partials/confirmBookingModal') %>
   <%- include('partials/bookingQuotationModal') %>
+  <%- include('partials/confBookingCompleteModal') %>
   <script src="js/manageBookingHandler.js"></script>
 
   <%- include('partials/footer') %>

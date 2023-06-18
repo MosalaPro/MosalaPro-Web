@@ -1,0 +1,113 @@
+<%- include('partials/header') %>
+<section class="bg-light h-100 p-4 ">
+    <div class="container pt-4">
+        <div class="row">
+          <div class="col pt-4">
+            <nav aria-label="breadcrumb" class="main-breadcrumb">
+              <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="/">Home</a></li>
+                  <li class="breadcrumb-item"><a href="/notifications">Notifications</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Messages</li>
+              </ol>
+          </nav>
+    <div class="card-chat mt-4">
+        <div class="row g-0">
+            <div class="col-12 col-lg-5 col-xl-3 border-right">
+                <div class="px-4 d-none d-md-block">
+                    <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                    <input type="text" class="form-control my-3" placeholder="Search...">
+                    </div>
+                    </div>
+                </div>
+
+                <% let start = true; if(correspondants.length > 0 ) { correspondants.forEach( c =>{  
+                    if(start){ %>
+                    <div class="list-group-item list-group-item-action ml-2  border-0 active-chat" oncClick="getMessages('<%=c._id%>')">
+                    <% start = false;} else { %>
+                    <div class="list-group-item list-group-item-action ml-2 border-0" oncClick="getMessages('<%=c._id%>')">
+                    <% } %>
+                        <div class="d-flex align-items-center">
+                            <img src="/photo/<%=c.photo%>" class="rounded-circle mr-1" alt="<%= c.firstName %>  <%= c.lastName %>" width="40" height="40">
+                            <div class="flex-grow-1 ml-3 my-auto">
+                                <%= c.firstName %>  <%= c.lastName %>
+                            </div>
+                        </div>
+                       
+                    </div><hr>
+                <% } ); } %>
+           
+
+
+
+        <hr class="d-block d-lg-none mt-1 mb-0">
+    </div>
+    <div class="col-12 col-lg-7 col-xl-9" id="message-block">
+    <div class="py-2 px-4 border-bottom d-none d-lg-block">
+    <div class="d-flex align-items-center py-1">
+    <% if(data.length > 0 ) { %>
+        <div id="chat-box-top">
+            <div class="position-relative">
+                <img src="/photo/<%=firstCor.photo%>" class="rounded-circle mr-1" alt="<%= firstCor.firstName%> <%=firstCor.lastName%>" width="40" height="40">
+            </div>
+            <div class="flex-grow-1 pl-3">
+                <strong><%= firstCor.firstName%> <%=firstCor.lastName%></strong>
+                <div class="text-muted small"><em><%=firstCor.accountType%></em></div>
+            </div>
+        </div>
+    <% } else { %>
+        <strong>No Messages</strong>
+    <% } %>
+    <div>
+    <button class="btn btn-light border btn-lg px-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+    </div>
+    </div>
+    </div>
+    
+    <div class="position-relative">
+    <div class="chat-messages p-4" id="chat-content">
+    <% if(data ) { for(let i = 0; i < data.length; i++) { %>
+        <% if(usr._id == data[i].senderId) { %> 
+            <div class="chat-message-right pb-4">
+                <div>
+                    <img src="/photo/<%= usr.photo%>" class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
+                    
+                </div>
+                <div class="flex-shrink-1 bg-light text-primary rounded py-2 sender-chat px-3 mr-3">
+                    
+                    <div class="font-weight-bold mb-1">You</div>
+                    <%= data[i].content %>
+                    <div class="text-muted small text-nowrap mt-2"><%=data[i].createdAt%></div>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="chat-message-left pb-4">
+                <div>
+                    <img src="/photo/<%= firstCor.photo%>" class="rounded-circle mr-1" alt="<%= firstCor.firstName%> <%=firstCor.lastName%>" width="40" height="40">
+                    <div class="text-muted small text-nowrap mt-2"><%=data[i].createdAt%></div>
+                </div>
+                <div class="flex-shrink-1 bg-light text-primary rounded py-2 px-3 ml-3">
+                    <div class="font-weight-bold mb-1"><%= firstCor.firstName%> <%=firstCor.lastName%></div>
+                    <%= data[i].content%>
+                </div>
+            </div>
+    <% } } } %>
+   
+
+
+    </div>
+    </div>
+    <div class="flex-grow-0 py-3 px-4 border-top">
+    <div class="input-group">
+    <input type="text" class="form-control" placeholder="Type your message">
+    <button class="btn-job btn-primary-job ">Send</button>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+</section>
+<script src="js/handleMessages.js"></script>
+<%- include('partials/footer') %>

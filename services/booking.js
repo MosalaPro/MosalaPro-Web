@@ -70,9 +70,7 @@ const BookingService =  {
               const pro = await UserModel.findOne({_id:req.body.providerId}).exec();
               if(pro){
                 console.log("BOOKING:: Provider found.");
-              }else{console.log("BOOKING:: Error occured while retrieving provider. "); return;};
-
-              console.log(pro); 
+              }else{console.log("BOOKING:: Error occured while retrieving provider. "); return;}
               const newRequest = await new PostRequestModel({
                 username: req.body.username,
                 requestTitle:  req.body.bookingTitle,
@@ -204,7 +202,7 @@ const BookingService =  {
               causedByItem: job._id,
               receiverId: booking.providerId,
               title: "Your booking has been cancelled.",
-              content: req.user.firstName+" "+req.user.lastName+" has cancelled your service booking. The service has been removed from your tasks list.",
+              content: req.user.firstName+" "+req.user.lastName+" has cancelled your service booking. The service request has been made available for other providers to apply.",
               createdAt: new Date(),
               lastUpdate: new Date()
                 }).save().then(success=>{
@@ -222,6 +220,98 @@ const BookingService =  {
         };
 
         return;
+      },
+
+      completeBooking: async (req, res)=>{
+        console.log("BOOKING:: Booking mf ID: "+req.body.bookingId);
+        const booking = await BookingModel.findById(req.body.bookingId).exec();
+        if(booking){
+            const job = await PostRequestModel.findById(booking.jobId).exec();
+            // If provider submitted completion files to customer
+            try{
+              const multer = require("multer");
+              const fs = require("fs");
+              let file_ = "";
+              if(req.body.file || req.file){
+                  const storage = multer.diskStorage({
+                    destination: function (req, file, cb) {
+                      const dir = "./postAttachments";
+                      if (!fs.existsSync(dir)) {
+                        fs.mkdirSync(dir);
+                      }
+                      cb(null, dir); 
+                    },
+                    filename: function (req, file, cb) {
+                      const uniquePrefix =
+                        Date.now() + "-" + Math.round(Math.random() * 1e9);
+                      cb(null, uniquePrefix + "-" + file.originalname); // Set a unique filename for the uploaded file
+                    },
+                  });
+            
+                  const upload = multer({
+                    storage: storage,
+                    limits: {
+                      fileSize: 1024 * 1024 * 500, // Limit the file size to 500MB
+                    },
+                    fileFilter: function (req, file, cb) {
+                      cb(null, true); // Allow any type of file
+                    },
+                  }).array("files", 10); 
+                  upload(req, res, async function (err) {
+                    if (err instanceof multer.MulterError) {
+                      console.log(err);
+                      res.status(400).send({ responseCode: 400, responseMessage: "Error uploading files",
+                      });
+                    } else if (err) {
+                      console.log(err);
+                      res.status(400).send({  responseCode: 400, responseMessage: "Error uploading files",
+                      });
+                    }
+                  });
+                  console.log("MF Files: "+req.body.file.name); // Contains information about the uploaded files
+                  file_ = req.body.file.name;
+                }
+
+                job.status = "completed";
+                job.lastUpdate = new Date();
+                await job.save();
+
+                booking.status = "completed";
+                booking.lastUpdate = new Date();
+                booking.providerFiles = file_;
+                await booking.save();
+
+                const user = await UserModel.findOne({username: booking.username}).exec();
+                const notification = await new NotificationModel({
+                  causedByUserId: req.user._id,
+                  causedByItem: job._id,
+                  receiverId: user._id,
+                  title: "Your booking has been completed.",
+                  content: req.user.firstName+" "+req.user.lastName+" has completed your service booking \'"+booking.bookingTitle
+                          +"\'. Review the submission and evaluate the service provider accordingly.",
+                  createdAt: new Date(),
+                  providerComments: req.body.providerComments,
+                  lastUpdate: new Date()
+                    }).save().then(success=>{
+                      console.log("BOOKING:: booking completeion notification- Notification sent to user.");
+                  }).catch(err=>{
+                    console.log("BOOKING:: booking completion notification - Error occured: "+err);
+                  });
+                  console.log("BOOKING:: booking has been successfully completed");
+                  res.status(200).send({status: 200, message: "Ok"});
+                  return;
+              }catch(err){ 
+                console.log("BOOKING:: Error occured while uploading submitted file: "+err);
+                res.status(401).send({status: 401, message: "Error"});
+                return;
+          }
+        }else {
+          console.log("BOOKING:: Error occured. Could not find booking.");
+          res.status(401).send({status: 401, message: "Error"});
+          return;
+        };
+        return;
+
       }
 
 }

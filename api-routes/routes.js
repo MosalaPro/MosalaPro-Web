@@ -786,6 +786,16 @@ app.get("/", async function(req, res){
         }else res.redirec("/");
     });
 
+    app.post("/complete-booking", async function(req, res){
+        if(req.isAuthenticated() && req.user.accountType == "provider"){
+            try{
+                BookingService.completeBooking(req, res);
+            }catch(error){
+                console.log("An error occured: "+error);
+            }
+        }else res.redirec("/");
+    });
+
     app.get("/p-profile", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
@@ -848,6 +858,46 @@ app.get("/", async function(req, res){
         UserService.verifyEmail(req, res);
     });
     
+    app.get("/messages", async function(req, res){
+        if( req.isAuthenticated()){
+            try{
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                const correspondants = await messageHander.getCorrespondants(req, res);
+                let messages = [];
+                let firstCorresp = null;
+                if(correspondants.length > 0){
+                    messages = await messageHander.getMessageWithUser(req, correspondants[0]._id);
+                    firstCorresp = await UserModel.findById(correspondants[0]._id).exec();
+                }
+                res.render("messages", {usr: req.user, data: messages, correspondants: correspondants,
+                    notifications: notifs.reverse(), firstCor: firstCorresp, cats: categories, link:null});
+            }
+            catch(err){
+                console.log("Error (routes): "+err);
+            }
+        }else
+            res.redirect("/");
+    });
+    app.post("/messages", async function(req, res){
+        if( req.isAuthenticated()){
+            try{
+                let messages = [];
+                let firstCorresp = null;
+                if(correspondants.length > 0){
+                    messages = await messageHander.getMessageWithUser(req, req.body.userId);
+                    firstCorresp = await UserModel.findById(req.body.userId).exec();
+                }
+                
+                res.status(200).send({usr: req.user, data: messages, chatUser: firstCorresp , status: 200});
+            }
+            catch(err){
+                res.status(401).send({status:401, message:"Error"});
+                console.log("Error (routes): "+err);
+            }
+        }else
+            res.redirect("/");
+    });
+
     app.post("/send-message", function(req, res){
         console.log("About to send message..");
         messageHander.sendMessage(req, res);

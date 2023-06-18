@@ -3,7 +3,10 @@
         <h4 class="ml-4 mb-3">Recent job applications</h4>
         <div class="row p-3">
             <% const classes = ["bg-soft-danger", "bg-soft-base", "bg-soft-warning", "bg-soft-success", "bg-soft-info"];
-                for(let i = ja.length-1; i > ja.length-6; i--){ %>
+                let limit = 6;
+                if(ja.length < 6)
+                    limit = ja.length;
+                for(let i = 0; i < limit; i++){ %>
                 
                 <div class="col-lg-4 col-md-6 col-12 mt-1 pt-2">
                     <div class="card border-0 bg-light-job rounded-job shadow-job">

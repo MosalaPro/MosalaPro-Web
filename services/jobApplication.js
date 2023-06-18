@@ -30,7 +30,7 @@ class JobApplication {
                 return;
             }else{
                 console.log("JOBAPPLICATION:: Application has been sent successfully.");
-                PostRequestModel.updateOne({_id: req.body.jobId}, {$set: {providerId: req.user._id}} ).exec();
+                //PostRequestModel.updateOne({_id: req.body.jobId}, {$set: {providerId: req.user._id}} ).exec();
                 const notification = new NotificationModel({
                     causedByUserId: req.user._id,
                     causedByItem: req.body.jobId,
@@ -113,7 +113,7 @@ class JobApplication {
                 appliedJobs.push(sr);
             }
         
-        return appliedJobs;
+        return appliedJobs.reverse();
     }
 
     async getApplicants(jobId_){
