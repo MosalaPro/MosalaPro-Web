@@ -1,4 +1,4 @@
-const verifyCode = async()=> {
+const verifyCode = async(redirect_link, user_id)=> {
     const first_ = document.getElementById("first");
     const second_ = document.getElementById("second");
     const third_ = document.getElementById("third");
@@ -6,7 +6,6 @@ const verifyCode = async()=> {
     const fifth_ = document.getElementById("fifth");
     const sixth_ = document.getElementById("sixth");
     const msg = document.getElementById("e_message");
-    const id_ = document.getElementById("uId");
 
     msg.innerHTML = "";
     
@@ -42,27 +41,34 @@ const verifyCode = async()=> {
         fourth: fourth_.value,
         fifth: fifth_.value,
         sixth: sixth_.value,
-        id: id_.value
+        id: user_id
     }
-
-    _postData('/verify-email', requestData )
+    post_link = "/verify-email";
+    
+    if(redirect_link == "/change-pass"){
+        post_link = "/verify-code";
+    }
+    _postData(post_link, requestData )
       .then(async json => {
         if(json.status == 200){
             msg.classList.remove('error_message');
             msg.classList.add('success_message');
             msg.innerHTML = "Email address successfully verified! Redirecting...";
             await new Promise(r => setTimeout(r, 500));
-            window.location = "/";
+            if(redirect_link == "/change-pass")
+              window.location = "/change-pass/"+user_id;
+            else
+              window.location = "/";
         }
         else{
-            msg.innerHTML = "Code does not match. Please try again. "+json.status;
+            msg.innerHTML = "The code you entered does not match. Please try again. "+json.status;
             first_.innerHTML = ""; second_.innerHTML = ""; third_.innerHTML = "";
             fourth_.innerHTML = ""; fifth_.innerHTML = ""; sixth_.innerHTML = "";
         }
         
       }).catch(err => {
         console.log(err) // Handle errors
-        msg.innerHTML = "Code does not match. Please try again. ";
+        msg.innerHTML = "The code you entered does not match. Please try again. ";
         first_.innerHTML = ""; second_.innerHTML = ""; third_.innerHTML = "";
         fourth_.innerHTML = ""; fifth_.innerHTML = ""; sixth_.innerHTML = "";
       });

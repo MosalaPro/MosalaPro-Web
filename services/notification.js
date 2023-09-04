@@ -25,6 +25,7 @@ class Notification {
                 causedByUserId: req.user._id,
                 causedByItem: job.jobId,
                 receiverId: endUser._id,
+                icon:"fa-money",
                 title: "Service Provider has provided a quotation for your booking.",
                 content: "Servive provider "+req.user.firstName+" "+req.user.lastName+" has sent you a  quotation for your booking. Check service provider's required budget.",
                 createdAt: new Date(),

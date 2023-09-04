@@ -35,6 +35,7 @@ class JobApplication {
                     causedByUserId: req.user._id,
                     causedByItem: req.body.jobId,
                     receiverId: user._id,
+                    icon:"fa-tasks",
                     title: "A service provider has applied for your service request.",
                     content: "Servive provider "+req.user.firstName+" "+req.user.lastName+" has applied for your service request. Check service provider's profile and hire.",
                     createdAt: new Date(),
@@ -72,6 +73,7 @@ class JobApplication {
                     const notification = new NotificationModel({
                         causedByUserId: req.user._id,
                         causedByItem: req.body.jobId,
+                        icon:"fa-tasks",
                         receiverId: endUser._id,
                         title: "A service provider submitted a quotation for your service request.",
                         content: "Servive provider "+req.user.firstName+" "+req.user.lastName+" has applied for your service request with a quotation. Check service provider's profile and hire.",

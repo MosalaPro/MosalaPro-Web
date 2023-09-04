@@ -51,6 +51,7 @@ const QuotationService = require("../services/quotation");
 const QuotationServiceObj = new QuotationService();
 const NotificationObj = new Notification();
 const UserModel = require("../models/user");
+const e = require("express");
 
 fs.readFile('./public/data/categories.json', 'utf8', (err, data) => {
   if (err) {
@@ -413,6 +414,7 @@ app.get("/", async function(req, res){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
           if(req.file)
             req.body.photo = req.file.filename;
+            req.body.accountType = "provider";
           if (UserService.update({ _id: req.user._id, ...req.body })) {
             res.redirect("/user");
           } else {
@@ -437,8 +439,28 @@ app.get("/", async function(req, res){
     });
 
     app.get("/register-user", function(req, res){
-        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.body.id, form_action: "/verify-u-email" });
+        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.body.id,  form_action: "/verify-u-email", redirect_link:"/" });
     });
+
+    app.get("/pass-recovery", function(req, res){
+        res.render("passRecovery", {usr: null, link:null, cats: categories, userId: req.body.id, form_action: "/verify-u-email" });
+    });
+    app.post("/recover-pass", async (req, res) =>{
+            UserService.sendVerificationCode(req, res);
+    });
+    app.get("/recover-pass/:userId", async (req, res) =>{
+        const unverifiedUser = await UserModel.findById(req.params.userId).exec();
+        let email = unverifiedUser.email.charAt(0);
+        const atIndex = unverifiedUser.email.indexOf('@');
+        for(let i = 0; i < atIndex; i++){
+            email = email + "*";
+        }
+        email = email + unverifiedUser.email.substr(atIndex, unverifiedUser.email.length-1);
+        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.params.userId, email: email, redirect_link:"/change-pass" });
+        
+    });
+
+    
 
     app.get("/service-requests", async function(req, res){
         
@@ -472,11 +494,11 @@ app.get("/", async function(req, res){
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("findprofessionals", {usr: req.user, notifications: notifs.reverse(), link: req.link, cats: categories, countries: countries, professionals: result, 
-                pages:pages, total: result.length});
+                pages:pages, total: result.length, base_domain: process.env.BASE_URL});
         }
         else
             res.render("findprofessionals", {usr: null, notifications: null, link:null, cats: categories, countries: countries, professionals: result, 
-                pages:pages, total: result.length});
+                pages:pages, total: result.length, base_domain: process.env.BASE_URL});
     });
 
     app.get("/term-of-use", async function(req, res){
@@ -524,6 +546,15 @@ app.get("/", async function(req, res){
             res.render("contact", {usr: null,  notifications:null, link: null,  cats: categories });
     });
 
+    app.get("/report-issue", async function(req, res){
+        if(req.isAuthenticated()){
+            const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+            res.render("contact", {usr: req.user, notifications: notifs.reverse(), link: null, cats: categories});
+        }
+        else
+            res.render("contact", {usr: null,  notifications:null, link: null,  cats: categories });
+    });
+
     app.get("/myrequests", async function(req, res){
     if(req.isAuthenticated()){
         try{
@@ -535,12 +566,34 @@ app.get("/", async function(req, res){
             }else{
                 console.log("No requests found with username: "+req.user.username);
             }
-            res.render("manageUserRequests", {usr: req.user, notifications: notifs.reverse(), postRequests: pRequests, allRequests: allRequests, link: null,  cats: categories});
+            res.render("manageUserRequests", {usr: req.user, notifications: notifs.reverse(), postRequests: pRequests, allRequests: allRequests, link: null,base_url:process.env.BASE_URL,  cats: categories});
         }catch(error) {res.redirect("/")};
     }
     else
         res.redirect("/");
     });
+
+    app.get("/myrequests/:type", async function(req, res){
+        let types = ["active", "completed", "in-progress", "all"];
+        if(req.isAuthenticated() && types.includes(req.params.type)){
+            try{
+                const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
+                const allRequests = req.params.type != "all"? await PostRequestModel.find({username:req.user.username, status:req.params.type}).exec(): 
+                                                                await PostRequestModel.find({username:req.user.username}).exec();
+                const pRequests =  req.params.type != "all"? await PostRequestModel.find({username:req.user.username, status:req.params.type}).limit(12).exec():
+                                                                await PostRequestModel.find({username:req.user.username}).limit(12).exec();
+                if(pRequests){
+                    console.log("Requests found: "+pRequests.length);
+                }else{
+                    console.log("No requests found with username: "+req.user.username);
+                }
+                res.render("userRequests", {usr: req.user, notifications: notifs.reverse(), postRequests: pRequests, allRequests: allRequests, link: null,
+                                            base_url:process.env.BASE_URL, projects_type:req.params.type, cats: categories});
+            }catch(error) {res.redirect("/")};
+        }
+        else
+            res.redirect("/");
+        });
 
     app.get("/getbookings", async function(req, res){
         if(req.isAuthenticated()){
@@ -665,6 +718,23 @@ app.get("/", async function(req, res){
             res.redirect("/");
     });
     
+    app.post('/change-password', async function(req, res){
+        UserService.changePassword(req, res);
+    });
+
+    app.get("/change-pass/:userId", async function(req, res){
+        try{
+            if(req.params.userId != null)
+                res.render("changePass.ejs", {usr: null, notifications: null, postRequests:null, link: null, cats: categories, userId: req.params.userId});
+            else
+                res.redirect("/");
+            
+        }catch(error){
+            console.log("ROUNTING: Error occured: "+error);
+        }
+        
+    });
+
     app.post("/authenticate", async function(req, res){
         const unverifiedUser = await UserModel.findById(req.body.iddl).exec();
         let email = unverifiedUser.email.charAt(0);
@@ -673,7 +743,7 @@ app.get("/", async function(req, res){
             email = email + "*";
         }
         email = email + unverifiedUser.email.substr(atIndex, unverifiedUser.email.length-1);
-        res.render("emailVerification", {usr: null, email: email, notifications: null, cats: categories, userId: req.body.iddl, link: null});
+        res.render("emailVerification", {usr: null, email: email, notifications: null, cats: categories, userId: req.body.iddl, link: null, redirect_link:"/"});
     });
     app.get("/userdash", async function(req, res){
         
@@ -701,13 +771,16 @@ app.get("/", async function(req, res){
     app.post("/verify-email", function(req, res){
         UserService.verifyEmail(req, res);
     });
-   
+    
+    app.post("/verify-code", function(req, res){
+        UserService.verifyCode(req, res);
+    });
     app.post("/register-pro", function(req, res){
         UserService.register(req, res);
     });
     app.get("/register-pro", function(req, res){
-        
-        res.render("emailVerification", {usr: null, link:null,  notifications:null, cats: categories, userId: req.body.id, form_action: "verify-email"});
+
+        res.render("emailVerification", {usr: null, link:null,  notifications:null, cats: categories, email:email, userId: req.body.id, form_action: "verify-email", redirect_link:"/"});
     });
   
     app.get("/profile", async function(req, res){
