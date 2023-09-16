@@ -224,14 +224,26 @@ const UserService = {
               email_ = email_ + "*";
           }
           email_ = email_ + user.email.substr(atIndex, user.email.length-1);
-          if(await userEmailSender.sendCode(6, user)){
-            //res.render("emailVerification", {usr: null, link:null, cats: categories, email:email_, userId: user._id, redirect_link:req.body.redirect_link });
-            res.status(200).send({userId: user._id, status:200});
-            return;
-          }else{
-              console.log("USER:: Could not resend code!");
-              res.status(408).send({status:408, msg:"USER:: Could not resend code!"});
+          if(req.body.redirect_link == "/"){
+            if(await userEmailSender.sendCode(6, user)){
+              //res.render("emailVerification", {usr: null, link:null, cats: categories, email:email_, userId: user._id, redirect_link:req.body.redirect_link });
+              res.status(200).send({userId: user._id, status:200});
               return;
+            }else{
+                console.log("USER:: Could not resend code!");
+                res.status(408).send({status:408, msg:"USER:: Could not resend code!"});
+                return;
+            }
+          }else{
+            if(await userEmailSender.sendRecoveryCode(6, user)){
+              //res.render("emailVerification", {usr: null, link:null, cats: categories, email:email_, userId: user._id, redirect_link:req.body.redirect_link });
+              res.status(200).send({userId: user._id, status:200});
+              return;
+            }else{
+                console.log("USER:: Could not resend code!");
+                res.status(408).send({status:408, msg:"USER:: Could not resend code!"});
+                return;
+            }
           }
       }
       else{
