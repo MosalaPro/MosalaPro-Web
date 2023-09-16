@@ -1,6 +1,8 @@
-function logKey(e) {
+document.getElementById("recover_email").addEventListener("keyup", logEnterKey);
+
+function logEnterKey(e) {
   if(e.code == 'Enter'){
-    onLoginSubmit();
+    onPassRecoverSubmit();
   }
 }
 
@@ -28,12 +30,16 @@ const onPassRecoverSubmit = async()=> {
             window.location = "/recover-pass/"+json.userId;
         }
         else{
-            message.innerHTML = "Wrong username or password! "+json.error;
+            message.classList.remove('success_message');
+            message.classList.add('error_message');
+            message.innerHTML = "Account not found! Make sure you enter the email address associated with your account.";
         }
         
       }).catch(err => {
         console.log(err) // Handle errors
-        message.innerHTML = "Wrong username or password!";
+        message.classList.remove('success_message');
+        message.classList.add('error_message');
+        message.innerHTML = "An error occured while trying to find your account. Please try again.";
       });
   }
 

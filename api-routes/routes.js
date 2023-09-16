@@ -456,7 +456,8 @@ app.get("/", async function(req, res){
             email = email + "*";
         }
         email = email + unverifiedUser.email.substr(atIndex, unverifiedUser.email.length-1);
-        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.params.userId, email: email, redirect_link:"/change-pass" });
+        req.params.redirect_link = "/change-pass";
+        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.params.userId, email: email, redirect_link:"/change-pass", link:"/change-pass" });
         
     });
 
@@ -757,7 +758,7 @@ app.get("/", async function(req, res){
         res.redirect("/");
     });
     app.get("/verified", function(req, res){
-        res.render("emailVerified", {usr:null, cats: categories});
+        res.render("emailVerified", {usr:null, cats: categories, link: null, redirect_link:"/", userId:null});
     });
 
     app.get("/logout", function(req, res, next ){
@@ -979,8 +980,21 @@ app.get("/", async function(req, res){
 
     app.get("/resendCode/:id", function(req, res){
         //model.resendCode(req, res);
+        req.body.redirect_link = "/";
         UserService.resendCode(req, res);
     });
+
+    app.post("/resendCode", async (req, res)=>{
+        //req.body.redirect_link = "/pass-change";
+        UserService.resendCode(req, res);
+    });
+
+    app.get("/resendCode/change-pass/:id", function(req, res){
+        //model.resendCode(req, res);
+        req.body.redirect_link = "/change-pass";
+        UserService.resendCode(req, res);
+    });
+
     app.get("/service-request", async function (req, res) {
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();

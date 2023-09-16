@@ -1531,3 +1531,11 @@ h4 {
 .datepicker-dropdown {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
+
+.fake_link{
+  cursor: pointer;
+  color:#1e2e50;
+}
+.fake_link::after{
+  color: darkslategrey;
+}

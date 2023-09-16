@@ -193,10 +193,15 @@ const UserService = {
             res.status(200).send({userId: user._id, status:200});
             return;
         }else{
-          console.log("USER:: Could find user!");
-          res.status(408).send({error: "USER:: Could not send code!"});
+          console.log("USER:: User found but could not send code!");
+          res.status(408).send("USER:: Could not send code!");
           return;
         }
+      }
+      else{
+        console.log("USER:: Could not find user!");
+        res.status(408).send({status:408, msg:"USER:: Could not find user!"});
+        return;
       }
     }catch(error){
       console.log("USER:: (sendVerificationCode) An error occured : "+error);
@@ -206,7 +211,7 @@ const UserService = {
   },
   resendCode: async(req, res)=>{
     try{
-      let user = await UserModel.findOne({_id: req.params.id}).exec();
+      let user = await UserModel.findOne({_id: req.body.id}).exec();
       if(user){
           console.log("USER:: User found, resending email..");
           let tok = await TokenModel.findOne({ userId: user._id }).exec();
@@ -220,15 +225,19 @@ const UserService = {
           }
           email_ = email_ + user.email.substr(atIndex, user.email.length-1);
           if(await userEmailSender.sendCode(6, user)){
-            res.render("emailVerification", {usr: null, link:null, cats: categories, email:email_, userId: user._id, redirect_link:"/" });
+            //res.render("emailVerification", {usr: null, link:null, cats: categories, email:email_, userId: user._id, redirect_link:req.body.redirect_link });
+            res.status(200).send({userId: user._id, status:200});
+            return;
           }else{
               console.log("USER:: Could not resend code!");
-              
+              res.status(408).send({status:408, msg:"USER:: Could not resend code!"});
+              return;
           }
       }
       else{
           console.log("USER:: User not found, could not resend email.");
-          res.render("emailVerification", {usr: null, link:null, cats: categories, email: null, userId: req.params.id});
+          //res.render("emailVerification", {usr: null, link:null, cats: categories, email: null, userId: req.params.id, redirect_link:req.body.redirect_link});
+          res.status(402).send({status:402, msg:"USER:: Could not find user!"});
           return;
       }
       
