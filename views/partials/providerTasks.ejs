@@ -1,116 +1,19 @@
-
-
-<%- include('partials/header') %>
-<%
-    let totalProjects = 0;
-    let totalBudget = 0.0;
-    let activeProjects = 0;
-    let completedProjects = 0;
-
-    if (postRequests) { postRequests.forEach(request=>{
-        if(request.status == "active")
-            activeProjects++;
-        if(request.status == "completed")
-            completedProjects++;
-        totalProjects++;
-        totalBudget += request.budget;
-    });}
-%>
-<section class="section bg-light search-pro-section">
-<div class="container p-4">
-
-    <div class="container">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-        <div class="col">
-        <div class="card radius-10 border-start border-0 border-3 border-info">
-        <a href="/myrequests/all"><div class="card-body">
-            <div class="d-flex align-items-center">
-                <div>
-                <p class="mb-0 job-details">Total Projects</p>
-                <h4 class="my-1 text-info"><%= totalProjects %></h4>
-                <p class="mb-0 font-13">Total number of projects</p>
-                </div>
-        <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><b class="fa fa-shopping-cart"></b>
-        </div>
-        </div>
-        </div></a>
-        </div>
-        </div>
-        <div class="col">
-        <div class="card radius-10 border-start border-0 border-3 border-danger">
-        <a href="#"><div class="card-body">
-        <div class="d-flex align-items-center">
-        <div>
-        <p class="mb-0 job-details">Total Budget</p>
-        <h4 class="my-1 text-danger"><%= totalBudget %></h4>
-        <p class="mb-0 font-13">Total spending for projects</p>
-        </div>
-        <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><b class="fa fa-dollar"></b>
-        </div>
-        </div>
-        </div></a>
-        </div>
-        </div>
-        <div class="col">
-        <div class="card radius-10 border-start border-0 border-3 border-success">
-        <a href="/myrequests/active"><div class="card-body">
-        <div class="d-flex align-items-center">
-        <div>
-        <p class="mb-0 job-details">Active Projects</p>
-        <h4 class="my-1 text-success"><%= activeProjects %></h4> 
-        <p class="mb-0 font-13">All active projects</p>
-        </div>
-        <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto"><b class="fa fa-bar-chart"></b>
-        </div>
-        </div>
-        </div></a>
-        </div>
-        </div>
-        <div class="col">
-        <div class="card radius-10 border-start border-0 border-3 border-warning">
-        <a href="/myrequests/completed"><div class="card-body">
-        <div class="d-flex align-items-center">
-        <div>
-        <p class="mb-0 job-details">Completed Projects</p>
-        <h4 class="my-1 text-warning"><%= completedProjects %></h4>
-        <p class="mb-0 font-13">All completed projects</p>
-        </div>
-        <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><b class="fa fa-users"></b>
-        </div>
-        </div>
-        </div></a>
-        </div>
-        </div>
-        </div>
-        </div>
-</div>
-
-</section>
-<% if(usr){ if(usr.favoriteProviders.length > 0) { %> 
-    <%- include('partials/actualUserFavProviders') %>
-<% } else { %>
-    <%- include('partials/userFavPros') %>
-<% } }%>
-
-
 <section class="bg-light" >
     <div class="container p-4">
         <div class="card-box card-u-pro-set">
             <div class="row">
-                <div class="col-md-6 col-lg-6 "><h5 class="header-title  ml-3">My Requests</h5></div>
-                <div class="col-md-6 col-lg-6 d-flex justify-content-end"><a href="/service-request"><button type="button" class="simple-btn" >Submit a service request</button></a>
-            </div>
-            
+                <div class="col-md-6 col-lg-6 "><h5 class="header-title  ml-3">My Tasks</h5></div>
+                <div class="col-md-6 col-lg-6 d-flex justify-content-end"><a href="/service-requests"><button type="button" class="simple-btn" >Apply for Service Resquests</button></a></div>
             <div class="table-responsive mt-3">
                 <table class="table">
                     <thead>
                         <tr class="text-primary card-header medium">
                         <th>#</th>
-                        <th>Project Title</th>
+                        <th>Title</th>
                         <th>Date Posted</th>
                         <th>Due Date</th>
                         <th>Status</th>
-                        <th>Provider</th>
+                        <th>Client</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -122,7 +25,7 @@
                         <td><%=request.createdAt.getUTCMonth() + 1 %>/<%= request.createdAt.getUTCDate()%>/<%= request.createdAt.getUTCFullYear() %></td>
                         <td><%=request.deadline %></td>
                         <td><span class="label label-info"><%=request.status%></span></td>
-                        <td> <%= request.pro %></td>
+                        <td> <%= request.username %></td>
                         </tr>
 
 
@@ -191,9 +94,3 @@
         </div>
     </div>
 </section>
-
-<%- include('partials/footer') %>
-
-
-
-

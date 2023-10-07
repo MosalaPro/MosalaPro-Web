@@ -183,32 +183,80 @@ const UserService = {
     return;
   
   },
-
+  sendVerificationCode: async(req, res)=>{
+    try{
+      const user = await UserModel.findOne({email:req.body.email}).exec();
+      
+      if(user){
+        if(userEmailSender.sendRecoveryCode(6, user)){
+            //res.render("emailVerification", {usr: null, link:null, cats: categories, userId: newUser._id});
+            res.status(200).send({userId: user._id, status:200});
+            return;
+        }else{
+          console.log("USER:: User found but could not send code!");
+          res.status(408).send("USER:: Could not send code!");
+          return;
+        }
+      }
+      else{
+        console.log("USER:: Could not find user!");
+        res.status(408).send({status:408, msg:"USER:: Could not find user!"});
+        return;
+      }
+    }catch(error){
+      console.log("USER:: (sendVerificationCode) An error occured : "+error);
+      res.status(400).send("USER:: (sendVerificationCode) An error occured : "+error);
+      return;
+    }
+  },
   resendCode: async(req, res)=>{
     try{
-      let user = await UserModel.findOne({_id: req.params.id}).exec();
+      let user = await UserModel.findOne({_id: req.body.id}).exec();
       if(user){
           console.log("USER:: User found, resending email..");
           let tok = await TokenModel.findOne({ userId: user._id }).exec();
-          await TokenModel.findByIdAndRemove(tok._id).exec();
+          if(tok)
+            await TokenModel.findByIdAndRemove(tok._id).exec();
 
-          if(userEmailSender.sendCode(6, user)){
-            res.render("emailVerification", {usr: null, link:null, cats: categories, userId: user._id});
+          let email_ = user.email.charAt(0);
+          const atIndex = user.email.indexOf('@');
+          for(let i = 0; i < atIndex; i++){
+              email_ = email_ + "*";
+          }
+          email_ = email_ + user.email.substr(atIndex, user.email.length-1);
+          if(req.body.redirect_link == "/"){
+            if(await userEmailSender.sendCode(6, user)){
+              //res.render("emailVerification", {usr: null, link:null, cats: categories, email:email_, userId: user._id, redirect_link:req.body.redirect_link });
+              res.status(200).send({userId: user._id, status:200});
+              return;
+            }else{
+                console.log("USER:: Could not resend code!");
+                res.status(408).send({status:408, msg:"USER:: Could not resend code!"});
+                return;
+            }
           }else{
-              console.log("USER:: Could not resend code!");
-              
+            if(await userEmailSender.sendRecoveryCode(6, user)){
+              //res.render("emailVerification", {usr: null, link:null, cats: categories, email:email_, userId: user._id, redirect_link:req.body.redirect_link });
+              res.status(200).send({userId: user._id, status:200});
+              return;
+            }else{
+                console.log("USER:: Could not resend code!");
+                res.status(408).send({status:408, msg:"USER:: Could not resend code!"});
+                return;
+            }
           }
       }
       else{
           console.log("USER:: User not found, could not resend email.");
-          res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.params.id});
+          //res.render("emailVerification", {usr: null, link:null, cats: categories, email: null, userId: req.params.id, redirect_link:req.body.redirect_link});
+          res.status(402).send({status:402, msg:"USER:: Could not find user!"});
           return;
       }
       
     }catch(error){
         console.log("USER:: An error occured: "+ error);
         //res.status(400).send("USER:: An error occured : "+error);
-        res.render("emailVerification", {usr: null, link:null, cats: categories, userId: req.params.id});
+        res.redirect("/");
         return;
     }
   },
@@ -252,6 +300,33 @@ const UserService = {
       return res.status(400).send("An error occured : "+error);
     }
   },
+
+  verifyCode: async (req, res) => {
+    try {
+      const user = await UserModel.findOne({ _id: req.body.id }).exec();
+      if (!user) return res.status(400).send("USER:: User : Invalid link. User id: "+req.body.id);
+  
+      const token = await TokenModel.findOne({ userId: user._id}).exec();
+
+      if (!token) return res.status(400).send("USER:: Token : Invalid link");
+      
+      const codeEntered = ""+req.body.first + req.body.second + req.body.third + req.body.fourth + req.body.fifth + req.body.sixth;
+      if(codeEntered == token.token){
+          console.log("USER:: Code verification successful! logging in the user..")
+          TokenModel.findByIdAndRemove(token._id).exec();
+          return res.status(200).send({msg:" Code verification successful!", status:200});
+      }
+      else{
+          return res.status(400).send("USER:: Email verification: Code entered does not match the one sent!");
+          //res.render("emailVerification", {usr: null, cats: categories, userId: user._id});
+      }
+      
+    } catch (error) {
+      console.log("USER:: An error occured (Email verification): "+ error);
+      return res.status(400).send("An error occured : "+error);
+    }
+  }, 
+
   find: async(query) => {
     const filters = {};
     if(query?.country_search && query?.country_search !== "Country")
@@ -333,16 +408,40 @@ const UserService = {
           req.user.setPassword(req.body.newPassword, function(){
             req.user.lastUpdate = new Date();
             req.user.save();
-            res.status(200).send('Password has been updated successfully!');
-            return;
+            return res.status(200).send('Password has been updated successfully!');
             });
           } else {
             console.log('USER:: Incorrect password');
-            res.status(304).send("Inccorect password");
-            return;
+            return res.status(304).send("Inccorect password");
         }
     return;
     });
+  },
+
+  changePassword : async(req, res) =>{
+    try{
+      const user = await UserModel.findById(req.body.userId).exec();
+      console.log("USER:: (changePassword) User successfully found! \n"+user);
+      if(user){
+          user.setPassword(req.body.newPassword,function(){
+          user.lastUpdate = new Date();
+          user.save();
+          console.log("We're getting there!");
+          res.status(200).send({message:"Ok", status:200});
+          return;
+          });
+        } else {
+          console.log('USER:: (changePassword) User not found. Password update failed.');
+          res.status(304).send({message:"Password update failed", status:304}); 
+          return;
+      }
+    }catch(error){
+      console.log('USER:: (changePassword) Error occured while trying to update password.');
+      res.status(304).send({message:"Error occured while trying to update password", status:304});
+      return;
+    }
+    
+
   },
 
   findUser: async(req, res)=>{
@@ -378,6 +477,7 @@ const UserService = {
         causedByUserId: req.user._id,
         causeByItem: req.body.jobId,
         receiverId: req.body.providerId,
+        icon:"fa-check-square-o",
         title: "Congratulations! You have been hired.",
         content: req.user.firstName+" "+req.user.lastName+" has accepted your job application for the job '"+job.requestTitle+"'. Open to check to check job's details",
         createdAt: new Date(),
@@ -418,6 +518,7 @@ const UserService = {
         causedByUserId: req.user._id,
         causeByItem: req.body.jobId,
         receiverId: req.body.providerId,
+        icon: "fa-window-close-o",
         title: "Your job application has been rejected.",
         content: " Unfortunately, "+req.user.firstName+" "+req.user.lastName+" has decided to hire another provider for the job: '"+jobApplication.requestTitle+"'.",
         createdAt: new Date(),
@@ -440,6 +541,25 @@ const UserService = {
     }
 
     return;
+  },
+  getUserRequests: async(req, res)=>{
+    const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
+    let requests = [];
+    if(pRequests){
+      for(let i = 0; i < pRequests.length; i++){
+        const booking = await BookingModel.findOne({jobId: pRequests[i]._id}).exec();
+        if(booking){
+          const prov = await UserModel.findById(booking.providerId);
+          pRequests[i].pro = prov.firstName+" "+prov.lastName;
+        }
+        else
+          pRequests[i].pro = " ";
+
+        requests.push(pRequests[i]);
+      }
+
+    }
+    return requests;
   },
 
   addFavPro: async(req, res)=>{

@@ -159,7 +159,7 @@ function validateAndRegisterU(){
             regMessage.classList.remove('error_message');
             regMessage.classList.add('success_message');
             regMessage.innerHTML = "Registration successful! Redirecting..";
-            await new Promise(r => setTimeout(r, 1000));
+            await new Promise(r => setTimeout(r, 500));
             document.getElementById("iddl").value = response.userId;
             document.theForm.submit();
             //window.location.replace("/verify-email");

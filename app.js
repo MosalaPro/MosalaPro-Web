@@ -20,6 +20,9 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const MongoStore = require('connect-mongo');
+const Notification = require(__dirname+"/services/notification");
+const notifObj = new Notification();
+const nodeCron = require('node-cron');
 
 
 // const emailValidator = required("email-validator");
@@ -180,6 +183,12 @@ app.get('/auth/facebook/mosalapro',
 	console.log("successful FB");
     res.redirect('/profile');
 });
+
+// check job deadline and send reminder to service providers
+const jobDeadlineReminder = nodeCron.schedule("59 59 0 * * *", async() =>{
+	await notifObj.sendBookingsDeadlineReminders();
+});
+jobDeadlineReminder.start();
 
 require('./api-routes/routes')(app);
 

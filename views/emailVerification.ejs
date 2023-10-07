@@ -15,7 +15,7 @@
       Email verification
       </h3>
       <p class="mt-4-ver mb-1">
-      An email with a verification code has been sent to your email address.
+      An email with a verification code has been sent to <%= email %>.
       </p>
       <p>
       Please enter the code in the field below.
@@ -51,8 +51,7 @@
               oninput="this.className = 'form-control form-control-ver form-control-lg-ver text-center py-4'"maxlength="1" required>
             </div>
           </div>
-          <input name="id" value="<%=userId%>" id="uId" style="display: none;" type="text"/>
-          <input type="submit" class="btn button-primary btn-lg w-100 hover-lift-light mt-4-ver" onClick="verifyCode()" value="Verify my account" required>
+          <input type="submit" class="btn button-primary btn-lg w-100 hover-lift-light mt-4-ver"  onClick="verifyCode('<%=redirect_link%>', '<%=userId%>')" value="Verify my account" required>
       <!--/form-->
         
      
@@ -61,9 +60,9 @@
       
       <p class="text-center text-muted mt-4-ver">
       Didn't receive verification email?
-      <a href="/resendCode/<%=userId%>" class="text-decoration-none ms-2">
+        <span id="resend_code" class="fake_link" onClick="resendCode('<%=redirect_link%>', '<%=userId%>')">
       Resend code
-      </a>
+      </span>
       </p>
       </div>
       </div>

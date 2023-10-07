@@ -1,0 +1,50 @@
+<div class="modal fade" id="confBookingCompleteModalCta" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content pt-1 mb-1">
+          <div class="modal-header mt-1">
+            <h5 class="mt-1 mb-1 text-center"> Booking Completion Submission</h5>
+            </div>
+        <div class="form-container">
+                    
+                    <span name="error" id="booking-comp-err"></span>
+                    <div class="row mt-1">
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <div class="form-group">
+                            <span class="text-small text-primary">Be sure to meet all the customer's requirements before completing and submitting the booking. Once submitted, the customer will evaluate you based on the work you have done.</span>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="row mt-2">
+                        
+                        <div class="col">
+                            <h6 class="mb-1">Comments</h6>
+                            <span>This will help understand your work and rate you accordingly. Enter at least 20 characters. </span> 
+                            <div class="input-field">
+                                <textarea type="text" id="submissionComment" class="input-field-textarea" name="submissionComment" oninput="this.className = 'input-field-textarea'"
+                                    placeholder="Comments for customer..."  required></textarea>
+                                <span class="char-limit">0/2,000</span> 
+                            </div>
+                            <span>Submit any impportant documents for the customer</b> </span> 
+                            <label for="submission-file" class="attach-btn">
+                                <i class="fas fa-paperclip"></i> Attach submission documents
+                            </label>
+                            <input id="submission-file" name="file" type="file" style="display: none;" >
+
+                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col d-flex justify-content-center mb-2">
+                            <input type="button" onClick="completeBooking('<%=booking._id %>')" name="submit" class="btn-job btn-primary-job" value="Complete  and submit booking">
+                            <input type="button" data-dismiss="modal" name="cancel" class="btn-job btn-primary-job-inv-blue ml-3" value="Cancel">
+                        </div>
+                    </div>
+
+              </div>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+    

@@ -184,6 +184,38 @@ const PostRequestService =  {
           return;
         });
         return;
+      },
+
+      checkBookingsDeadline: async ()=>{
+        const providers = await UserModel.find({accountType:"provider"}).exec();
+        console.log("POST REQUEST:: Providers: "+providers.length);
+        if(providers){
+          let bookingsWithCloseDeadlines = [];
+          for(let j = 0; j < providers.length; j++){
+            try{
+              const bookings = await BookingModel.find({providerId: providers[j]._id}).exec();
+              console.log("POST REQUEST:: Bookings: "+bookings.length);
+              if(bookings){
+                const today = new Date();
+                bookings.forEach(booking=>{
+                  const deadline = new Date(booking.deadline);
+                  const diffTime = deadline - today;
+                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                  console.log("today: "+today+" - deadline: "+deadline+"; diff: "+diffDays);
+                  if(diffDays <= 2 && (booking.status == "active" || booking.status == "in-progress") ){
+                    bookingsWithCloseDeadlines.push(booking);
+                  }
+                });
+              }
+            }catch(error){
+              console.log("POST REQUEST:: Error occured while retrieving bookings: "+error);
+            }
+          }
+          return bookingsWithCloseDeadlines;
+        }
+        else{
+          console.log("POST REQUEST:: No providers were returned.");
+        }
       }
 
 }

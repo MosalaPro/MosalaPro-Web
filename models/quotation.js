@@ -1,20 +1,25 @@
 const mongoose = require("mongoose");
 
 // Service Request
-const bookingSchema = new mongoose.Schema({
+const quotationSchema = new mongoose.Schema({
     username: { type: String, require:true },
-    bookingTitle:{
-        type: String,
+    budget:{
+        type: Number,
         required: true
     },
-    bookingDescription:{
+    budgetType: String,
+    quotationDescription:{
         type: String,
         required: true
     },
     category: String, 
     providerId : String,
-    jobId: String,
-    budget: Number,
+    jobId: {type: String,
+            required: true},
+    initialBudget: {
+        type: Number,
+        required: true
+    },
     deadline: String,
     status:{
         type: String,
@@ -27,18 +32,10 @@ const bookingSchema = new mongoose.Schema({
     lastUpdate:{
         type: Date,
         required: true
-    },
-
-    files: [{
-        type: String
-    }],
-    providerComments: String,
-    providerFiles:[{
-        type: String
-    }]
+    }
 });
-bookingSchema.plugin(require("mongoose-findorcreate"));
+quotationSchema.plugin(require("mongoose-findorcreate"));
 
-const BookingModel = new mongoose.model("Booking", bookingSchema);
+const QuotationModel = new mongoose.model("Quotation", quotationSchema);
 
-module.exports = BookingModel;
+module.exports = QuotationModel;

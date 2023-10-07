@@ -58,15 +58,24 @@
                             </div>
                             <p class="post-modern-text mt-1 mb-4">Please read the documents carefully to make sure to meet the requirements of this request.</p>
                         </div>
-                        <% if(booking.status != "in-progress") { %>
+                        <% if(booking.status == "active") { %>
                         <div class="d-flex justify-content-center mt-3 mb-4">
                           <a href="#cancelBookingConfModalCta" data-toggle="modal" data-caption-animate="fadeInUp"><button class="btn-job btn-primary-job-inv-dgr mr-3" >Cancel booking</button></a>
                           <a href="#confBookingModalCta" data-toggle="modal" data-caption-animate="fadeInUp" ><button class="btn-job btn-primary-job" >Confirm booking</button></a>
-                            <button class="btn-job btn-primary-job-inv-blue tooltips ml-3" title="If you are not satisfied with the budget, you can provide your quote for this request." 
+                          <a href="#quotationModalCta" data-toggle="modal" data-caption-animate="fadeInUp"> <button class="btn-job btn-primary-job-inv-blue tooltips ml-3" title="If you are not satisfied with the budget, you can provide your quote for this request." 
                             data-toggle="tooltip" data-placement="top" 
-                             >Provide a quote</button>
+                             >Provide a quote</button></a>
                              
                         </div>
+                        <% } else if (booking.status == "in-progress") { %>
+                          <div class="d-flex justify-content-center mt-3 mb-4">
+                            <a href="#confBookingCompleteModalCta" data-toggle="modal" data-caption-animate="fadeInUp" ><button class="btn-job btn-primary-job" >Complete Job and Submit</button></a>
+                            <a href="#requestExtensionModalCta" data-toggle="modal" data-caption-animate="fadeInUp"> <button class="btn-job btn-primary-job-inv-blue tooltips ml-3" title="If you can't meet the deadline, you can request an extension." 
+                              data-toggle="tooltip" data-placement="top" 
+                               >Request deadline extension</button></a>
+                               
+                          </div>
+
                         <% } %>
                       </div>
                 </div>
@@ -94,6 +103,8 @@
 
   <%- include('partials/cancelBookingConfModal') %>
   <%- include('partials/confirmBookingModal') %>
+  <%- include('partials/bookingQuotationModal') %>
+  <%- include('partials/confBookingCompleteModal') %>
   <script src="js/manageBookingHandler.js"></script>
 
   <%- include('partials/footer') %>

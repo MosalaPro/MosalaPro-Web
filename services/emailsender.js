@@ -47,17 +47,27 @@ class EmailSender {
       
         const randomString = randomArray.join("");
         return randomString;
-      };
+      }
     
-    async sendCode(codeLength, user){
+      async generateRandomDigit(codeLength){
         const chars =
           "1234567890";
         const randomArray = Array.from(
           { length: codeLength},
           (v, k) => chars[Math.floor(Math.random() * chars.length)]
         );
-      
-        const randomDigit = randomArray.join("");
+        const code = randomArray.join("");
+        return code;
+      }
+    
+    async sendCode(codeLength, user){
+        const chars =
+        "1234567890";
+      const randomArray = Array.from(
+        { length: codeLength},
+        (v, k) => chars[Math.floor(Math.random() * chars.length)]
+      );
+        const randomDigit =  randomArray.join("");
 
         let token = await new TokenModel({
             userId: user._id,
@@ -80,18 +90,14 @@ class EmailSender {
       }
 
       async sendProCode(codeLength, provider) {
+        
         const chars =
           "1234567890";
         const randomArray = Array.from(
           { length: codeLength},
           (v, k) => chars[Math.floor(Math.random() * chars.length)]
         );
-      
-        const randomDigit = randomArray.join("");
-        let token = await new TokenModel({
-            userId: provider._id,
-            token: randomDigit,
-        }).save();
+        const randomDigit =  randomArray.join("");
 
         const name = provider.firstName; 
         const email = provider.email;
@@ -109,6 +115,34 @@ class EmailSender {
         else
             return false;
         
+    }
+
+    async sendRecoveryCode(codeLength, user){
+      const chars =
+        "1234567890";
+        const randomArray = Array.from(
+          { length: codeLength},
+          (v, k) => chars[Math.floor(Math.random() * chars.length)]
+        );
+        const randomDigit =  randomArray.join("");
+
+        let token = await new TokenModel({
+            userId: user._id,
+            token: randomDigit,
+        }).save();
+
+        const name = user.firstName;
+        const email = user.email;
+        const subject = "Your MosalaPro Account Recovery Code";
+        const message = "Hi "+name+",\n\nWe received a request to reset your MosalaPro password."+
+            "\nPlease enter the following password reset code to change your password:\n\n"
+            +randomDigit +"\n\nThank you,\nMosalaPro TM";
+            
+        console.log("EMAIL_SENDER:: An Email sent to your account please verify");
+        if(this.sendEmail(name, email, subject, message))
+            return true;
+        else
+            return false; 
     }
 }
 

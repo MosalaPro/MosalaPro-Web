@@ -1,4 +1,4 @@
-const verifyCode = async()=> {
+const verifyCode = async(redirect_link, user_id)=> {
     const first_ = document.getElementById("first");
     const second_ = document.getElementById("second");
     const third_ = document.getElementById("third");
@@ -6,7 +6,6 @@ const verifyCode = async()=> {
     const fifth_ = document.getElementById("fifth");
     const sixth_ = document.getElementById("sixth");
     const msg = document.getElementById("e_message");
-    const id_ = document.getElementById("uId");
 
     msg.innerHTML = "";
     
@@ -42,31 +41,84 @@ const verifyCode = async()=> {
         fourth: fourth_.value,
         fifth: fifth_.value,
         sixth: sixth_.value,
-        id: id_.value
+        id: user_id
     }
-
-    _postData('/verify-email', requestData )
+    post_link = "/verify-email";
+    
+    if(redirect_link == "/change-pass"){
+        post_link = "/verify-code";
+    }
+    _postData(post_link, requestData )
       .then(async json => {
         if(json.status == 200){
             msg.classList.remove('error_message');
             msg.classList.add('success_message');
             msg.innerHTML = "Email address successfully verified! Redirecting...";
             await new Promise(r => setTimeout(r, 500));
-            window.location = "/";
+            if(redirect_link == "/change-pass")
+              window.location = "/change-pass/"+user_id;
+            else
+              window.location = "/";
         }
         else{
-            msg.innerHTML = "Code does not match. Please try again. "+json.status;
+            msg.classList.remove('success_message');
+            msg.classList.add('error_message');
+            msg.innerHTML = "The code you entered does not match. Please try again. ";
             first_.innerHTML = ""; second_.innerHTML = ""; third_.innerHTML = "";
             fourth_.innerHTML = ""; fifth_.innerHTML = ""; sixth_.innerHTML = "";
         }
         
       }).catch(err => {
         console.log(err) // Handle errors
-        msg.innerHTML = "Code does not match. Please try again. ";
+        msg.classList.remove('success_message');
+        msg.classList.add('error_message');
+        msg.innerHTML = "The code you entered does not match. Please try again. ";
         first_.innerHTML = ""; second_.innerHTML = ""; third_.innerHTML = "";
         fourth_.innerHTML = ""; fifth_.innerHTML = ""; sixth_.innerHTML = "";
       });
   }
+
+
+  const resendCode = async(redirectlink, user_id)=>{
+    const msg = document.getElementById("e_message");
+    const resend_txt_lnk = document.getElementById("resend_code");
+
+    msg.innerHTML = ""
+  
+    requestData = {
+      id: user_id, 
+      redirect_link: redirectlink
+    }
+  
+  _postData('/resendCode', requestData )
+    .then(async json => {
+      if(json.status == 200){
+          msg.classList.remove('error_message');
+          msg.classList.add('success_message');
+          msg.innerHTML = "The code has been resent successfully...";
+          resend_txt_lnk.classList.remove("fake_link");
+          resend_txt_lnk.classList.add("text-muted");
+          await new Promise(r => setTimeout(r, 35000));
+          resend_txt_lnk.classList.remove("text-muted");
+          resend_txt_lnk.classList.add("fake_link");
+          msg.innerHTML = "";
+          
+      }
+      else{
+        msg.classList.remove('success_message');
+        msg.classList.add('error_message');
+        msg.innerHTML = "An error occured while resending the link, please try again ";
+      }
+      
+    }).catch(err => {
+      msg.classList.remove('success_message');
+      msg.classList.add('error_message');
+      console.log(err) // Handle errors
+      msg.innerHTML = "An error occured while resending the link, please try again . ";
+    });
+  
+  }
+
 
 async function _postData(url = '', data = {}) {
     const response = await fetch(url, {
@@ -86,3 +138,4 @@ async function _postData(url = '', data = {}) {
       return response.json();
     }else{ return response;}
 }
+
