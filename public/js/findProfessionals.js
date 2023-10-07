@@ -153,15 +153,16 @@ const handleSearch = async () => {
             </td>
             <td>
                
-              <div class="fb-like" 
-                data-href="${url_}" 
-                data-width="400"
-                data-layout="standard" 
-                data-show-faces="true"
-                data-action="like" 
-                data-size="small"  
-                data-share="true">
-              </div>
+            <div class="fb-like" 
+              data-href="${url_}" 
+              data-width="400"
+              data-layout="standard" 
+              data-show-faces="true"
+              data-action="like" 
+              data-size="small"  
+              data-share="true">
+            </div>
+
              
             </td>
             </tr>`
