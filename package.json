@@ -1,5 +1,5 @@
 {
-  "name": "MosalaPro",
+  "name": "mosalapro",
   "version": "1.0.0",
   "description": "African Service Finder",
   "main": "app.js",
@@ -41,6 +41,15 @@
   "author": "Constant Pagoui",
   "license": "ISC",
   "engines": {
-    "node": "18.0.0"
-  }
+    "node": "18.19.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/constant17/MosalaPro-Web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/constant17/MosalaPro-Web/issues"
+  },
+  "homepage": "https://github.com/constant17/MosalaPro-Web#readme"
 }
