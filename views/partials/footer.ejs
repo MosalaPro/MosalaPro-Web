@@ -1,0 +1,180 @@
+
+<% if(!usr){%>
+  
+  <%-include('loginModal') %>
+  <%-include('registerModal') %>
+  
+<% } %>
+<%- include('paymentModal') %>
+
+      <footer class="section footer-classic">
+        <div class="footer-inner-1">
+          <div class="container">
+            <div class="row row-40 mx-1">
+              <div class="col-md-3 col-lg-3 col-sm-6 col-6 ">
+                <h5>Our Contacts</h5>
+                <ul class="contact-list font-weight-bold">
+                  <li>
+                    <div class="unit unit-spacing-xs">
+                      <div class="unit-left">
+                        <div class="icon icon-sm icon-primary novi-icon mdi mdi-map-marker"></div>
+                      </div>
+                      <div class="unit-body"><a href="https://maps.google.com/?q=30 N Gould St, Ste N Sheridan, WY 82801" target="_blank">30 N Gould St, Ste N Sheridan<br> WY 82801 USA.</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="unit unit-spacing-xs">
+                      <div class="unit-left">
+                        <div class="icon icon-sm icon-primary novi-icon mdi mdi-phone"></div>
+                      </div>
+                      <div class="unit-body"><a href="tel:#">+1 (800) 123 1234</a></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="unit unit-spacing-xs">
+                      <div class="unit-left">
+                        <div class="icon icon-sm icon-primary novi-icon mdi mdi-email"></div>
+                      </div>
+                      <div class="unit-body"><a href="mailto:#">info@mosalapro.com</a></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="unit unit-spacing-xs">
+                      <div class="unit-left">
+                        <div class="icon icon-sm icon-primary novi-icon mdi mdi-clock"></div>
+                      </div>
+                      <div class="unit-body">
+                        <ul class="list-0">
+                          <li>Weekdays: 8:00AM–05:00 PM</li>
+                          <li>Weekends: 8:00AM-03:00 PM</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <h5>Company Info</h5>
+                <div class="row row-5 justify-content-between">
+                  <div class="col-sm-8">
+                    <ul class="footer-list big">
+                      <li><a href="/about-us">About Us</a></li>
+                      <li><a href="/professionals">For Professionals</a></li>
+                      <li><a href="/term-of-use">Terms of Use</a></li>
+                      <li><a href="/privacy-policy">Privacy Policy</a></li>
+                      <li><a href="/do-not-sell">Do not Sell</a></li>
+                      <li><a href="/contact-us">Help</a></li>
+                    </ul>
+                  </div>
+				  
+                  
+                </div>
+              </div>
+              <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <h5 class="left">Quick Links</h5>
+                <div class="row row-5 justify-content-between">
+                  <div class="col-sm-8">
+                    <ul class="footer-list big">
+                      <li><a href="/">Home</a></li>
+                      <li><a href="/search">Search for Services</a></li>
+                      <li><a href="/about-us">About Us</a></li>
+                      <li><a href="/contact-us">FAQ</a></li>
+                      <% if(usr){ %>
+                        <li><a href="/service-request" >My Service Requests</a></li>
+                        <li><a href="/report-issue" >Report an issue</a></li>
+                        <% } else { %>
+                          <li><a href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Login</a></li>
+                          <li><a href="#regModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Create an account</a></li>
+                        <% } %>
+
+                      <li><a href="/contact-us#contact_us">Contact Us</a></li>
+                    </ul>
+                  </div>
+                  </div>
+              </div>
+              <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <h5>Categories</h5>
+                <div class="row row-5 justify-content-between">
+                  <div class="col-sm-8">
+                    <ul class="footer-list big">
+                      <% if(dbConnected && cats) { for(let i = 0; i < 6; i++){ %>
+                        <li><a href="/<%=cats[i].name%>"><%=cats[i].name%></a></li>
+                      <%} }%>
+                    </ul>
+                <!--h5>Partners</h5-->
+                <!--div class="row row-30 align-items-center text-center">
+                  <div class="col-6 col-md-4 col-lg-6"><a class="link-image" href="#"><img src="images/footer-1-brand-1-144x70.png" alt="" width="144" height="35"/></a></div>
+                  <div class="col-6 col-md-4 col-lg-6"><a class="link-image" href="#"><img src="images/footer-1-brand-2-121x68.png" alt="" width="121" height="34"/></a></div>
+                  <div class="col-6 col-md-4 col-lg-6"><a class="link-image" href="#"><img src="images/footer-1-brand-3-121x33.png" alt="" width="121" height="16"/></a></div>
+                  <div class="col-6 col-md-4 col-lg-6"><a class="link-image" href="#"><img src="images/footer-1-brand-4-101x76.png" alt="" width="101" height="38"/></a></div>
+                  <div class="col-6 col-md-4 col-lg-6"><a class="link-image" href="#"><img src="images/footer-1-brand-5-107x53.png" alt="" width="107" height="26"/></a></div>
+                  <div class="col-6 col-md-4 col-lg-6"><a class="link-image" href="#"><img src="images/footer-1-brand-6-97x52.png" alt="" width="97" height="26"/></a></div-->
+                </div>
+              </div>
+            </div>
+              
+          </div>
+        
+        <div class="footer-inner-2">
+          <div class="container">
+            <div class="text-center mt-4"> We are proud to be the most effective professional service finder platform. <br>Follow us on social media<br>
+              <a href="https://www.facebook.com/people/Mosalapro/100064060309267/" target="_blank" class="fab fa-facebook ml-3"></a>
+              <a  href="https://twitter.com/MosalaPro" target="_blank" class="fab fa-twitter ml-3"> </a>
+              <a href="https://www.linkedin.com/company/mosalapro" target="_blank" class="fa fa-linkedin ml-3"> </a>
+          </div>
+            <p class="rights text-center"><span>&copy;&nbsp;</span><span class="copyright-year"></span>. All Rights Reserved. Mosalapro TM</p>
+          </div>
+        </div>
+      </div>
+      </footer>
+    </div>
+    <div class="snackbars" id="form-output-global"></div>
+    
+  
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.min.js"></script>
+    
+    <script src="js/core.min.js"></script>
+    <script src="js/script.js"></script>
+    <% if(!usr){%>
+      <script src="js/registerUser.js"></script>
+      <script src="js/registerProvider.js"></script>
+      <script src="js/login.js"></script>
+      <script>
+        $(document).ready(function() {
+            $('#regModalCta').on('hidden', function() {
+              $(':input', this).val('');
+            });
+        });
+      </script>
+    <% } %>
+    <script src="js/pageNotFound.js"></script>
+    <script src="js/message.js"></script>
+    <script>
+
+      $(window).load(async function(){
+        // PAGE IS FULLY LOADED  
+        // FADE OUT YOUR OVERLAYING DIV
+        $('#preloader').fadeOut();
+      });
+            
+    </script>
+
+<script>
+
+  window.addEventListener( "pageshow", function ( event ) {
+            var historyTraversal = event.persisted || 
+                                  ( typeof window.performance != "undefined" && 
+                                        window.performance.navigation.type === 2 );
+            if ( historyTraversal ) {
+              // Handle page restore.
+              window.location.reload();
+            }
+          });
+          
+   </script>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+[{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dc5"
+  },
+  "name": "Operators",
+  "description": "Automatic or live assistance to a consumer to arrange for billing or completion of a telephone call, busy line verification, emergency interrupt, and operator-assisted directory assistance services.",
+  "icon": "mercury-icon-phone-24"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dc8"
+  },
+  "name": "Computer Repair",
+  "description": "Identification, troubleshooting and resolving problems and issues in a faulty computer.  Repair of computer hardware, software or network/Internet problems.",
+  "icon": "mercury-icon-cloud-2 "
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dc9"
+  },
+  "name": "Corporate Law Attorney",
+  "description": "Information on people rights, responsibilities, and duties under the law. Representation of the corporate entity at courts and negotiations.",
+  "icon": "mercury-icon-scales"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dca"
+  },
+  "name": "Notarization",
+  "description": "Public services in non-contentious matters usually concerned with general financial transactions, estates, deeds, powers-of-attorney, and foreign and international business",
+  "icon": "mercury-icon-note-2 "
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dcd"
+  },
+  "name": "Events",
+  "description": " Provision of artwork support in respect of events, includes related Logistics Services and associated services in relation to an event",
+  "icon": "mercury-icon-group"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dce"
+  },
+  "name": "Event Security",
+  "description": "Safety guards to provide safety and protection of all attendees at events including concerts, sporting events, conferences, and private gatherings",
+  "icon": "mercury-icon-social"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dc7"
+  },
+  "name": "Accounting",
+  "description": "Measurement, processing and communication of financial information about economic entities including, financial accounting, management accounting, auditing, auditing services, taxation and accounting information systems etc..",
+  "icon": "mercury-icon-calc"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dc6"
+  },
+  "name": "Technology & Engineering",
+  "description": "Project-based's technology and engineering services, helping clients bring products or technology to market. ",
+  "icon": "mercury-icon-lightbulb-gears"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dcf"
+  },
+  "name": "Architecture",
+  "description": "Design, preparation of construction documents, and construction administration, feasibility studies, architectural programming and project management.",
+  "icon": "mercury-icon-house"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dd0"
+  },
+  "name": "Carpentry",
+  "description": "Cutting, shaping and installation of building materials during the construction of buildings, ships, timber bridges, concrete formwork, etc.",
+  "icon": "mercury-icon-lib"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dd1"
+  },
+  "name": "Handyman Services",
+  "description": "Maintenance worker, repaire worker, keeping buildings, shops or equipment around the home in good repair.",
+  "icon": "mercury-icon-user"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dd2"
+  },
+  "name": "Cleaning Services",
+  "description": "Hand washing, dry cleaning machine, Ultrasonic parts cleaning, Carbon dioxide, snow cleaning in an aerospace setting ",
+  "icon": "mercury-icon-books "
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dcc"
+  },
+  "name": "Software Development",
+  "description": "Computer programming, design, code development and maintenance, implementation, support, testing, and documentation services and other services",
+  "icon": "mercury-icon-touch"
+},{
+  "_id": {
+    "$oid": "640be335c42a867e68d70dcb"
+  },
+  "name": "Real Estate",
+  "description": "Service provision with respect to the purchase, sale, lease, rental, or appraisal of real property",
+  "icon": "mercury-icon-briefcase "
+}]

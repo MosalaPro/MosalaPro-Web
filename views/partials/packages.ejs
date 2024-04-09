@@ -1,0 +1,141 @@
+<section class="section section-sm section-bottom-70 section-fluid bg-pricing ">
+    <div class="pricing-container">
+    
+          <h2 class="text-center mb"></span><span>Join as service provider. <span class="text-light">Choose the right package for you.</span></span></h2>
+          <div class="row row-30 justify-content-center">
+            <div class="col-sm-3 ">
+              <div class="box-pricing box-pricing-black box-pricing-popular">
+                <div class="box-pricing-body">
+                  <h5 class="box-pricing-title ">Trial</h5>
+                  <h3 class="box-pricing-price ">Free</h3>
+                  <div class="box-pricing-time ">30 days</div>
+                  <div class="box-pricing-divider">
+                    <div class="divider"></div><span>Trial</span>
+                  </div>
+                  <ul class="box-pricing-list">
+                    <li class="active">Booking</li>
+                    <li class="active">Provider Page</li>
+                    <li class="active">Google Calendar</li>
+                    <li class="active">Invoice</li>
+                    <li>Multiple Locations</li>
+                    <li>Contact Numbers</li>
+                    <li>Gallery</li>
+                    <li>Quality assurance</li>
+                    <li>Full Support</li>
+                  </ul>
+                </div>
+                <% if(usr) { 
+                    if (usr.subscriptionPlan == "trial") {%>
+                      <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block disabled_link"  href="#" data-toggle="modal" data-caption-animate="fadeInUp" >Current Plan</a></div>
+                      <div class="box-pricing-current">Current Plan</div>
+                    <% }else{ %>
+                      <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+                <% } } else { %>
+                <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+                 <% }%>
+              </div>
+            </div>
+
+            <div class="col-sm-3 ">
+              <div class="box-pricing box-pricing-black box-pricing-popular">
+                <div class="box-pricing-body">
+                  <h5 class="box-pricing-title">Bronze</h5>
+                  <h3 class="box-pricing-price">$50.00</h3>
+                  <div class="box-pricing-time">90 days</div>
+                  <div class="box-pricing-divider">
+                    <div class="divider"></div><span>Silver</span>
+                  </div>
+                  <ul class="box-pricing-list">
+                    <li class="active">Booking</li>
+                    <li class="active">Provider Page</li>
+                    <li class="active">Google Calendar</li>
+                    <li class="active">Invoice</li>
+                    <li>Multiple Locations</li>
+                    <li class="active">Contact Numbers</li>
+                    <li>Gallery</li>
+                    <li>Quality assurance</li>
+                    <li>Full Support</li>
+                  </ul>
+                </div>
+                <% if(usr) { 
+                  if (usr.subscriptionPlan == "bronze") {%>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block disabled_link"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Current plan</a></div>
+                    <div class="box-pricing-current">Current Plan</div>
+                  <% }else{ %>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp" onclick="openSubscriptionModal('bronze')">Get Started</a></div>
+              <% } } else { %>
+              <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+               <% }%>
+                </div>
+            </div>
+
+            <div class="col-sm-3 ">
+              <div class="box-pricing box-pricing-black box-pricing-popular">
+                <div class="box-pricing-body">
+                  <h5 class="box-pricing-title">Gold</h5>
+                  <h3 class="box-pricing-price">$100.00</h3>
+                  <div class="box-pricing-time">180 days</div>
+                  <div class="box-pricing-divider">
+                    <div class="divider"></div><span>Gold</span>
+                  </div>
+                  <ul class="box-pricing-list">
+                    <li class="active">Booking</li>
+                    <li class="active">Provider Page</li>
+                    <li class="active">Google Calendar</li>
+                    <li class="active">Invoice</li>
+                    <li class="active">Multiple Locations</li>
+                    <li class="active">Contact Numbers</li>
+                    <li class="active">Gallery</li>
+                    <li>Quality assurance</li>
+                    <li>Full Support</li>
+                  </ul>
+                </div>
+                <% if(usr) { 
+                  if (usr.subscriptionPlan == "gold") {%>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block disabled_link"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Current Plan</a></div>
+                    <div class="box-pricing-current">Current Plan</div>
+                  <% }else{ %>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#payModalCta" data-toggle="modal" onclick="openSubscriptionModal('gold')" data-caption-animate="fadeInUp">Get Started</a></div>
+                    <div class="box-pricing-badge">popular</div>
+                  <% } } else { %>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+                    <div class="box-pricing-badge">popular</div>
+              <% }%>
+                
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="box-pricing box-pricing-black">
+                <div class="box-pricing-body">
+                  <h5 class="box-pricing-title">Platinum</h5>
+                  <h3 class="box-pricing-price">$250.00</h3>
+                  <div class="box-pricing-time">365 days</div>
+                  <div class="box-pricing-divider">
+                    <div class="divider"></div><span>Platinum</span>
+                  </div>
+                  <ul class="box-pricing-list">
+                    <li class="active">Booking</li>
+                    <li class="active">Provider Page</li>
+                    <li class="active">Google Calendar</li>
+                    <li class="active">Invoice</li>
+                    <li class="active">Multiple Locations</li>
+                    <li class="active">Contact Numbers</li>
+                    <li class="active">Gallery</li>
+                    <li class="active">Quality assurance</li>
+                    <li class="active">Full Support</li>
+                  </ul>
+                </div>
+                <% if(usr) { 
+                  if (usr.subscriptionPlan == "Platinum") {%>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block disabled_link"  href="#payModalCta" data-toggle="modal" data-caption-animate="fadeInUp" >Current Plan</a></div>
+                    <div class="box-pricing-current">Current Plan</div>
+                  <% }else{ %>
+                    <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#payModalCta" data-toggle="modal" onclick="openSubscriptionModal('platinum')" data-caption-animate="fadeInUp">Get Started</a></div>
+              <% } } else { %>
+              <div class="box-pricing-button" aria-disabled="true"><a class="button-lg button-block button-gray-4"  href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">Get Started</a></div>
+               <% }%>
+              </div>
+            </div>
+          </div>
+        </div>
+</section>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="wide wow-animation" lang="en">
+  <head>
+    <title>MosalaPro | Professional Service Finder</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="MosalaPro | Professional Service Finder" />
+    <meta property="og:description"   content="Professional Service Finder" />
+
+    <base href="/" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,900">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/input.css">
+    <link rel="stylesheet" href="css/searchpro.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/toggle.css">
+    <link rel="stylesheet" href="css/job.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="css/invoice.css">
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="js/home.js"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script src="jspdf.js"></script>
+    <script src="jspdf.plugin.from_html.js"></script>
+    <script src="jspdf.plugin.split_text_to_size.js"></script>
+    <script src="jspdf.plugin.standard_fonts_metrics.js"></script>
+  </head>
+  <body>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0&appId=816417526759341&autoLogAppEvents=1" nonce="WebJTIjJ"></script>
+
+
+    <!--div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div-->
+    <div class="preloader" id="preloader">
+      <div class="preloader-body">
+        <div class="loader">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <p>Loading...</p>
+      </div>
+    </div>
+       
+    <div class="page"><!--a class="banner banner-top" href="https://www.templatemonster.com/website-templates/monstroid2.html" target="_blank"><img src="images/monstroid.jpg" alt="" height="0"></a-->
+      <header class="section page-header rd-navbar-transparent-wrap">
+        <!--RD Navbar-->
+        <div class="rd-navbar-wrap">
+          <nav class="rd-navbar rd-navbar-transparent" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-lg-stick-up-offset="20px" data-xl-stick-up-offset="20px" data-xxl-stick-up-offset="20px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+            <div class="rd-navbar-collapse-toggle rd-navbar-fixed-element-1" data-rd-navbar-toggle=".rd-navbar-collapse"><span></span></div>
+            <div class="rd-navbar-aside-outer rd-navbar-collapse">
+              <div class="rd-navbar-aside">
+                <div class="rd-navbar-info sm-scr">
+                  Professional Service Finder
+                  
+                </div>
+                
+                    <ul class="list-lined sm-scr">
+                    <% if(usr){ %>
+                      <li>
+                        <div class="btn-group open ">
+                          
+                          <a class="btn position-relative" data-toggle="dropdown" href="#" class="text-transform-none"><b class="fa fa-user fa-fw ">
+                            <% let unread = 0;
+                              if(notifications) 
+                                notifications.forEach(notif=>{
+                                  if(notif.status == "unread")
+                                    unread++;
+                                });  
+                              if (unread >  0) {  %>
+                            <span class="position-absolute top-0 start-100  badge rounded-pill-notification"> <%=unread %>
+                            </span>
+                            <% } %>
+                            </b> <%=usr.firstName %>
+                            <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
+                            <ul class="dropdown-menu ul-none">
+                              <% if(usr.accountType=="provider"){ %>
+                                <li><a href="/p-profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
+                                <li><a href="/mybookings"><b class="fa fa-tasks mr-2"></b>  Manage Bookings</a></li>
+                                <li><a href="/applications"><b class="fa fa-bar-chart mr-1"></b>  My applications</a></li>
+                              <%}else{%>
+                                <li><a href="/profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
+                                <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>
+                                <li><a href="/professionals"><b class="fa fa-id-card-o mr-1"></b>  Become a pro</a></li>
+                              <%}%>
+                              <% if (unread >  0) { %>
+                              <li><a href="/notifications"><b class="fa fa-bell mr-2"></b>  Notifications (<%=unread%>)</a></li>
+                              <% } else { %>
+                              <li><a href="/notifications"><b class="fa fa-bell mr-2"></b>  Notifications</a></li>
+                              <% } %>
+                              <li><a href="/logout"><b class="fa fa-sign-out mr-2"></b>  Logout </a></li>
+                            </ul>
+                          
+                        </div>
+                      </li>
+                    <% } else { %>
+                      <li class="ml-2 mb-2">
+                        <!--To keep modal up even when the user clicks away, uncomment link below and use it-->
+                        <!--<a href="#logModalCta" data-controls-modal="#logModalCta" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-caption-animate="fadeInUp"> -->
+                        <a href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lock mr-1 mb-1" viewBox="0 0 16 16">
+                          <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 5.996V14H3s-1 0-1-1 1-4 6-4c.564 0 1.077.038 1.544.107a4.524 4.524 0 0 0-.803.918A10.46 10.46 0 0 0 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h5ZM9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2Zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1Z"/>
+                        </svg> Log in</a></li>
+                      <li class="ml-2"><a href="#regModalCta" data-toggle="modal" data-caption-animate="fadeInUp">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add mr-1 mb-1" viewBox="0 0 16 16">
+                          <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                          <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                        </svg>Create an account</a></li>
+                      <% } %>
+                  </ul>
+
+                  <ul class="sm-scr-show">
+                     <li class="ml-2 mb-2"><a href="/">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house mr-2 mb-1" viewBox="0 0 16 16">
+                      <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+                    </svg>Home</a></li>
+                    <li class="ml-2 mb-2"><a href="/about-us">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle mr-2 mb-1" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                      </svg>About us</a></li>
+                    <li class="ml-2 mb-2"><a href="/professionals">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-vcard mr-2 mb-1" viewBox="0 0 16 16">
+                        <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5ZM9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8Zm1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Z"/>
+                        <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96c.026-.163.04-.33.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1.006 1.006 0 0 1 1 12V4Z"/>
+                      </svg>For Professionals</a></li>
+                    <li class="ml-2"><a  href="/contact-us">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-at mr-2 mb-1" viewBox="0 0 16 16">
+                        <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z"/>
+                        <path d="M14.247 14.269c1.01 0 1.587-.857 1.587-2.025v-.21C15.834 10.43 14.64 9 12.52 9h-.035C10.42 9 9 10.36 9 12.432v.214C9 14.82 10.438 16 12.358 16h.044c.594 0 1.018-.074 1.237-.175v-.73c-.245.11-.673.18-1.18.18h-.044c-1.334 0-2.571-.788-2.571-2.655v-.157c0-1.657 1.058-2.724 2.64-2.724h.04c1.535 0 2.484 1.05 2.484 2.326v.118c0 .975-.324 1.39-.639 1.39-.232 0-.41-.148-.41-.42v-2.19h-.906v.569h-.03c-.084-.298-.368-.63-.954-.63-.778 0-1.259.555-1.259 1.4v.528c0 .892.49 1.434 1.26 1.434.471 0 .896-.227 1.014-.643h.043c.118.42.617.648 1.12.648Zm-2.453-1.588v-.227c0-.546.227-.791.573-.791.297 0 .572.192.572.708v.367c0 .573-.253.744-.564.744-.354 0-.581-.215-.581-.8Z"/>
+                      </svg>Contact Us</a></li>
+                  </ul>
+
+              </div>
+            </div>
+            <div class="rd-navbar-main-outer">
+              <div class="rd-navbar-main-inner">
+                <div class="rd-navbar-main">
+                  <!--RD Navbar Panel-->
+                  <div class="rd-navbar-panel">
+                    <!--RD Navbar Toggle-->
+                    <!--RD Navbar Brand-->
+                    <div class="rd-navbar-brand">
+                      <!--Brand--><a class="brand" href="/"><img class="brand-logo-dark" src="images/mosalapro-logo-h.png" alt="" width="146" height="22"/><img class="brand-logo-light" src="images/mosalapro-logo-h.png" alt="" width="155" height="22"/></a>
+                    </div>
+                  </div>
+                  <div class="rd-navbar-main-element">
+                    <div class="rd-navbar-nav-wrap">
+                      <ul class="rd-navbar-nav">
+                        <% if(usr){ %>
+                          <li class="rd-nav-item active"><a class="rd-nav-link" href="/">Dashboard</a>
+                          </li>
+                          <li class="rd-nav-item"><a class="rd-nav-link" href="/find-services">Find Services</a></li>
+                          <!--li class="rd-nav-item"><a class="rd-nav-link" href="/about-us">About us</a></li-->
+                          <% if(usr.accountType=="provider"){ %>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/service-requests">Service requests</a></li>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/mybookings">Manage Bookings</a>
+                          <% } else { %>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/professionals">For Professionals</a></li>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/myrequests">My Requests</a></li>
+                          <% } %>
+                          
+                        <% } else { %>
+                          <li class="rd-nav-item active"><a class="rd-nav-link" href="/">Home</a>
+                          </li>
+                          <li class="rd-nav-item"><a class="rd-nav-link" href="/find-services">Find Services</a></li>
+                          <li class="rd-nav-item"><a class="rd-nav-link" href="/about-us">About us</a></li>
+                          <li class="rd-nav-item"><a class="rd-nav-link" href="/professionals">For Professionals</a>
+                          </li>
+                          <li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us">Contact Us</a>
+                          </li>
+                        <% } %>
+                        <li class="rd-nav-item">
+                          <div class="btn-group open ml-2"> 
+                            <% if(usr){ %>
+                                <a class="btn  position-relative mb-2 " data-toggle="dropdown" href="#">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
+                                  </svg>
+                                  <!--div class="thumb-sm member-thumb mx-auto"><img src="/photo/<%=usr.photo%>" class="rounded-circle img-profile-thumb" alt="profile-image"></div-->
+                                  <% let unread = 0;
+                                    if(notifications) 
+                                      notifications.forEach(notif=>{
+                                        if(notif.status == "unread")
+                                          unread++;
+                                      });  
+                                    if (unread >  0) {  %>
+                                    <span class="position-absolute top-0 start-100  badge rounded-pill-notification"> <%=unread %>
+                                    </span>
+                                    <% } %>
+                                  <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
+                                  <ul class="dropdown-menu ul-none">
+                                
+                                    <% if(usr.accountType=="provider"){ %>
+                                      <li><a href="/p-profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
+                                      <li><a href="/mybookings"><b class="fa fa-tasks mr-2"></b>  Manage Bookings</a></li>
+                                      <li><a href="/applications"><b class="fa fa-bar-chart mr-1"></b>  My applications</a></li>
+                                    <%}else{%>
+                                      <li><a href="/profile"><b class="fa fa-user-circle mr-2"></b>  Profil</a></li>
+                                      <li><a href="/myrequests"><b class="fa fa-tasks mr-2"></b>  My Requests</a></li>
+                                      <li><a href="/professionals"><b class="fa fa-id-card-o mr-1"></b>  Become a pro</a></li>
+                                    <%}%>
+                                    
+                                    <% if (unread > 0) { %>
+                                      <li><a href="/notifications"><b class="fa fa-bell mr-2"></b>  Notifications(<%=unread %>)</a></li>
+                                      <% } else { %>
+                                      <li><a href="/notifications"><b class="fa fa-bell mr-2"></b>  Notifications</a></li>
+                                    <%}%>
+                                  <li><a href="/logout"><b class="fa fa-sign-out mr-2"></b>  Logout </a></li>
+                                <%} else{ %>
+                                  <a class="btn" data-toggle="dropdown" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-lock" viewBox="0 0 16 16">
+                                      <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5v-1a1.9 1.9 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Zm7 0a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2Zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1Z"/>
+                                    </svg>
+                                    <span class="fa fa-caret-down ml-1" title="Toggle dropdown menu"></span></a>
+                                    <ul class="dropdown-menu ul-none">
+                                  <li><a href="#logModalCta" data-toggle="modal" data-caption-animate="fadeInUp">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lock mr-2" viewBox="0 0 16 16">
+                                      <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 5.996V14H3s-1 0-1-1 1-4 6-4c.564 0 1.077.038 1.544.107a4.524 4.524 0 0 0-.803.918A10.46 10.46 0 0 0 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h5ZM9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2Zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1Z"/>
+                                    </svg>   Login </a></li>
+                                  <li><a href="#regModalCta" data-toggle="modal" data-caption-animate="fadeInUp">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add mr-2" viewBox="0 0 16 16">
+                                      <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                                      <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                                    </svg> Signup</a></li>
+                                <% } %>
+                              </ul>
+                            
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+  
+<!--TODO: Check if user not logged in, then include-->
+<script>
+
+//location.reload();
+</script>
+
+
+        

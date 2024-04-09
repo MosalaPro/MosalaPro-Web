@@ -1,0 +1,40 @@
+<section class="bg-light">
+    <div class="container px-4">
+        <h5 class="ml-4 mb-3">Your favorite service providers</h5>
+        <div class="row p-3">
+            <%
+                let limit_ = 8;
+                if(favProviders.length <= 8) 
+                    limit_ = favProviders.length;
+                
+                for(let j = 0; j < limit_; j++){ 
+                    if(favProviders[j]) { %>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-12 custom-px">
+                    <div class="text-center card-box-pro">
+                        <div class="member-card pt-2 pb-2">
+                            <div class="thumb-lg member-thumb mx-auto"><img src="photo/<%=favProviders[j].photo %> " class="rounded-circle img-thumbnail" alt="profile-image"></div>
+                            <div class="mt-2">
+                                <h6><%=favProviders[j].firstName %> <%=favProviders[j].lastName %> </h6>
+                                <span class="text-muted "><%=favProviders[j].role %>  </span>
+                                <ul class="rating " data-mdb-toggle="rating" data-mdb-readonly="true" data-mdb-value="3"> 
+                                    <% let i = 0; for(i = 0; i < favProviders[j].rating; i++) { %>
+                                        <li class="d-inline"><b class="fa-star fa-sm rating-star-color fas "></b></li>
+                                    <% } if(i < 5) while(i < 5) { %>
+                                        <li class="d-inline"><b class="fa-star-o fa-sm rating-star-color fas "></b></li>
+                                    <% i++; } %>
+                                </ul>
+                            </div>
+                            <ul class="social-links list-inline">
+                                <li class="list-inline-item"><a title="Contact <%=favProviders[j].firstName%>" data-toggle="tooltip" data-placement="top"  class="tooltips" href="/pro-profile/<%=favProviders[j]._id%>" data-caption-animate="fadeInUp"><b class="fa fa-envelope-o"></b></a></li>
+                                <li class="list-inline-item"><a title="Visit <%=favProviders[j].firstName%> LinkedIn profile" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="LinkedIn"><b class="fa fa-linkedin"></b></a></li>
+                                <li class="list-inline-item"><a title="Send a Whatsapp message to <%=favProviders[j].firstName%>" data-placement="top" data-toggle="tooltip" href="https://wa.me/<%=favProviders[j].countryCode%><%=favProviders[j].phone%>" target="_blank" data-original-title="Whatsapp"><b class="fa fa-whatsapp"></b></a></li>
+                            </ul>
+                    
+                        </div>
+                    </div>
+                </div>
+            <% } } %>
+            </div>
+
+        </div>
+</section>
