@@ -1,6 +1,6 @@
 /*********************************************************************************************************
 *	emailsender.js : Handles email notifications sent to the user.
-*   Author: Constant Pagoui.
+* Author: Constant Pagoui.
 *	Date: 03-19-2023
 *	Copyright: MosalaPro TM
 *

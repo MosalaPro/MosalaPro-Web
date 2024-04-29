@@ -55,7 +55,7 @@ const e = require("express");
 
 fs.readFile('./public/data/categories.json', 'utf8', (err, data) => {
   if (err) {
-    console.log('APP:: Error reading file from disk: '+err)
+    logger.error('APP:: Error reading file from disk: '+err)
   } else {
     // parse JSON string to JSON object
     const cates = JSON.parse(data)
@@ -72,12 +72,12 @@ fs.readFile('./public/data/categories.json', 'utf8', (err, data) => {
 countries = [];
 fs.readFile('./public/data/countries.json', 'utf8', (err, data) => {
     if (err) {
-      console.log('APP:: Error reading file from disk: '+err)
+      logger.error('APP:: Error reading file from disk: '+err)
     } else {
       // parse JSON string to JSON object
       const kountries = JSON.parse(data)
   
-      // print all databases
+      // print all countries
       kountries.forEach(ctry => {
         countries.push(ctry);
       })
@@ -162,7 +162,7 @@ app.get("/", async function(req, res){
                     }
                 });
             }catch(err){
-                console.log("Card payment error: "+err);
+                logger.error("Card payment error: "+err);
                 res.redirect('/');
             }
 
@@ -189,7 +189,7 @@ app.get("/", async function(req, res){
                 });
             }
             catch(error){
-                console.log("Error occured while loading notifications: "+error);
+                logger.error("Error occured while loading notifications: "+error);
             }
           } else {
             res.redirect("/");
@@ -204,11 +204,11 @@ app.get("/", async function(req, res){
                 loadNotifs_.reverse().forEach(not =>{
                     ages_.push(Math.floor(Math.abs( new Date() - not.createdAt ) / (1000*3600*24)));
                 });
-                console.log("Notifications loaded: "+notifs.length);
+                logger.info("Notifications loaded: "+notifs.length);
                 res.status(200).send({message:"Ok", status:200, notifications:notifs.reverse(), loadNotifs: loadNotifs_, ages: ages_});
                 return;
             }catch(error){
-                console.log("Error occured while loading notifications: "+error);
+                logger.error("Error occured while loading notifications: "+error);
             }
         }else{
             res.redirect("/");
@@ -226,7 +226,7 @@ app.get("/", async function(req, res){
                     const provider = await UserModel.findOne({_id: req.query?.p}).exec();
                     const job_ = await PostRequestModel.findOne({_id: notifi.causedByItem}).exec();
                     const checkBooking_ = await BookingModel.findOne({jobId: notifi.causedByItem}).exec();
-                    console.log("checkbooking: "+checkBooking_);
+                    logger.info("checkbooking: "+checkBooking_);
                     res.render("notificationDetails", {pro: provider, notifi: notifi, 
                         postRequestsCompleted: postReqCompleted.length,
                         job: job_, 
@@ -240,7 +240,7 @@ app.get("/", async function(req, res){
                 }
 
             }catch(error){
-                console.log("Error occured while fetching notification: "+error);
+                logger.error("Error occured while fetching notification: "+error);
             }
         }
         else{
@@ -253,11 +253,11 @@ app.get("/", async function(req, res){
         if(req.isAuthenticated()){
             try{
                 if(notificationObj.readNotification(req, res))
-                    console.log("Notification read with success!");
+                    logger.info("Notification read with success!");
                 else    
-                    console.log("Error occured while reading notification.");
+                    logger.error("Error occured while reading notification.");
             }catch(error){
-                console.log("Error occured while loading notifications: "+error);
+                logger.error("Error occured while loading notifications: "+error);
             }
         }else{
             res.redirect("/");
@@ -281,7 +281,7 @@ app.get("/", async function(req, res){
                     link: null, cats: categories, 
                     countries: countries} );
 
-            }catch(error){console.log("Error occured while loading notifications: "+error);
+            }catch(error){logger.error("Error occured while loading notifications: "+error);
         }
         }else{
             res.redirect("/");
@@ -301,7 +301,7 @@ app.get("/", async function(req, res){
                 
                 res.render("manageJobApplications", {usr: req.user, notifications: notifs.reverse(), allApp: allApplications, ja: ja, link: null,  cats: categories});
                 }catch(error){
-                    console.log("Error occured: "+error);
+                    logger.error("Error occured: "+error);
                     res.redirect("/");
                 }
         }else{
@@ -325,7 +325,7 @@ app.get("/", async function(req, res){
                 }
                 res.send(ja);
             }catch(error) {
-                console.log("Error occured: "+error);
+                logger.error("Error occured: "+error);
                 res.redirect("/")
             };
         }else
@@ -339,7 +339,7 @@ app.get("/", async function(req, res){
                 await QuotationServiceObj.send(req, res);
             }
             catch(err){
-                console.log("Error occured: "+err);
+                logger.error("Error occured: "+err);
             }
         }
     });
@@ -348,11 +348,11 @@ app.get("/", async function(req, res){
         if(req.isAuthenticated()){
             try{
                 if(notificationObj.deleteNotification(req, res))
-                    console.log("Notification deleted with success!");
+                    logger.info("Notification deleted with success!");
                 else    
-                    console.log("Error occured while deleting notification.");
+                    logger.error("Error occured while deleting notification.");
             }catch(error){
-                console.log("Error occured while loading notifications: "+error);
+                logger.error("Error occured while loading notifications: "+error);
             }
         }
     });
@@ -362,7 +362,7 @@ app.get("/", async function(req, res){
                 UserService.hireProvider(req, res);
             }
             catch(error){
-                console.log("Error occured hire-pro: "+error);
+                logger.error("Error occured hire-pro: "+error);
             }
         }else
             res.redirect("/");
@@ -373,13 +373,13 @@ app.get("/", async function(req, res){
                 UserService.rejectApplication(req, res);
             }
             catch(error){
-                console.log("Error occured reject-pro: "+error);
+                logger.error("Error occured reject-pro: "+error);
             }
         }
     });
 
     app.get("/user", async function(req, res){
-        console.log(req.isAuthenticated());
+        logger.info(req.isAuthenticated());
         if (req.isAuthenticated()) {
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("user", {
@@ -491,7 +491,7 @@ app.get("/", async function(req, res){
     app.get("/find-services", async function(req, res){
         const result = await UserModel.find({accountType:"provider"}).exec();
         const pages = result.length > 10 ? (Math.floor(result.length / 10))+1 : 1; 
-        console.log("result length: "+result.length+" Pages: "+pages);  
+        logger.info("result length: "+result.length+" Pages: "+pages);  
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             res.render("findprofessionals", {usr: req.user, notifications: notifs.reverse(), link: req.link, cats: categories, countries: countries, professionals: result, 
@@ -563,9 +563,9 @@ app.get("/", async function(req, res){
             const allRequests = await PostRequestModel.find({username:req.user.username, status:"active"}).exec();
             const pRequests = await PostRequestModel.find({username:req.user.username, status:"active"}).limit(6).exec();
             if(pRequests){
-                console.log("Requests found: "+pRequests.length);
+                logger.info("Requests found: "+pRequests.length);
             }else{
-                console.log("No requests found with username: "+req.user.username);
+                logger.info("No requests found with username: "+req.user.username);
             }
             res.render("manageUserRequests", {usr: req.user, notifications: notifs.reverse(), postRequests: pRequests, allRequests: allRequests, link: null,base_url:process.env.BASE_URL,  cats: categories});
         }catch(error) {res.redirect("/")};
@@ -584,9 +584,9 @@ app.get("/", async function(req, res){
                 const pRequests =  req.params.type != "all"? await PostRequestModel.find({username:req.user.username, status:req.params.type}).limit(12).exec():
                                                                 await PostRequestModel.find({username:req.user.username}).limit(12).exec();
                 if(pRequests){
-                    console.log("Requests found: "+pRequests.length);
+                    logger.info("Requests found: "+pRequests.length);
                 }else{
-                    console.log("No requests found with username: "+req.user.username);
+                    logger.info("No requests found with username: "+req.user.username);
                 }
                 res.render("userRequests", {usr: req.user, notifications: notifs.reverse(), postRequests: pRequests, allRequests: allRequests, link: null,
                                             base_url:process.env.BASE_URL, projects_type:req.params.type, cats: categories});
@@ -599,7 +599,7 @@ app.get("/", async function(req, res){
     app.get("/getbookings", async function(req, res){
         if(req.isAuthenticated()){
             try{
-                console.log("Pro: "+req.user._id);
+                logger.info("Pro: "+req.user._id);
                 const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
                 let pRequests = [];
                 if(req.query?.type == "all")
@@ -608,11 +608,11 @@ app.get("/", async function(req, res){
                     pRequests =  await BookingModel.find({providerId:req.user._id, status:req.query?.type}).exec();
 
                 if(pRequests){
-                    console.log("GetBookings found: "+pRequests.length);
+                    logger.info("GetBookings found: "+pRequests.length);
                 }else{
-                    console.log("No requests found with username: "+req.user.username);
+                    logger.info("No requests found with username: "+req.user.username);
                 }
-                console.log("Bookings: "+pRequests.length);
+                logger.info("Bookings: "+pRequests.length);
                 res.send(pRequests);
             }catch(error) {res.redirect("/")};
         }
@@ -623,7 +623,7 @@ app.get("/", async function(req, res){
     app.get("/getrequests", async function(req, res){
         if(req.isAuthenticated()){
             try{
-                console.log("User: "+req.user.username);
+                logger.info("User: "+req.user.username);
                 const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
                 let pRequests = [];
                 let allRequests = [];
@@ -637,15 +637,15 @@ app.get("/", async function(req, res){
                 }
 
                 if(pRequests){
-                    console.log("Requests found: "+pRequests.length);
+                    logger.info("Requests found: "+pRequests.length);
                 }else{
-                    console.log("No requests found for user: "+req.user.username);
+                    logger.info("No requests found for user: "+req.user.username);
                 }
-                console.log("Requests: "+pRequests.length);
+                logger.info("Requests: "+pRequests.length);
                 res.send(pRequests);
                 
             }catch(error) {
-                console.log("Error occured: "+error);
+                logger.info("Error occured: "+error);
                 res.redirect("/")
             };
         }
@@ -666,7 +666,7 @@ app.get("/", async function(req, res){
                 }
                 res.render("manageRequest", {usr: req.user, notifications: notifs.reverse(), interestedPros: inPros, request: req_, link: null,  cats: categories});
             }catch(error){
-                console.log("Error occured: "+error);
+                logger.info("Error occured: "+error);
                 res.redirect("/myrequests");
             }
         }
@@ -679,7 +679,7 @@ app.get("/", async function(req, res){
             try{
                 PostRequestService.resubmitRequest(req, res);
             }catch(error){  
-                console.log("An error occured (/resubmit-request): "+error);
+                logger.info("An error occured (/resubmit-request): "+error);
             }
         }else
             res.redirect("/");
@@ -690,7 +690,8 @@ app.get("/", async function(req, res){
             try{
                 PostRequestService.cancelRequest(req, res);
             }catch(error){  
-                console.log("An error occured (/cancel-request): "+error);
+                logger.info("An error occured (/cancel-request): "+error);
+                //console.log("An error occured (/cancel-request): "+error);
             }
         }else
             res.redirect("/");
@@ -701,9 +702,11 @@ app.get("/", async function(req, res){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
             const bookings = await BookingModel.find({providerId:req.user._id, status: "active"}).exec();
             if(bookings){
-                console.log("Bookings found: "+bookings.length);
+                //console.log("Bookings found: "+bookings.length);
+                logger.info("Bookings found: "+bookings.length);
             }else{
-                console.log("No requests found with username: "+req.user.username);
+                logger.warn("No requests found with username: "+req.user.username);
+                //console.log("No requests found with username: "+req.user.username);
             }
             res.render("manageServiceRequests", {usr: req.user, notifications: notifs.reverse(), postRequests:bookings, link: null,  cats: categories});
             
@@ -731,7 +734,7 @@ app.get("/", async function(req, res){
                 res.redirect("/");
             
         }catch(error){
-            console.log("ROUNTING: Error occured: "+error);
+            logger.error("ROUNTING: Error occured: "+error);
         }
         
     });
@@ -750,7 +753,7 @@ app.get("/", async function(req, res){
         
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            console.log(notifs);
+            logger.info(notifs);
             const pRequests = await PostRequestModel.find({username:req.user.username}).exec();
             res.render("userDashboard", {usr: req.user, notifications: notifs.reverse(), cats: categories, postRequests: pRequests, link: null});
         }
@@ -800,7 +803,7 @@ app.get("/", async function(req, res){
             if(UserService.updateUser({_id: req.user._id, ...req.body}))
                 res.redirect("/profile");
             else
-                console.log("Update failed!");
+                logger.info("Update failed!");
             
         }else res.redirect("/");
         
@@ -829,7 +832,7 @@ app.get("/", async function(req, res){
                     });
                 }
             }catch(error){
-                console.log("Error occured: "+error);
+                logger.error("Error occured: "+error);
             }
         }else
             res.redirect("/");
@@ -840,7 +843,7 @@ app.get("/", async function(req, res){
             try{
                 BookingService.confirmBooking(req, res);
             }catch(error){
-                console.log("An error occured: "+error);
+                logger.error("An error occured: "+error);
             }
         }
         else
@@ -855,7 +858,7 @@ app.get("/", async function(req, res){
                 else
                     BookingService.cancelBookingByUser(req, res);
             }catch(error){
-                console.log("An error occured: "+error);
+                logger.error("An error occured: "+error);
             }
         }else res.redirec("/");
     });
@@ -865,7 +868,7 @@ app.get("/", async function(req, res){
             try{
                 BookingService.completeBooking(req, res);
             }catch(error){
-                console.log("An error occured: "+error);
+                logger.error("An error occured: "+error);
             }
         }else res.redirec("/");
     });
@@ -910,7 +913,7 @@ app.get("/", async function(req, res){
                 await UserService.addFavPro(req, res);
             }
             catch(error){
-                console.log("An error occured(addfavpro): "+error);
+                logger.error("An error occured(addfavpro): "+error);
             }
         }else   
             res.render("proProfile", {usr: null, notifications: null, pro: provider, cats: categories, link:req.link});
@@ -947,7 +950,7 @@ app.get("/", async function(req, res){
                     notifications: notifs.reverse(), firstCor: firstCorresp, cats: categories, link:null});
             }
             catch(err){
-                console.log("Error (routes): "+err);
+                logger.error("Error (routes): "+err);
             }
         }else
             res.redirect("/");
@@ -966,20 +969,19 @@ app.get("/", async function(req, res){
             }
             catch(err){
                 res.status(401).send({status:401, message:"Error"});
-                console.log("Error (routes): "+err);
+                logger.error("Error (routes): "+err);
             }
         }else
             res.redirect("/");
     });
 
     app.post("/send-message", function(req, res){
-        console.log("About to send message..");
+        logger.info("About to send message..");
         messageHander.sendMessage(req, res);
 
     });
 
     app.get("/resendCode/:id", function(req, res){
-        //model.resendCode(req, res);
         req.body.redirect_link = "/";
         UserService.resendCode(req, res);
     });
@@ -998,10 +1000,10 @@ app.get("/", async function(req, res){
     app.get("/service-request", async function (req, res) {
         if(req.isAuthenticated()){
             const notifs = await NotificationModel.find({receiverId: req.user._id}).exec();
-            console.log("Creating a service request..");
+            logger.info("Creating a service request..");
             res.render("serviceRequest",{usr: req.user, notifications: notifs.reverse(), link:null,  cats: categories});
         }else{
-            console.log("User not connecting, redirecting to home page..");
+            logger.info("User not connecting, redirecting to home page..");
             res.redirect("/");
         }
     });
@@ -1068,7 +1070,7 @@ app.get("/", async function(req, res){
             try{
                 jobApplicationHander.cancelApplication(req, res);
             }catch(error){
-                console.log("An error occured: "+error);
+                logger.error("An error occured: "+error);
             }
         }
         else{
