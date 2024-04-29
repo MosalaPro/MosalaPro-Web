@@ -23,6 +23,10 @@ const MongoStore = require('connect-mongo');
 const Notification = require(__dirname+"/services/notification");
 const notifObj = new Notification();
 const nodeCron = require('node-cron');
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = "debug";
+
 
 
 // const emailValidator = required("email-validator");
@@ -36,9 +40,12 @@ const connectDB = async(DBURI) => {
 		family:4
 	}).then(success=>{
 		dbConnected = true;
-		console.log("APP:: Successfully connected to the database.");
+		logger.info("APP:: Successfully connected to the database.");
+		// console.log("APP:: Successfully connected to the database.");
 		return true;
-	}).catch(err=>{console.log("APP:: Error occured while connecting to the database.\n"+err);
+	}).catch(err=>{
+		logger.debug("APP:: Error occured while connecting to the database. "+err);
+		// console.log("APP:: Error occured while connecting to the database.\n"+err);
 		return false;
 	});
 };
@@ -116,7 +123,8 @@ passport.use(new GoogleStrategy ({
 					lastUpdate: new Date()
 				}).save(function(err,newUser){
 					if(err) {
-						console.log("GOOGLE AUTH:: Error occured: "+ err);
+						logger.error("GOOGLE AUTH:: Error occured: "+ err);
+						// console.log("GOOGLE AUTH:: Error occured: "+ err);
 					};
 					return cb(err, newUser);
 				});
@@ -153,7 +161,8 @@ passport.use(new FacebookStrategy({
 			}).save(function(err,newUser){
 				
 				if(err) {
-					console.log("FB AUTH:: Error occured: "+ err);
+					logger.error("FB AUTH:: Error occured: "+ err);
+					// console.log("FB AUTH:: Error occured: "+ err);
 				};
 				return cb(err, newUser);
 			});
@@ -180,7 +189,8 @@ app.get('/auth/facebook/mosalapro',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
     // Successful authentication, redirect home.
-	console.log("successful FB");
+	logger.info("FB Authentication successful!");
+	//console.log("successful FB");
     res.redirect('/profile');
 });
 
@@ -199,11 +209,15 @@ const start = async () => {
     try {
         await connectDB(process.env.DBURI).then(async function (success) {
 			app.listen(process.env.PORT || 3000, function() {
-			console.log("APP:: Server successfully started online and locally on port 3000");
+				logger.info("APP:: Server successfully started online or locally on port 3000");
+				//console.log("APP:: Server successfully started online or locally on port 3000");
 			});
 		}).catch(function (error) {console.log("APP:: Error"+error);});
 		
-	}catch(error) {console.log("APP:: Error occured while connecting to the db: "+error);}
+	}catch(error) {
+		logger.fatal("APP:: Error occured while connecting to the DB: "+error);
+		//console.log("APP:: Error occured while connecting to the DB: "+error);
+	}
 };
 
 start();
