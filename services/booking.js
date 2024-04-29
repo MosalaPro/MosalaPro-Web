@@ -51,14 +51,14 @@ const BookingService =  {
             upload(req, res, async function (err) {
               if (err instanceof multer.MulterError) {
                 // A Multer error occurred when uploading
-                console.log(err);
+                logger.info(err);
                 res.status(400).send({
                   responseCode: 400,
                   responseMessage: "Error uploading files",
                 });
               } else if (err) {
                 // An unknown error occurred when uploading
-                console.log(err);
+                logger.error(err);
                 res.status(400).send({
                   responseCode: 400,
                   responseMessage: "Error uploading files",
@@ -66,11 +66,11 @@ const BookingService =  {
               }
       
               // Everything went fine
-              console.log("In the bookings.");
+              logger.info("In the bookings.");
               const pro = await UserModel.findOne({_id:req.body.providerId}).exec();
               if(pro){
-                console.log("BOOKING:: Provider found.");
-              }else{console.log("BOOKING:: Error occured while retrieving provider. "); return;}
+                logger.info("BOOKING:: Provider found.");
+              }else{logger.error("BOOKING:: Error occured while retrieving provider. "); return;}
               const newRequest = await new PostRequestModel({
                 username: req.body.username,
                 requestTitle:  req.body.bookingTitle,
@@ -84,8 +84,8 @@ const BookingService =  {
                 lastUpdate: new Date(),
               }).save();
               if(newRequest){
-                console.log("BOOKING:: Job request saved successfully: "+ newRequest);
-              }else{console.log("BOOKING:: Error occured while saving jr into the db: "); return;};
+                logger.info("BOOKING:: Job request saved successfully: "+ newRequest);
+              }else{logger.error("BOOKING:: Error occured while saving jr into the db: "); return;};
 
               const newBooking = await new BookingModel({
                 username: req.body.username,
@@ -112,17 +112,17 @@ const BookingService =  {
                   createdAt: new Date(),
                   lastUpdate: new Date()
                     }).save().then(success=>{
-                      console.log("BOOKING:: cancel booking notification- Notification sent to user.");
+                      logger.info("BOOKING:: cancel booking notification- Notification sent to user.");
                   }).catch(err=>{
-                    console.log("BOOKING:: cancel booking notification - Error occured: "+err);
+                    logger.error("BOOKING:: cancel booking notification - Error occured: "+err);
                   });
-                  console.log("Posted successfully!");
+                  logger.info("Posted successfully!");
       
-              }else{console.log("Error occured while saving into the db: "+err);};
+              }else{logger.error("Error occured while saving into the db: "+err);};
              
             });
           } catch (e) {
-            console.log(e);
+            logger.error(e);
             res.status(400).send({
               responseCode: 400,
               responseMessage: "Error posting service booking: "+e,
@@ -136,7 +136,7 @@ const BookingService =  {
 
           if(booking){
           const job = await PostRequestModel.findByIdAndUpdate(booking.jobId, {status: "in-progress", lastUpdate: new Date()}).exec();
-          console.log("BOOKING:: booking has been successfully confirmed");
+          logger.info("BOOKING:: booking has been successfully confirmed");
           const customer = await UserModel.findOne({username: booking.username}).exec();
           const notification = await new NotificationModel({
             causedByUserId: req.user._id,
@@ -148,14 +148,14 @@ const BookingService =  {
             createdAt: new Date(),
             lastUpdate: new Date()
               }).save().then(success=>{
-                console.log("BOOKING:: cancel booking notification- Notification sent to user.");
+                logger.info("BOOKING:: cancel booking notification- Notification sent to user.");
             }).catch(err=>{
-              console.log("BOOKING:: cancel booking notification - Error occured: "+err);
+              logger.error("BOOKING:: cancel booking notification - Error occured: "+err);
             });
           res.status(200).send({status: 200, message: "Ok"});
           return;
         }else{
-          console.log("BOOKING:: Error occured. Could not find booking.");
+          logger.error("BOOKING:: Error occured. Could not find booking.");
           res.status(401).send({status: 401, message: "Error"});
           return;
         }
@@ -167,7 +167,7 @@ const BookingService =  {
         const booking = await BookingModel.findByIdAndUpdate(req.body.bookingId, {status:"cancelled", lastUpdate: new Date()}).exec();
         if(booking){
           const job = await PostRequestModel.findByIdAndUpdate(booking.jobId, {status: "active", lastUpdate: new Date()}).exec();
-          console.log("BOOKING:: booking has been successfully cancelled");
+          logger.info("BOOKING:: booking has been successfully cancelled");
           const customer = await UserModel.findOne({username: booking.username}).exec();
           const notification = await new NotificationModel({
               causedByUserId: req.user._id,
@@ -179,15 +179,15 @@ const BookingService =  {
               createdAt: new Date(),
               lastUpdate: new Date()
                 }).save().then(success=>{
-                  console.log("BOOKING:: cancel booking notification- Notification sent to user.");
+                  logger.info("BOOKING:: cancel booking notification- Notification sent to user.");
               }).catch(err=>{
-                console.log("BOOKING:: cancel booking notification - Error occured: "+err);
+                logger.error("BOOKING:: cancel booking notification - Error occured: "+err);
               });
 
           res.status(200).send({status: 200, message: "Ok"});
           return;
         }else {
-          console.log("BOOKING:: Error occured. Could not find booking.");
+          logger.error("BOOKING:: Error occured. Could not find booking.");
           res.status(401).send({status: 401, message: "Error"});
           return;
         };
@@ -199,7 +199,7 @@ const BookingService =  {
         const booking = await BookingModel.findByIdAndUpdate(req.body.bookingId, {status:"cancelled", lastUpdate: new Date()}).exec();
         if(booking){
           const job = await PostRequestModel.findByIdAndUpdate(booking.jobId, {status: "active", lastUpdate: new Date()}).exec();
-          console.log("BOOKING:: booking has been successfully cancelled");
+          logger.info("BOOKING:: booking has been successfully cancelled");
           const notification = await new NotificationModel({
               causedByUserId: req.user._id,
               causedByItem: job._id,
@@ -210,15 +210,15 @@ const BookingService =  {
               createdAt: new Date(),
               lastUpdate: new Date()
                 }).save().then(success=>{
-                  console.log("BOOKING:: cancel booking notification- Notification sent to user.");
+                  logger.info("BOOKING:: cancel booking notification- Notification sent to user.");
               }).catch(err=>{
-                console.log("BOOKING:: cancel booking notification - Error occured: "+err);
+                logger.error("BOOKING:: cancel booking notification - Error occured: "+err);
               });
 
           res.status(200).send({status: 200, message: "Ok"});
           return;
         }else {
-          console.log("BOOKING:: Error occured. Could not find booking.");
+          logger.error("BOOKING:: Error occured. Could not find booking.");
           res.status(401).send({status: 401, message: "Error"});
           return;
         };
@@ -227,7 +227,7 @@ const BookingService =  {
       },
 
       completeBooking: async (req, res)=>{
-        console.log("BOOKING:: Booking mf ID: "+req.body.bookingId);
+        logger.info("BOOKING:: Booking mf ID: "+req.body.bookingId);
         const booking = await BookingModel.findById(req.body.bookingId).exec();
         if(booking){
             const job = await PostRequestModel.findById(booking.jobId).exec();
@@ -263,16 +263,16 @@ const BookingService =  {
                   }).array("files", 10); 
                   upload(req, res, async function (err) {
                     if (err instanceof multer.MulterError) {
-                      console.log(err);
+                      logger.error(err);
                       res.status(400).send({ responseCode: 400, responseMessage: "Error uploading files",
                       });
                     } else if (err) {
-                      console.log(err);
+                      logger.error(err);
                       res.status(400).send({  responseCode: 400, responseMessage: "Error uploading files",
                       });
                     }
                   });
-                  console.log("MF Files: "+req.body.file.name); // Contains information about the uploaded files
+                  logger.info("MF Files: "+req.body.file.name); // Contains information about the uploaded files
                   file_ = req.body.file.name;
                 }
 
@@ -298,20 +298,20 @@ const BookingService =  {
                   providerComments: req.body.providerComments,
                   lastUpdate: new Date()
                     }).save().then(success=>{
-                      console.log("BOOKING:: booking completeion notification- Notification sent to user.");
+                      logger.info("BOOKING:: booking completeion notification- Notification sent to user.");
                   }).catch(err=>{
-                    console.log("BOOKING:: booking completion notification - Error occured: "+err);
+                    logger.error("BOOKING:: booking completion notification - Error occured: "+err);
                   });
-                  console.log("BOOKING:: booking has been successfully completed");
+                  logger.info("BOOKING:: booking has been successfully completed");
                   res.status(200).send({status: 200, message: "Ok"});
                   return;
               }catch(err){ 
-                console.log("BOOKING:: Error occured while uploading submitted file: "+err);
+                logger.error("BOOKING:: Error occured while uploading submitted file: "+err);
                 res.status(401).send({status: 401, message: "Error"});
                 return;
           }
         }else {
-          console.log("BOOKING:: Error occured. Could not find booking.");
+          logger.error("BOOKING:: Error occured. Could not find booking.");
           res.status(401).send({status: 401, message: "Error"});
           return;
         };
