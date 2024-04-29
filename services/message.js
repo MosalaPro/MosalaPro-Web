@@ -16,7 +16,7 @@ mongoose.set('strictQuery', false);
 
 class Message {
     async sendMessage(req, res){
-        console.log("Req info: "+req.user._id+" - "+req.body.proId+" "+req.body.messageTitle+" - "+req.body.content);
+        logger.info("Req info: "+req.user._id+" - "+req.body.proId+" "+req.body.messageTitle+" - "+req.body.content);
         const newMessage = await new MessageModel({
             senderId: req.user._id,
             recipientId:  req.body.proId,
@@ -25,7 +25,7 @@ class Message {
             createdAt: new Date()
         }).save(function (err) {
             if (err) {
-                console.log("MESSAGE:: Error occured while sending message: "+err);
+                logger.error("MESSAGE:: Error occured while sending message: "+err);
                 res.status(401).send({error:"Error occured while sending message"} );
                 return;
             }else{
@@ -39,10 +39,10 @@ class Message {
                     createdAt: new Date(),
                     lastUpdate: new Date()
                 }).save(async function (err) {
-                    if (err) {console.log("MESSAGE:: Error occured while creating notification.");}
-                    else console.log("MESSAGE:: Notification has been successfuly saved"); });
+                    if (err) {logger.error("MESSAGE:: Error occured while creating notification.");}
+                    else logger.info("MESSAGE:: Notification has been successfuly saved"); });
 
-                console.log("MESSAGE:: Message has been sent successfully.");
+                logger.info("MESSAGE:: Message has been sent successfully.");
                 res.status(200).send({message:"Message sent successfully!", status:200} );
                 return;
             }
@@ -55,9 +55,9 @@ class Message {
         const messages = await MessageModel.find().or([{senderId: req.user._id}, { recipientId: req.user._id }])
                     .sort({ createdAt: 'desc'})
                     .then(success => {
-                        console.log("MESSAGE:: Message successfully retrieved!");
+                        logger.info("MESSAGE:: Message successfully retrieved!");
                     }).catch(err=>{
-                        console.log("MESSAGE:: Error occured while retrieving messages: "+err);
+                        logger.error("MESSAGE:: Error occured while retrieving messages: "+err);
                     });
         let firstCorrespondantId = ""; 
         let firstConvo = [];
@@ -68,9 +68,9 @@ class Message {
                     {$or: [{senderId: firstCorrespondantId}, { recipientId: firstCorrespondantId }] })
                     .sort({ createdAt: 'desc'})
                     .then(success => {
-                        console.log("MESSAGE:: First convo successfully retrieved!");
+                        logger.info("MESSAGE:: First convo successfully retrieved!");
                     }).catch(err=>{
-                        console.log("MESSAGE:: Error occured while retrieving first convo: "+err);
+                        logger.error("MESSAGE:: Error occured while retrieving first convo: "+err);
                     });
         }
         return firstConvo;
@@ -81,7 +81,7 @@ class Message {
 
         const otherUser = await UserModel.findById(userId).exec();
         if(otherUser){
-            console.log("Getting messages with user: "+otherUser.username);
+            logger.info("Getting messages with user: "+otherUser.username);
             otherUser.username = " ";
             otherUser.address = " ";
             otherUser.role = " ";
