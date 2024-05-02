@@ -33,8 +33,8 @@ class EmailSender {
         
         return axios(config)
             .then(function (response) {
-                console.log(JSON.stringify(response.data));
-            }).catch(function (error) {console.log(error);});
+                logger.info(JSON.stringify(response.data));
+            }).catch(function (error) {logger.error(error);});
     }
     
     async generateRandomString(strLength){
@@ -81,7 +81,7 @@ class EmailSender {
             "\nPlease use the code below to verify your MosalaPro Account:\n\n"
             +randomDigit +"\n\nThank you,\nMosalaPro TM";
             
-        console.log("EMAIL_SENDER:: An Email sent to your account please verify");
+        logger.info("EMAIL_SENDER:: Email sent to user");
         if(this.sendEmail(name, email, subject, message))
             return true;
         else
@@ -108,7 +108,7 @@ class EmailSender {
             "\nPlease use the code below to verify your MosalaPro Account:\n\n"
             +randomDigit +"\n\nThank you,\nMosalaPro TM";
             
-        console.log("EMAIL_SENDER:: An Email sent to your account please verify");
+        logger.info("EMAIL_SENDER:: An Email sent to your account please verify");
             
         if(this.sendEmail(name, email, subject, message))
             return true;
@@ -138,7 +138,7 @@ class EmailSender {
             "\nPlease enter the following password reset code to change your password:\n\n"
             +randomDigit +"\n\nThank you,\nMosalaPro TM";
             
-        console.log("EMAIL_SENDER:: An Email sent to your account please verify");
+        logger.info("EMAIL_SENDER:: An Email sent to your account please verify");
         if(this.sendEmail(name, email, subject, message))
             return true;
         else
